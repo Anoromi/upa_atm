@@ -27,7 +27,7 @@ set(PROJECT_SOURCES
         mainwindow.ui
         ${TS_FILES}
         middleware/credentials.h middleware/credentials.cpp middleware/transfer.cpp middleware/transfer.h middleware/types.h middleware/tariff.cpp middleware/tariff.h middleware/SignedConnection.cpp middleware/SignedConnection.h middleware/deposit.h
-        )
+        middleware/exceptions.h backend/bank.h middleware/connectionExceptions.h)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(upa_atm

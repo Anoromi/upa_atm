@@ -9,16 +9,21 @@
 #include "deposit.h"
 
 class SignedConnection {
-
+    Credentials _credentials;
 public:
-    TransferDetails getTransferDetails(const TransferRequest&);
-    void transferMoney(const TransferRequest&);
+    TransferDetails getTransferDetails(const TransferRequest &);
 
-    DepositDetails getDepositDetails(const DepositRequest&);
-    void depositMoney(const DepositRequest&);
+    void transferMoney(const TransferRequest &);
 
-    WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest&);
-    void withdrawMoney(const WithdrawalRequest&);
+    DepositDetails getDepositDetails(const DepositRequest &);
+
+    void depositMoney(const DepositRequest &);
+
+    WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &);
+
+    void withdrawMoney(const WithdrawalRequest &);
+
+
 };
 
 //class JuniorConnection : public SignedConnection {

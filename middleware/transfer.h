@@ -20,15 +20,13 @@ public:
             const String &recipientName,
             const Card &recipientCard,
             const uint money,
-            Unique<Tariff> &&tariff
-    ) : _recipientName(recipientName), _recipientCard(recipientCard), _money(money), _tariff(tariff.get()) {
-        tariff.release();
+            Unique<Tariff> tariff
+    ) : _recipientName(recipientName), _recipientCard(recipientCard), _money(money), _tariff(std::move(tariff)) {
     }
 };
 
 class TransferRequest {
 private:
-    Credentials _from;
     Card _destination;
     uint _money;
     bool _afterTariff;

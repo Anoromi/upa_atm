@@ -7,6 +7,7 @@
 
 #include <string>
 #include <memory>
+#include <vector>
 
 using ushort = unsigned short;
 using uint = unsigned int;
@@ -20,5 +21,8 @@ using Unique = std::unique_ptr<T>;
 
 template<typename T>
 using Shared = std::shared_ptr<T>;
+
+template<typename T>
+using Vector = std::vector<T>;
 
 #endif //BOOBLEEQUE_ATM_TYPES_H

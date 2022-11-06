@@ -79,8 +79,12 @@ private:
     T _value;
 public:
     inline Authorized(const Credentials &credentials, const T &value) : _credentials(credentials), _value(value) {}
-    inline const Credentials& credentials() const {return _credentials;}
-    inline const T& value() const {return _value;}
+
+    inline const Credentials &credentials() const { return _credentials; }
+
+    inline const T &value() const { return _value; }
+
+    inline T &value() { return _value; }
 };
 
 #endif //BOOBLEEQUE_ATM_CREDENTIALS_H

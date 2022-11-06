@@ -16,7 +16,7 @@ private:
 
     public:
 
-        bool areValidCredentials(Credentials);
+        bool areValidCredentials(const Credentials&);
 
         TransferDetails getTransferDetails(const TransferRequest &);
 
@@ -35,25 +35,28 @@ private:
     InternalBank _internalBank;
 public:
     template<typename T, typename R = void>
-    using Request = R (InternalBank::*)(T);
+    using Request = R (InternalBank::*)(const T &);
 
     template<typename T, typename R>
     inline R authorizedCall(Authorized<T> a, Request<T, R> request) {
-        if(!_internalBank.areValidCredentials(a.credentials())) {
+        if (!_internalBank.areValidCredentials(a.credentials())) {
             throw UnexpectedException("Credentials aren't valid");
         }
-        _internalBank.*request(a.value());
+        return (_internalBank.*request)(a.value());
     }
 
+    inline bool areValidCredentials(const Credentials& c) {
+        return _internalBank.areValidCredentials(c);
+    }
 private:
 
 public:
-    const Bank::Request<const TransferRequest &, TransferDetails> getTransferDetails = &InternalBank::getTransferDetails;
-    const Bank::Request<const TransferRequest &> transferMoney = &InternalBank::transferMoney;
-    const Bank::Request<const DepositRequest &, DepositDetails> getDepositDetails = &InternalBank::getDepositDetails;
-    const Bank::Request<const DepositRequest &> depositMoney = &InternalBank::depositMoney;
-    const Bank::Request<const WithdrawalRequest &, WithdrawalDetails> getWithdrawalDetails = &InternalBank::getWithdrawalDetails;
-    const Bank::Request<const WithdrawalRequest &> withdrawMoney = &InternalBank::withdrawMoney;
+    constexpr static Bank::Request<TransferRequest, TransferDetails> getTransferDetails = &InternalBank::getTransferDetails;
+    constexpr static Bank::Request<TransferRequest> transferMoney = &InternalBank::transferMoney;
+    constexpr static Bank::Request<DepositRequest, DepositDetails> getDepositDetails = &InternalBank::getDepositDetails;
+    constexpr static Bank::Request<DepositRequest> depositMoney = &InternalBank::depositMoney;
+    constexpr static Bank::Request<WithdrawalRequest, WithdrawalDetails> getWithdrawalDetails = &InternalBank::getWithdrawalDetails;
+    constexpr static Bank::Request<WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
 };
 
 

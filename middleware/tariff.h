@@ -6,6 +6,7 @@
 #define BOOBLEEQUE_ATM_TARIFF_H
 
 #include "types.h"
+#include <sstream>
 
 class Tariff {
 private:
@@ -20,24 +21,45 @@ public:
 
     inline uint getLeftOver(uint money) const { return getLeftOver_v(money); };
 
-    Tariff() {}
+    inline Tariff() {}
     virtual ~Tariff() {}
 };
 
-//class PercentageTariff : public Tariff {
-//private:
-//    uint _percentage;
-//
-//public:
-//    PercentageTariff()
-//};
-//
-//class WholeTariff : public Tariff {
-//private:
-//    uint _money;
-//    uint _loss;
-//public:
-//
-//};
+class PercentageTariff : public Tariff {
+private:
+    double _percentage;
+
+public:
+    explicit inline PercentageTariff(double percentage) : Tariff(), _percentage(percentage) {}
+
+private:
+    inline virtual String getTariff_v(uint money) const override {
+        std::ostringstream st;
+        st << _percentage;
+        return st.str();
+    }
+
+    inline virtual uint getLeftOver_v(uint money) const override {
+        return money * (uint)(_percentage * 100) / 100;
+    }
+};
+
+class WholeTariff : public Tariff {
+private:
+    uint _loss;
+public:
+    explicit inline WholeTariff(uint loss) : _loss(loss) {}
+
+private:
+    String getTariff_v(uint money) const override {
+        std::ostringstream st;
+        st << _loss;
+        return st.str();
+    }
+
+    uint getLeftOver_v(uint money) const override {
+        return money - _loss;
+    }
+};
 
 #endif //BOOBLEEQUE_ATM_TARIFF_H

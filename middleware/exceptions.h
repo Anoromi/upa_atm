@@ -25,8 +25,16 @@ public:
 
 };
 
-class BadPassword {
+class BadCredentials {
+private:
     Credentials _credentials;
+
+public:
+    explicit BadCredentials(const Credentials &credentials) : _credentials(credentials) {}
+
+    const Credentials &getCredentials() const {
+        return _credentials;
+    }
 };
 
 #endif //UPA_ATM_EXCEPTIONS_H

@@ -7,12 +7,14 @@
 #include "transfer.h"
 #include "deposit.h"
 #include "backend/bankProvider.h"
+#include "connectionDetails.h"
 
 class SignedConnection {
-    Credentials _credentials;
+    ConnectionDetails _details;
     Bank& bank = BankProvider::getBank();
 public:
-    explicit SignedConnection(const Credentials &credentials);
+
+    explicit SignedConnection(const ConnectionDetails &details);
 
     TransferDetails getTransferDetails(const TransferRequest &);
 
@@ -26,6 +28,8 @@ public:
     void depositMoney(const DepositRequest &r);
 
     WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &r);
+
+    inline const Credentials& credentials() const { return _details.getCredentials();}
 };
 
 #endif //UPA_ATM_SIGNEDCONNECTION_H

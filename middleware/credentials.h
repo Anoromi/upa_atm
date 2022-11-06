@@ -87,4 +87,22 @@ public:
     inline T &value() { return _value; }
 };
 
+class ChildCard {
+public:
+    ChildCard(const String &name, const Card &card);
+
+    inline const String &getName() const {
+        return _name;
+    }
+
+    inline const Card &getCard() const {
+        return _card;
+    }
+
+
+private:
+    String _name;
+    Card _card;
+};
+
 #endif //BOOBLEEQUE_ATM_CREDENTIALS_H

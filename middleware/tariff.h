@@ -51,13 +51,13 @@ public:
     explicit inline WholeTariff(uint loss) : _loss(loss) {}
 
 private:
-    String getTariff_v(uint money) const override {
+    inline String getTariff_v(uint money) const override {
         std::ostringstream st;
         st << _loss;
         return st.str();
     }
 
-    uint getLeftOver_v(uint money) const override {
+    inline uint getLeftOver_v(uint money) const override {
         return money - _loss;
     }
 };

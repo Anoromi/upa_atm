@@ -20,7 +20,7 @@ public:
 
     Unique<SignedConnection> createConnection(const Credentials& c) {
         if( bank.areValidCredentials(c)) {
-
+//            return Unique(SignedConnection());
         }
     }
 };

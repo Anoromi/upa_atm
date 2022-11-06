@@ -8,7 +8,7 @@
 
 #include "middleware/transfer.h"
 #include "middleware/deposit.h"
-#include "middleware/connectionExceptions.h"
+#include "middleware/exceptions.h"
 
 class Bank {
 private:
@@ -30,6 +30,8 @@ private:
 
         void withdrawMoney(const WithdrawalRequest &);
 
+
+
     };
 
     InternalBank _internalBank;
@@ -48,6 +50,8 @@ public:
     inline bool areValidCredentials(const Credentials& c) {
         return _internalBank.areValidCredentials(c);
     }
+
+
 private:
 
 public:

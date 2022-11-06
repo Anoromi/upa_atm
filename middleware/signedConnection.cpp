@@ -4,32 +4,29 @@
 
 #include "signedConnection.h"
 
-SignedConnection::SignedConnection(const Credentials &credentials) : _credentials(credentials) {}
 
 TransferDetails SignedConnection::getTransferDetails(const TransferRequest &r) {
-    return bank.authorizedCall(Authorized(_credentials, r), Bank::getTransferDetails);
+    return bank.authorizedCall(Authorized(credentials(), r), Bank::getTransferDetails);
 }
 
 void SignedConnection::transferMoney(const TransferRequest & r) {
-    return bank.authorizedCall(Authorized(_credentials, r), Bank::transferMoney);
+    return bank.authorizedCall(Authorized(credentials(), r), Bank::transferMoney);
 }
 
 DepositDetails SignedConnection::getDepositDetails(const DepositRequest & r) {
-    return bank.authorizedCall(Authorized(_credentials, r), Bank::getDepositDetails);
+    return bank.authorizedCall(Authorized(credentials(), r), Bank::getDepositDetails);
 }
 
 void SignedConnection::depositMoney(const DepositRequest & r ) {
-    return bank.authorizedCall(Authorized(_credentials, r), Bank::depositMoney);
+    return bank.authorizedCall(Authorized(credentials(), r), Bank::depositMoney);
 }
 
 WithdrawalDetails SignedConnection::getWithdrawalDetails(const WithdrawalRequest & r) {
-    return bank.authorizedCall(Authorized(_credentials, r), Bank::getWithdrawalDetails);
+    return bank.authorizedCall(Authorized(credentials(), r), Bank::getWithdrawalDetails);
 }
 
 void SignedConnection::withdrawMoney(const WithdrawalRequest & r) {
-    return bank.authorizedCall(Authorized(_credentials, r), Bank::withdrawMoney);
+    return bank.authorizedCall(Authorized(credentials(), r), Bank::withdrawMoney);
 }
-// Created by Andrii on 11/6/2022.
-//
 
-#include "signedConnection.h"
+SignedConnection::SignedConnection(const ConnectionDetails &details) : _details(details) {}

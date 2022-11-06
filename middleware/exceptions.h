@@ -37,4 +37,17 @@ public:
     }
 };
 
+#include "types.h"
+
+class UnexpectedException{
+private:
+    String _message;
+public:
+    explicit UnexpectedException(const String &message) : _message(message) {}
+
+    const String &message() const {
+        return _message;
+    }
+};
+
 #endif //UPA_ATM_EXCEPTIONS_H

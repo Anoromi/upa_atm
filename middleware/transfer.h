@@ -31,15 +31,6 @@ private:
     uint _money;
     bool _afterTariff;
 public:
-//    TransferRequest(
-//            Credentials from,
-//            Card destination,
-//            uint money,
-//            bool afterTariff
-//    ) : _from(from), _destination(destination), _money(money), _afterTariff(afterTariff) {}
-//
-//    Credentials& from() {return _from;}
-//    Card& destination() {return _destination;}
 };
 
 #endif //BOOBLEEQUE_ATM_TRANSFER_H

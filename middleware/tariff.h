@@ -22,6 +22,7 @@ public:
     inline uint getLeftOver(uint money) const { return getLeftOver_v(money); };
 
     inline Tariff() {}
+
     virtual ~Tariff() {}
 };
 
@@ -33,14 +34,14 @@ public:
     explicit inline PercentageTariff(double percentage) : Tariff(), _percentage(percentage) {}
 
 private:
-    inline virtual String getTariff_v(uint money) const override {
+    inline String getTariff_v(uint money) const override {
         std::ostringstream st;
         st << _percentage;
         return st.str();
     }
 
-    inline virtual uint getLeftOver_v(uint money) const override {
-        return money * (uint)(_percentage * 100) / 100;
+    inline uint getLeftOver_v(uint money) const override {
+        return money * (uint) (_percentage * 100) / 100;
     }
 };
 

@@ -24,7 +24,7 @@ public:
 	: _recipientCard(rc == nullptr ? nullptr : std::make_unique<Card>(*rc)),
 	  _senderCard(sc == nullptr ? nullptr : std::make_unique<Card>(*sc)),
 	  _money(money),
-	  _tariff(t == nullptr ? nullptr : std::make_unique<Tariff>(*t),
+	  _tariff(t == nullptr ? nullptr : std::make_unique<Tariff>(*t)),
 	  // date
 	  _description(d == nullptr ? nullptr : std::make_unique<String>(d))
 	{}
@@ -36,7 +36,7 @@ public:
 	inline uint  getMoney() { return _money; }
 	inline Tariff* getTariff() { return _tariff.get(); }
 	// inline Date* getDate() {...}
-	inline String* getDescription() { return desc.get(); }
+	inline String* getDescription() { return _description.get(); }
 };
 
 

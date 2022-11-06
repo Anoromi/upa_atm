@@ -1,28 +1,31 @@
 //
-// Created by Andrii on 10/22/2022.
+// Created by Andrii on 11/6/2022.
 //
 
-#ifndef BOOBLEEQUE_ATM_SIGNEDCONNECTION_H
-#define BOOBLEEQUE_ATM_SIGNEDCONNECTION_H
-
+#ifndef UPA_ATM_SIGNEDCONNECTION_H
+#define UPA_ATM_SIGNEDCONNECTION_H
 #include "transfer.h"
 #include "deposit.h"
+#include "backend/bankProvider.h"
 
 class SignedConnection {
     Credentials _credentials;
+    Bank& bank = BankProvider::getBank();
 public:
+    explicit SignedConnection(const Credentials &credentials);
+
     TransferDetails getTransferDetails(const TransferRequest &);
 
     void transferMoney(const TransferRequest &);
 
-    DepositDetails getDepositDetails(const DepositRequest &);
-
-    void depositMoney(const DepositRequest &);
-
-    WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &);
 
     void withdrawMoney(const WithdrawalRequest &);
 
+    DepositDetails getDepositDetails(const DepositRequest &r);
 
+    void depositMoney(const DepositRequest &r);
+
+    WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &r);
 };
-#endif //BOOBLEEQUE_ATM_SIGNEDCONNECTION_H
+
+#endif //UPA_ATM_SIGNEDCONNECTION_H

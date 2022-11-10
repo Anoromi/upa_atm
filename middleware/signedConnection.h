@@ -32,4 +32,16 @@ public:
     inline const Credentials& credentials() const { return _details.getCredentials();}
 };
 
+class ParentConnection {
+private:
+    ConnectionDetails _details;
+    ChildCard _childCard;
+    Bank bank = BankProvider::getBank();
+public:
+
+
+    inline const Credentials& credentials() const { return _details.getCredentials();}
+
+   void limitChildMoney(uint money)
+};
 #endif //UPA_ATM_SIGNEDCONNECTION_H

@@ -67,9 +67,9 @@ private:
 public:
     Credentials(Card card, Pin pin) : _card(card), _pin(pin) {}
 
-    const Card &card() const { return _card; }
+    inline const Card &card() const { return _card; }
 
-    const Pin &pin() const { return _pin; }
+    inline const Pin &pin() const { return _pin; }
 };
 
 template<typename T>

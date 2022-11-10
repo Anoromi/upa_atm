@@ -16,38 +16,38 @@ private:
 
     public:
 
-        bool areValidCredentials(const Credentials&);
+        bool areValidCredentials(const Credentials &);
 
-        TransferDetails getTransferDetails(const TransferRequest &);
+        TransferDetails getTransferDetails(const Credentials &, const TransferRequest &);
 
-        void transferMoney(const TransferRequest &);
+        void transferMoney(const Credentials &, const TransferRequest &);
 
-        DepositDetails getDepositDetails(const DepositRequest &);
+        DepositDetails getDepositDetails(const Credentials &, const DepositRequest &);
 
-        void depositMoney(const DepositRequest &);
+        void depositMoney(const Credentials &, const DepositRequest &);
 
-        WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &);
+        WithdrawalDetails getWithdrawalDetails(const Credentials &, const WithdrawalRequest &);
 
-        void withdrawMoney(const WithdrawalRequest &);
+        void withdrawMoney(const Credentials &, const WithdrawalRequest &);
 
-
+        void limitChildMoney(const Credentials &, const Card &card, const uint &money);
 
     };
 
     InternalBank _internalBank;
 public:
-    template<typename T, typename R = void>
-    using Request = R (InternalBank::*)(const T &);
+    template<typename R, typename... Ad>
+    using Request = R (InternalBank::*)(const Credentials &, const Ad &...);
 
-    template<typename T, typename R>
-    inline R authorizedCall(Authorized<T> a, Request<T, R> request) {
-        if (!_internalBank.areValidCredentials(a.credentials())) {
+    template<typename R, typename... Ad>
+    R authorizedCall(const Credentials &cr, Request<R, Ad...> request, const Ad &... ar) {
+        if (!_internalBank.areValidCredentials(cr)) {
             throw UnexpectedException("Credentials aren't valid");
         }
-        return (_internalBank.*request)(a.value());
+        return (_internalBank.*request)(cr, ar...);
     }
 
-    inline bool areValidCredentials(const Credentials& c) {
+    inline bool areValidCredentials(const Credentials &c) {
         return _internalBank.areValidCredentials(c);
     }
 
@@ -55,12 +55,13 @@ public:
 private:
 
 public:
-    constexpr static Bank::Request<TransferRequest, TransferDetails> getTransferDetails = &InternalBank::getTransferDetails;
-    constexpr static Bank::Request<TransferRequest> transferMoney = &InternalBank::transferMoney;
-    constexpr static Bank::Request<DepositRequest, DepositDetails> getDepositDetails = &InternalBank::getDepositDetails;
-    constexpr static Bank::Request<DepositRequest> depositMoney = &InternalBank::depositMoney;
-    constexpr static Bank::Request<WithdrawalRequest, WithdrawalDetails> getWithdrawalDetails = &InternalBank::getWithdrawalDetails;
-    constexpr static Bank::Request<WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
+    constexpr static Bank::Request<TransferDetails, TransferRequest> getTransferDetails = &InternalBank::getTransferDetails;
+    constexpr static Bank::Request<void, TransferRequest> transferMoney = &InternalBank::transferMoney;
+    constexpr static Bank::Request<DepositDetails, DepositRequest> getDepositDetails = &InternalBank::getDepositDetails;
+    constexpr static Bank::Request<void, DepositRequest> depositMoney = &InternalBank::depositMoney;
+    constexpr static Bank::Request<WithdrawalDetails, WithdrawalRequest> getWithdrawalDetails = &InternalBank::getWithdrawalDetails;
+    constexpr static Bank::Request<void, WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
+    constexpr static Bank::Request<void, Card, uint> limitChildMoney = &InternalBank::limitChildMoney;
 };
 
 

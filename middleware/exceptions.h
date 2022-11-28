@@ -50,4 +50,15 @@ public:
     }
 };
 
+class BadRecipient {
+public:
+    explicit BadRecipient(const Card &card) : _card(card) {}
+
+    const Card &getCard() const {
+        return _card;
+    }
+
+private:
+    Card _card;
+};
 #endif //UPA_ATM_EXCEPTIONS_H

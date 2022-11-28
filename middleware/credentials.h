@@ -20,6 +20,8 @@ public:
     Card(ullong cardNumber);
 
     Card(char numbers[16]);
+
+    ullong getCardNumber() const;
 };
 
 
@@ -48,6 +50,8 @@ public:
     class TooBigNumber;
 
     Pin(ushort pin);
+
+    ushort getPin() const;
 
 };
 

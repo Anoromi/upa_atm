@@ -42,6 +42,6 @@ public:
 
     inline const Credentials& credentials() const { return _details.getCredentials();}
 
-   void limitChildMoney(uint money)
+   void limitChildMoney(uint money);
 };
 #endif //UPA_ATM_SIGNEDCONNECTION_H

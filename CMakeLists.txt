@@ -16,7 +16,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools Sql)
 
 set(TS_FILES upa_atm_uk_UA.ts)
 
@@ -27,7 +27,7 @@ set(PROJECT_SOURCES
         mainwindow.ui
         ${TS_FILES}
         middleware/credentials.h middleware/credentials.cpp middleware/transfer.cpp middleware/transfer.h middleware/types.h middleware/tariff.cpp middleware/tariff.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/deposit.h
-        middleware/exceptions.h backend/bank.h backend/bankProvider.h backend/bankProvider.cpp middleware/unsignedConnection.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/connectionDetails.h)
+        middleware/exceptions.h backend/bank.h backend/bankProvider.h backend/bankProvider.cpp middleware/unsignedConnection.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/connectionDetails.h backend/user_card.h)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(upa_atm
@@ -57,6 +57,7 @@ else ()
 endif ()
 
 target_link_libraries(upa_atm PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(upa_atm PRIVATE Qt${QT_VERSION_MAJOR}::Sql)
 
 set_target_properties(upa_atm PROPERTIES
         MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

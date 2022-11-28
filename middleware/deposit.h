@@ -12,10 +12,8 @@ class DepositRequest {
 public:
     Credentials _from;
     uint _money;
-    bool _afterTariff;
 
-    inline DepositRequest(Credentials from, uint money, bool afterTariff) : _from(from), _money(money),
-                                                                            _afterTariff(afterTariff) {}
+    inline DepositRequest(Credentials from, uint money, bool afterTariff) : _from(from), _money(money) {}
 
     const Credentials &getFrom() const {
         return _from;
@@ -25,26 +23,32 @@ public:
         return _money;
     }
 
-    bool isAfterTariff() const {
-        return _afterTariff;
-    }
-
 };
 
 class DepositDetails {
+private:
     uint _money;
     Unique<Tariff> _tariff;
-
-    inline DepositDetails(uint money, Unique<Tariff> tariff) : _money(money), _tariff(std::move(tariff)) {}
+    uint _previousBalance;
 
 public:
+    DepositDetails(uint money, Unique<Tariff> &&tariff, uint resultingBalance) : _money(money),
+                                                                                 _tariff(std::move(tariff)),
+                                                                                 _previousBalance(
+                                                                                         resultingBalance) {}
+
     uint getMoney() const {
         return _money;
     }
 
     const Unique<Tariff> &getTariff() const {
         return _tariff;
-    };
+    }
+
+    uint getPreviousBalance() const {
+        return _previousBalance;
+    }
+
 };
 
 class WithdrawalRequest {

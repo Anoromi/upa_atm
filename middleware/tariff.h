@@ -21,6 +21,7 @@ public:
 
     inline uint getLeftOver(uint money) const { return getLeftOver_v(money); };
 
+
     inline Tariff() {}
 
     virtual ~Tariff() {}
@@ -33,6 +34,10 @@ private:
 public:
     explicit inline PercentageTariff(double percentage) : Tariff(), _percentage(percentage) {}
 
+    inline uint getInitial(uint tariffed) const {
+        return tariffed / (uint) (_percentage * 100) * 100;
+    }
+
 private:
     inline String getTariff_v(uint money) const override {
         std::ostringstream st;
@@ -43,6 +48,7 @@ private:
     inline uint getLeftOver_v(uint money) const override {
         return money * (uint) (_percentage * 100) / 100;
     }
+
 };
 
 class WholeTariff : public Tariff {
@@ -61,6 +67,7 @@ private:
     inline uint getLeftOver_v(uint money) const override {
         return money - _loss;
     }
+
 };
 
 #endif //BOOBLEEQUE_ATM_TARIFF_H

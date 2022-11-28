@@ -23,9 +23,32 @@ public:
             Unique<Tariff> tariff
     ) : _recipientName(recipientName), _recipientCard(recipientCard), _money(money), _tariff(std::move(tariff)) {
     }
+
+    const String &getRecipientName() const {
+        return _recipientName;
+    }
+
+    const Card &getRecipientCard() const {
+        return _recipientCard;
+    }
+
+    uint getMoney() const {
+        return _money;
+    }
+
+    const Tariff &getTariff() const {
+        return *_tariff.get();
+    }
 };
 
 class TransferRequest {
+public:
+    const Card &getDestination() const;
+
+    uint getMoney() const;
+
+    bool isAfterTariff() const;
+
 private:
     Card _destination;
     uint _money;

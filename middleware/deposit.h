@@ -41,8 +41,8 @@ public:
         return _money;
     }
 
-    const Unique<Tariff> &getTariff() const {
-        return _tariff;
+    const Tariff &getTariff() const {
+        return *_tariff.get();
     }
 
     uint getPreviousBalance() const {

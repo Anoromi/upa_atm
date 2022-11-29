@@ -25,14 +25,16 @@ private:
 
         uint cardBalance(const Card &c) {
             QSqlQuery query;
-            query.prepare("SELECT balance FROM Card WHERE number = ?");
+            query.prepare("SELECT balance FROM card WHERE number = ?");
             query.addBindValue(c.getCardNumber());
+            query.next();
+            return query.value(0).toUInt();
         }
 
         void addMoney(const Card &c, uint change) {
             uint balance = cardBalance(c);
             QSqlQuery query(_db);
-            query.prepare("UPDATE Card SET balance = ? WHERE number = ?");
+            query.prepare("UPDATE card SET balance = ? WHERE number = ?");
             query.addBindValue(balance + change);
             query.addBindValue(c.getCardNumber());
             if (!query.exec()) {
@@ -46,12 +48,33 @@ private:
                 throw UnexpectedException("Trying to remove too much money");
             }
             QSqlQuery query(_db);
-            query.prepare("UPDATE Card SET balance = ? WHERE number = ?");
+            query.prepare("UPDATE card SET balance = ? WHERE number = ?");
             query.addBindValue(balance - change);
             query.addBindValue(c.getCardNumber());
             if (!query.exec()) {
                 throw UnexpectedException("Error adding money to card");
             }
+        }
+
+        void addTransaction(std::optional<Card> sender, std::optional<Card> receiver, uint amount, uint fee) {
+            if (sender.has_value()) {
+                removeMoney(sender.value(), amount);
+            }
+            if (receiver.has_value()) {
+                addMoney(receiver.value(), amount - fee);
+            }
+            QSqlQuery transAdd(_db);
+            transAdd.prepare(
+                    "INSERT INTO transaction (sender_id, receiver_id, amount, fee, date) VALUES (?, ?, ?, ?, ?)");
+            if (sender.has_value())
+                transAdd.addBindValue(sender.value().getCardNumber());
+            else transAdd.addBindValue(NULL);
+            if (sender.has_value())
+                transAdd.addBindValue(receiver.value().getCardNumber());
+            else transAdd.addBindValue(NULL);
+            transAdd.addBindValue(amount);
+            transAdd.addBindValue(fee);
+            transAdd.addBindValue((ullong) std::chrono::system_clock::now().time_since_epoch().count());
         }
 
     public:
@@ -62,7 +85,7 @@ private:
 
         bool areValidCredentials(const Credentials &c) {
             QSqlQuery query(_db);
-            query.prepare("SELECT 1 FROM Card WHERE number = ? AND pin = ?");
+            query.prepare("SELECT 1 FROM card WHERE number = ? AND pin = ?");
             query.addBindValue(c.card().getCardNumber());
             query.addBindValue(c.pin().getPin());
             query.exec();
@@ -72,7 +95,7 @@ private:
 
         TransferDetails getTransferDetails(const Credentials &c, const TransferRequest &request) {
             QSqlQuery getReceiver(_db);
-            getReceiver.prepare("SELECT (number,holder_id) FROM Card WHERE number = ?");
+            getReceiver.prepare("SELECT (number,holder_id) FROM card WHERE number = ?");
             getReceiver.addBindValue(request.getDestination().getCardNumber());
             getReceiver.exec();
             if (!getReceiver.next()) {
@@ -81,7 +104,7 @@ private:
             const ullong rNumber = getReceiver.value(0).toULongLong();
             const ullong rHolder = getReceiver.value(1).toULongLong();
             QSqlQuery getHolderName(_db);
-            getHolderName.prepare("SELECT (name, surname) FROM Holder WHERE id = ?");
+            getHolderName.prepare("SELECT (name, surname) FROM holder WHERE id = ?");
             getHolderName.addBindValue(rHolder);
             getHolderName.exec();
             if (!getHolderName.next()) {
@@ -113,14 +136,16 @@ private:
         void transferMoney(const Credentials &c, const TransferRequest &request) {
             TransferDetails details = getTransferDetails(c, request);
             _db.transaction();
-            removeMoney(c.card(), details.getMoney());
+//            removeMoney(c.card(), details.getMoney());
+            addTransaction(c.card(), request.getDestination().getCardNumber(), details.getMoney(),
+                           details.getTariff().getFee(details.getMoney()));
             addMoney(request.getDestination(), details.getMoney());
             _db.commit();
         }
 
-        DepositDetails getDepositDetails(const Credentials & c, const DepositRequest & request) {
+        DepositDetails getDepositDetails(const Credentials &c, const DepositRequest &request) {
             QSqlQuery query(_db);
-            query.prepare("SELECT balance FROM Card WHERE number = ?");
+            query.prepare("SELECT balance FROM card WHERE number = ?");
             query.addBindValue(c.card().getCardNumber());
             query.exec();
             query.next();
@@ -128,10 +153,11 @@ private:
             return {request.getMoney(), Unique<Tariff>(new WholeTariff(10)), previousBalance};
         }
 
-        void depositMoney(const Credentials & c, const DepositRequest & request) {
+        void depositMoney(const Credentials &c, const DepositRequest &request) {
             DepositDetails details = getDepositDetails(c, request);
             _db.transaction();
-            addMoney(c.card(), request.getMoney());
+            addTransaction(c.card(), std::optional<Card>(), details.getMoney(),
+                           details.getTariff().getFee(details.getMoney()));
             _db.transaction();
         }
 

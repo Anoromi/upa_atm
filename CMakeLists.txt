@@ -24,6 +24,9 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
+        login.h
+        login.cpp
+        login.ui
         mainwindow.ui
         ${TS_FILES}
         middleware/credentials.h middleware/credentials.cpp middleware/transfer.cpp middleware/transfer.h middleware/types.h middleware/tariff.cpp middleware/tariff.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/deposit.h

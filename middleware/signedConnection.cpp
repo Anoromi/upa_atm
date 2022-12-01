@@ -34,3 +34,4 @@ SignedConnection::SignedConnection(const ConnectionDetails &details) : _details(
 void ParentConnection::limitChildMoney(uint money) {
     bank.authorizedCall(credentials(), Bank::limitChildMoney, _childCard.getCard(), money);
 }
+

@@ -37,3 +37,23 @@ DBTransaction DBTransaction::selectById(ullong id, const QSqlDatabase &db)
     }
     throw DatabaseException("No transaction with given id."); // todo replace with more specific exception & add id to msg
 }
+
+Vector<DBTransaction> DBTransaction::selectSpendingsByPeriod(ullong card_id,
+                                                     QDateTime start,
+                                                     QDateTime end,
+                                                     const QSqlDatabase& db)
+{
+    SqlQuery query(db);
+    query.prepare("SELECT * FROM bank_transaction "
+                  "WHERE sender_id = ? AND (time BETWEEN ? AND ?)");
+    int i = 0;
+    query.bindValue(i++, card_id);
+    query.bindValue(i++, start);
+    query.bindValue(i++, end);
+    query.exec();
+    Vector<DBTransaction> result;
+    while (query.next()) {
+        result.push_back(query.record());
+    }
+    return result;
+}

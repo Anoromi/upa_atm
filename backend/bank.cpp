@@ -4,10 +4,26 @@
 #include "backend/database/db_card.h"
 #include "backend/database/db_transaction.h"
 #include "backend/database/db_category.h"
+#include "backend/database/db_parent_relation.h"
 #include "qsqlquery.h"
 
 uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
-    throw UnexpectedException(L"Unimplemented");
+    Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(c.card().getCardNumber());
+    ullong balance = cardBalance(c.card());
+    if (!rel.has_value()) { // it is not a child card
+        return balance;
+    }
+    ullong dayLimit = rel.value().getDayLimit().value();
+    Vector<DBTransaction> todayTransactions =
+            DBTransaction::selectSpendingsByPeriod(c.card().getCardNumber(),
+                                                   QDate::currentDate().startOfDay(),
+                                                   QDateTime::currentDateTime(),
+                                                   _db);
+    ullong todaySpendings = 0;
+    for (auto& t : todayTransactions) {
+        todaySpendings += t.getAmount().value();
+    }
+    return dayLimit - todaySpendings;
 }
 
 uint Bank::InternalBank::cardBalance(const Card &c) {
@@ -70,7 +86,6 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
     } catch (...) {
         throw BadRecipient(request.getDestination());
     }
-    const ullong rNumber = receiver.getNumber().value();
     const ullong rHolder = receiver.getHolderId().value();
     DBHolder receiverInfo;
     try {

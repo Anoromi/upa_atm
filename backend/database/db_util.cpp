@@ -35,8 +35,8 @@ void clearDatabase()
     QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.exec("DROP TABLE IF EXISTS parent_relation");
-    query.exec("DROP TABLE IF EXISTS card");
     query.exec("DROP TABLE IF EXISTS bank_transaction");
+    query.exec("DROP TABLE IF EXISTS card");
     query.exec("DROP TABLE IF EXISTS category");
     query.exec("DROP TABLE IF EXISTS holder");
 }

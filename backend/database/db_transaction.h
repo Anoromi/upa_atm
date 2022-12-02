@@ -61,6 +61,10 @@ public:
     static ullong create(const DBTransaction& card, const QSqlDatabase& db = QSqlDatabase::database());
     static Vector<DBTransaction> selectAll(const QSqlDatabase& db = QSqlDatabase::database());
     static DBTransaction selectById(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
+    static Vector<DBTransaction> selectSpendingsByPeriod(ullong card_id,
+                                                         QDateTime start,
+                                                         QDateTime end,
+                                                         const QSqlDatabase& db = QSqlDatabase::database());
 };
 
 

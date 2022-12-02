@@ -15,3 +15,7 @@ uint TransferRequest::getMoney() const {
 bool TransferRequest::isAfterTariff() const {
     return _afterTariff;
 }
+
+TransferRequest::TransferRequest(const Card &destination, uint money, bool afterTariff) : _destination(destination),
+                                                                                          _money(money),
+                                                                                          _afterTariff(afterTariff) {}

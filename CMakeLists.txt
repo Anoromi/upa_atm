@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.5)
 
 project(upa_atm VERSION 0.1 LANGUAGES CXX)
 
-#file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/config LOCAL_PKG_CONFIG_PATH)
-#
-#set(CMAKE_PREFIX_PATH ${LOCAL_PKG_CONFIG_PATH})
+file(STRINGS ${CMAKE_CURRENT_LIST_DIR}/config LOCAL_PKG_CONFIG_PATH)
+
+set(CMAKE_PREFIX_PATH ${LOCAL_PKG_CONFIG_PATH})
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -30,7 +30,12 @@ set(PROJECT_SOURCES
         mainwindow.ui
         ${TS_FILES}
         middleware/credentials.h middleware/credentials.cpp middleware/transfer.cpp middleware/transfer.h middleware/types.h middleware/tariff.cpp middleware/tariff.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/deposit.h
-        middleware/exceptions.h backend/bank.h backend/bankProvider.h backend/bankProvider.cpp middleware/unsignedConnection.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/connectionDetails.h backend/user_card.h)
+        middleware/exceptions.h backend/bank.h backend/bankProvider.h backend/bankProvider.cpp middleware/unsignedConnection.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/connectionDetails.h backend/user_card.h
+        transaction_screen.h transaction_screen.cpp transaction_screen.ui middleware/converters.cpp middleware/converters.h frontend/error_message.cpp frontend/error_message.h
+        transaction_details.h transaction_details.cpp transaction_details.ui
+        success_screen.h success_screen.cpp success_screen.ui
+        navigationwindow.h navigationwindow.cpp navigationwindow.ui
+    )
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(upa_atm

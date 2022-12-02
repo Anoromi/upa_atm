@@ -20,7 +20,7 @@ private:
         QSqlDatabase _db;
 
         llong getExpendableMoney(const Credentials &c) {
-            throw UnexpectedException("Unimplemented");
+            throw UnexpectedException(L"Unimplemented");
         }
 
         uint cardBalance(const Card &c) {
@@ -38,21 +38,21 @@ private:
             query.addBindValue(balance + change);
             query.addBindValue(c.getCardNumber());
             if (!query.exec()) {
-                throw UnexpectedException("Error adding money to card");
+                throw UnexpectedException(L"Error adding money to card");
             }
         }
 
         void removeMoney(const Card &c, uint change) {
             uint balance = cardBalance(c);
             if (balance < change) {
-                throw UnexpectedException("Trying to remove too much money");
+                throw UnexpectedException(L"Trying to remove too much money");
             }
             QSqlQuery query(_db);
             query.prepare("UPDATE card SET balance = ? WHERE number = ?");
             query.addBindValue(balance - change);
             query.addBindValue(c.getCardNumber());
             if (!query.exec()) {
-                throw UnexpectedException("Error adding money to card");
+                throw UnexpectedException(L"Error adding money to card");
             }
         }
 
@@ -68,10 +68,10 @@ private:
                     "INSERT INTO transaction (sender_id, receiver_id, amount, fee, date) VALUES (?, ?, ?, ?, ?)");
             if (sender.has_value())
                 transAdd.addBindValue(sender.value().getCardNumber());
-            else transAdd.addBindValue(NULL);
+            else transAdd.addBindValue(QVariant::ULongLong);
             if (sender.has_value())
                 transAdd.addBindValue(receiver.value().getCardNumber());
-            else transAdd.addBindValue(NULL);
+            else transAdd.addBindValue(QVariant::ULongLong);
             transAdd.addBindValue(amount);
             transAdd.addBindValue(fee);
             transAdd.addBindValue((ullong) std::chrono::system_clock::now().time_since_epoch().count());
@@ -108,9 +108,9 @@ private:
             getHolderName.addBindValue(rHolder);
             getHolderName.exec();
             if (!getHolderName.next()) {
-                throw UnexpectedException("Holder with id wasn't found");
+                throw UnexpectedException(L"Holder with id wasn't found");
             }
-            String holderName = (getHolderName.value(0).toString() + getHolderName.value(1).toString()).toStdString();
+            String holderName = (getHolderName.value(0).toString() + getHolderName.value(1).toString()).toStdWString();
 
             PercentageTariff *tariff = new PercentageTariff(0.5);
             uint actualInitial;
@@ -177,7 +177,7 @@ public:
     template<typename R, typename... Ad>
     R authorizedCall(const Credentials &cr, Request<R, Ad...> request, const Ad &... ar) {
         if (!_internalBank.areValidCredentials(cr)) {
-            throw UnexpectedException("Credentials aren't valid");
+            throw UnexpectedException(L"Credentials aren't valid");
         }
         return (_internalBank.*request)(cr, ar...);
     }

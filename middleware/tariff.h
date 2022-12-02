@@ -42,7 +42,7 @@ public:
 
 private:
     inline String getTariff_v(uint money) const override {
-        std::ostringstream st;
+        std::wstringstream st;
         st << _percentage;
         return st.str();
     }
@@ -65,7 +65,7 @@ public:
 
 private:
     inline String getTariff_v(uint money) const override {
-        std::ostringstream st;
+        std::wstringstream st;
         st << _loss;
         return st.str();
     }

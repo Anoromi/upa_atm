@@ -19,7 +19,7 @@ public:
 
     Card(ullong cardNumber);
 
-    Card(char numbers[16]);
+//    Card(char numbers[16]);
 
     ullong getCardNumber() const;
 };

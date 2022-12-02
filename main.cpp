@@ -14,8 +14,8 @@
 #include <QSqlQuery>
 #include <vector>
 #include "backend/database/SqlQuery.h"
-#include "backend/database/sqltransaction.h"
 #include "backend/database/db_util.h"
+
 void selectAllHolders()
 {
     Vector<DBHolder> holders = DBHolder::selectAll();
@@ -27,29 +27,6 @@ void selectAllHolders()
                     h.getPhoneNumber().value();
     }
 };
-
-void transactionTest()
-{
-    {
-        SqlTransaction transaction;
-        qDebug() << "holders:" << DBHolder::selectAll().size();
-        qDebug() << "cards:" << DBCard::selectAll().size();
-        try {
-            DBHolder::create(DBHolder(0, "holder_test", "holder_test", "test number"), transaction);
-            DBCard::create(DBCard(1234123412341234, 1234, QDate(), 3, 1000,1), transaction);
-        } catch (...) {
-            qDebug() << "rollback!!";
-            transaction.rollback();
-        }
-        qDebug() << "holders:" << DBHolder::selectAll().size();
-        qDebug() << "cards:" << DBCard::selectAll().size();
-        try {
-            DBHolder::create(DBHolder(0, "holder_test", "holder_test", "test number"), transaction);
-        } catch(...) {
-            qDebug() << "we cannot use this transaction!";
-        }
-    }
-}
 
 void dbtest()
 {
@@ -106,7 +83,6 @@ int main(int argc, char *argv[])
     } catch (const DatabaseException& ex) {
         qDebug() << "ERROR: " << ex.what();
     }
-    transactionTest();
     return a.exec();
 //    return 0;
 }

@@ -8,6 +8,7 @@
 #include <QSqlDatabase>
 #include "middleware/deposit.h"
 #include "middleware/transfer.h"
+#include "middleware/exceptions.h"
 
 class Bank {
 private:

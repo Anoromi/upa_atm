@@ -6,9 +6,10 @@ NavigationWindow::NavigationWindow(QWidget *parent) :
         QMainWindow(parent),
         ui(new Ui::NavigationWindow) {
     ui->setupUi(this);
-    ui->navigationStack->addWidget(new Login([this](SignedConnection s) {
+    ui->navigationStack->addWidget(new Login(UnsignedConnection(), [this](SignedConnection s) {
 
 //        ui->navigationStack->insertWidget(0, );
+
     }));
     ui->navigationStack->setCurrentIndex(0);
 }

@@ -41,11 +41,11 @@ public:
 
     void to(DBHolder& other) const;
 
-    static ullong create(const DBHolder& card);
-    static Vector<DBHolder> selectAll();
-    static DBHolder selectById(ullong id);
-    static void update(const DBHolder& card);
-    static void remove(ullong id);
+    static ullong create(const DBHolder& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static Vector<DBHolder> selectAll(const QSqlDatabase& db = QSqlDatabase::database());
+    static DBHolder selectById(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
+    static void update(const DBHolder& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static void remove(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
 };
 
 

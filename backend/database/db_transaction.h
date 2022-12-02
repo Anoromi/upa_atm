@@ -54,9 +54,9 @@ public:
 
     //void to(DBHolder& other) const;
 
-    static ullong create(const DBTransaction& card);
-    static Vector<DBTransaction> selectAll();
-    static DBTransaction selectById(ullong id);
+    static ullong create(const DBTransaction& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static Vector<DBTransaction> selectAll(const QSqlDatabase& db = QSqlDatabase::database());
+    static DBTransaction selectById(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
     //static void update(const DBHolder& card);
     //static void remove(ullong id);
 };

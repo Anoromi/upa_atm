@@ -86,7 +86,7 @@ inline void createTableParentRelation(QSqlDatabase& db)
     static const char* stmttext = "CREATE TABLE IF NOT EXISTS parent_relation ("
                                   "parent_card_id INTEGER NOT NULL,"
                                   "child_card_id INTEGER NOT NULL,"
-                                  "day_limit INTEGER NOT NULL,"
+                                  "day_limit INTEGER,"
                                   "PRIMARY KEY (child_card_id),"
                                   "FOREIGN KEY (parent_card_id) REFERENCES card (number)"
                                   "ON DELETE CASCADE ON UPDATE CASCADE,"

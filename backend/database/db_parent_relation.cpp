@@ -15,28 +15,27 @@ void DBParentRelation::to(DBParentRelation& other) const
     }
 }
 
-ullong DBParentRelation::create(const DBParentRelation& parentRelation)
+ullong DBParentRelation::create(const DBParentRelation& parentRelation, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("INSERT INTO parent_relation (parent_card_id, child_card_id, day_limit)"
                   "VALUES (?,?,?)");
     int i = 0;
     query.bindValue(i++, parentRelation.getParentCardId().value());
     query.bindValue(i++, parentRelation.getChildCardId().value());
-    query.bindValue(i++, parentRelation.getDayLimit().value());
+    query.bindValue(i++, parentRelation.getDayLimit() ?
+                        parentRelation.getDayLimit().value() : QVariant());
     query.exec();
     return query.lastInsertId().toLongLong();
 }
 
-Vector<DBParentRelation> DBParentRelation::selectAll()
+Vector<DBParentRelation> DBParentRelation::selectAll(const QSqlDatabase &db)
 {
-    return selectAllT<DBParentRelation>("parent_relation");
+    return selectAllT<DBParentRelation>("parent_relation", db);
 }
 
-Vector<DBParentRelation> DBParentRelation::selectByParentId(ullong id)
+Vector<DBParentRelation> DBParentRelation::selectByParentId(ullong id, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("SELECT * FROM parent_relation WHERE parent_card_id = ?");
     query.bindValue(0, id);
@@ -48,9 +47,8 @@ Vector<DBParentRelation> DBParentRelation::selectByParentId(ullong id)
     return result;
 }
 
-DBParentRelation DBParentRelation::selectByChildId(ullong id)
+DBParentRelation DBParentRelation::selectByChildId(ullong id, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("SELECT * FROM parent_relation WHERE child_card_id = ?");
     query.bindValue(0, id);
@@ -61,14 +59,13 @@ DBParentRelation DBParentRelation::selectByChildId(ullong id)
     throw DatabaseException("No child card with given id."); // todo replace with more specific exception & add id to msg
 }
 
-void DBParentRelation::update(const DBParentRelation& parentRelation)
+void DBParentRelation::update(const DBParentRelation& parentRelation, const QSqlDatabase &db)
 {
     if (!parentRelation.getChildCardId()) {
         throw DatabaseException("Cannot update parent relation with unknown child id.");
     }
-    DBParentRelation old = DBParentRelation::selectByChildId(parentRelation.getChildCardId().value());
+    DBParentRelation old = DBParentRelation::selectByChildId(parentRelation.getChildCardId().value(), db);
     parentRelation.to(old);
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("UPDATE parent_relation SET "
                   "parent_card_id = ?,"
@@ -81,9 +78,8 @@ void DBParentRelation::update(const DBParentRelation& parentRelation)
     query.exec();
 }
 
-void DBParentRelation::remove(ullong id)
+void DBParentRelation::remove(ullong id, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("DELETE FROM parent_relation WHERE child_card_id = ?");
     query.bindValue(0, id);

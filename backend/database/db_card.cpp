@@ -24,11 +24,8 @@ void DBCard::to(DBCard& other) const {
     }
 }
 
-
-
-ullong DBCard::create(const DBCard& card)
+ullong DBCard::create(const DBCard& card, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("INSERT INTO card (number, pin, expiration_date, holder_id, balance, category_id)"
                   "VALUES (?,?,?,?,?,?)");
@@ -42,14 +39,13 @@ ullong DBCard::create(const DBCard& card)
     return query.lastInsertId().toLongLong();
 }
 
-Vector<DBCard> DBCard::selectAll()
+Vector<DBCard> DBCard::selectAll(const QSqlDatabase &db)
 {
-    return selectAllT<DBCard>("card");
+    return selectAllT<DBCard>("card", db);
 }
 
-DBCard DBCard::selectByNumber(ullong number)
+DBCard DBCard::selectByNumber(ullong number, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("SELECT * FROM card WHERE number = ?");
     query.bindValue(0,number);
@@ -60,14 +56,13 @@ DBCard DBCard::selectByNumber(ullong number)
     throw DatabaseException("No card with given id."); // todo replace with more specific exception & add id to msg
 }
 
-void DBCard::update(const DBCard& card)
+void DBCard::update(const DBCard& card, const QSqlDatabase &db)
 {
     if (!card.getNumber()) {
         throw DatabaseException("Cannot update card with unknown id.");
     }
-    DBCard old = DBCard::selectByNumber(card.getNumber().value());
+    DBCard old = DBCard::selectByNumber(card.getNumber().value(), db);
     card.to(old);
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("UPDATE card SET "
                   "pin = ?,"
@@ -85,9 +80,8 @@ void DBCard::update(const DBCard& card)
     query.exec();
 }
 
-void DBCard::remove(ullong number)
+void DBCard::remove(ullong number, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("DELETE FROM card WHERE number = ?");
     query.bindValue(0, number);

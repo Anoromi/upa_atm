@@ -35,11 +35,11 @@ public:
 
     void to(DBCategory& other) const;
 
-    static ullong create(const DBCategory& card);
-    static Vector<DBCategory> selectAll();
-    static DBCategory selectById(ullong id);
-    static void update(const DBCategory& card);
-    static void remove(ullong id);
+    static ullong create(const DBCategory& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static Vector<DBCategory> selectAll(const QSqlDatabase& db = QSqlDatabase::database());
+    static DBCategory selectById(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
+    static void update(const DBCategory& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static void remove(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
 };
 
 

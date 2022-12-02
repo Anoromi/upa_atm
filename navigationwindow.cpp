@@ -27,5 +27,5 @@ void NavigationWindow::pushNav(QWidget *w) {
 }
 
 void NavigationWindow::pushActionsScreen(Shared<SignedConnection> s) {
-    pushNav(new ActionsScreen(s));
+    pushNav(new ActionsScreen(s, [this](auto p) { pushNav(p); }, [this]() { popNav(); }));
 }

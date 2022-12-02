@@ -8,7 +8,7 @@
 #include "qsqlquery.h"
 
 uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
-    Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(c.card().getCardNumber());
+    Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(c.card().getCardNumber(), _db);
     ullong balance = cardBalance(c.card());
     if (!rel.has_value()) { // it is not a child card
         return balance;
@@ -164,6 +164,23 @@ void Bank::InternalBank::withdrawMoney(const Credentials &, const WithdrawalRequ
     throw UnexpectedException(L"not implemented");
 }
 
-void Bank::InternalBank::limitChildMoney(const Credentials &, const Card &card, const uint &money) {
-    throw UnexpectedException(L"not implemented");
+void Bank::InternalBank::limitChildMoney(const Credentials& parentCred, const Card& childCard, const uint& money) {
+    Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(childCard.getCardNumber(), _db);
+    if (rel.has_value()) {
+        DBParentRelation relInfo = rel.value();
+        if (relInfo.getParentCardId() == parentCred.card().getCardNumber())
+        {
+            if (money != relInfo.getDayLimit().value()) {
+                relInfo.setDayLimit(money);
+                DBParentRelation::update(relInfo, _db);
+            }
+        } else {
+            throw UnexpectedException(L"Cannot limit: this card was limited by other user");
+        }
+    } else {
+        DBParentRelation relInfo(parentCred.card().getCardNumber(),
+                                 childCard.getCardNumber(),
+                                 money);
+        DBParentRelation::create(relInfo, _db);
+    }
 }

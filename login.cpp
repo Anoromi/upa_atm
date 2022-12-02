@@ -23,7 +23,13 @@ void Login::on_confirmLogin_clicked() {
         errorMessage(std::get<String>(cardRes));
         return;
     }
-    Pin
+    auto pinRes = parsePin(ui->cardNumberField->text().toStdWString());
+    if (cardRes.index() == 1) {
+        errorMessage(std::get<String>(cardRes));
+        return;
+    }
+    Card card = std::get<Card>(cardRes);
+    Pin pin = std::get<Pin>(pinRes);
 //    auto pinNumber =
 //    if(_uConnection.validateCredentials())
 //    _enter();

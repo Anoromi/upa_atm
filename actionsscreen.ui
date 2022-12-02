@@ -1,21 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <author/>
- <comment/>
- <exportmacro/>
  <class>ActionsScreen</class>
  <widget class="QWidget" name="ActionsScreen">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>844</width>
+    <height>591</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget#ActionsScreen{
+	background: black;
+}</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2">
+   <item row="1" column="0">
+    <widget class="QWidget" name="cardMenu" native="true">
+     <property name="styleSheet">
+      <string notr="true">QWidget#cardMenu {
+	background-color:black;
+}</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3">
+      <item row="2" column="0">
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="text">
+         <string>PushButton</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="pushButton">
+        <property name="text">
+         <string>PushButton</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QWidget" name="cardInfo" native="true">
+     <property name="styleSheet">
+      <string notr="true">QWidget#cardInfo {
+	border-style: outset;
+	border-radius: 10px;
+	border-width: 2px;
+	
+	border-color: red;
+	background-color:black;
+}</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="3" column="0">
+       <widget class="QLabel" name="balanceText">
+        <property name="styleSheet">
+         <string notr="true">QLabel#balanceText {
+	color:red;
+	background: black;
+}</string>
+        </property>
+        <property name="text">
+         <string>Баланс</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="balance">
+        <property name="styleSheet">
+         <string notr="true">QLabel#balance {
+	color:red;
+	background: black;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="cardNumber">
+        <property name="styleSheet">
+         <string notr="true">QLabel#cardNumber {
+	color:red;
+	background: black;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="cardNumberText">
+        <property name="styleSheet">
+         <string notr="true">QLabel#cardNumberText {
+	color: red;
+	background: black;
+}</string>
+        </property>
+        <property name="text">
+         <string>Номер карти</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
  </widget>
- <pixmapfunction/>
+ <resources/>
  <connections/>
 </ui>

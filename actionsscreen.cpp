@@ -6,8 +6,8 @@ ActionsScreen::ActionsScreen(Shared<SignedConnection> &s, std::function<void(QWi
         QWidget(parent),
         ui(new Ui::ActionsScreen),
         s(s),
-        push(push),
-        pop(pop) {
+        _push(std::move(push)),
+        _pop(std::move(pop)) {
     ui->setupUi(this);
 }
 

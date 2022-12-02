@@ -76,3 +76,5 @@ config
 /out
 /.vs
 *.bkp
+/cmake-build-debug/
+/.idea/

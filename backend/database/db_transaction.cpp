@@ -5,14 +5,15 @@
 ullong DBTransaction::create(const DBTransaction& transaction, const QSqlDatabase &db)
 {
     SqlQuery query(db);
-    query.prepare("INSERT INTO bank_transaction (sender_id, receiver_id, amount, time, description)"
-                  "VALUES (?,?,?,?,?)");
+    query.prepare("INSERT INTO bank_transaction (sender_id, receiver_id, amount, fee, time, description)"
+                  "VALUES (?,?,?,?,?,?)");
     int i = 0;
     query.bindValue(i++, transaction.getSenderId() ?
                         transaction.getSenderId().value() : QVariant());
     query.bindValue(i++, transaction.getReceiverId() ?
                         transaction.getReceiverId().value() : QVariant());
     query.bindValue(i++, transaction.getAmount().value());
+    query.bindValue(i++, transaction.getFee().value());
     query.bindValue(i++, transaction.getTime().value());
     query.bindValue(i++, transaction.getDescription() ?
                         transaction.getDescription().value() : QVariant());

@@ -103,6 +103,7 @@ inline void createTableTransaction(QSqlDatabase& db)
                                   "sender_id INTEGER,"
                                   "receiver_id INTEGER,"
                                   "amount INTEGER NOT NULL,"
+                                  "fee INTEGER NOT NULL,"
                                   "time TEXT NOT NULL,"
                                   "description TEXT,"
                                   "FOREIGN KEY (sender_id) REFERENCES card (number)"

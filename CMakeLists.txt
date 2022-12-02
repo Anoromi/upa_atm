@@ -49,8 +49,6 @@ set(PROJECT_SOURCES
         backend/database/db_parent_relation.cpp
         backend/database/db_transaction.cpp
 
-        middleware/credentials.h middleware/credentials.cpp middleware/transfer.cpp middleware/transfer.h middleware/types.h middleware/tariff.cpp middleware/tariff.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/deposit.h
-        middleware/exceptions.h backend/bank.h backend/bank.cpp backend/bankProvider.h backend/bankProvider.cpp middleware/unsignedConnection.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/connectionDetails.h backend/user_card.h
         transaction_screen.h transaction_screen.cpp transaction_screen.ui middleware/converters.cpp middleware/converters.h frontend/error_message.cpp frontend/error_message.h
         transaction_details.h transaction_details.cpp transaction_details.ui
         success_screen.h success_screen.cpp success_screen.ui

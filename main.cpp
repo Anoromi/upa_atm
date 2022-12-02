@@ -35,6 +35,7 @@ void dbtest()
     SqlQuery query(db);
 
     DBHolder holder;
+    holder.setName("Oleg");
     holder.setSurname("olegovich");
     holder.setPhoneNumber("+3800505050505");
     DBHolder::create(holder);

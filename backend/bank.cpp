@@ -142,6 +142,6 @@ uint Bank::InternalBank::cardBalance(const Card &c) {
     return query.value(0).toUInt();
 }
 
-llong Bank::InternalBank::getExpendableMoney(const Credentials &c) {
+uint Bank::InternalBank::getExpendableMoney(const Credentials &c) {
     throw UnexpectedException(L"Unimplemented");
 }

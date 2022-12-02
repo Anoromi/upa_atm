@@ -19,7 +19,7 @@ private:
     private:
         QSqlDatabase _db;
 
-        llong getExpendableMoney(const Credentials &c);
+        uint getExpendableMoney(const Credentials &c);
 
         uint cardBalance(const Card &c);
 

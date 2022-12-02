@@ -37,6 +37,7 @@ public:
     }
 };
 
+	
 class BlockedCard {
 };
 
@@ -64,4 +65,5 @@ public:
 private:
     Card _card;
 };
+
 #endif //UPA_ATM_EXCEPTIONS_H

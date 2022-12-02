@@ -28,6 +28,15 @@
      <height>600</height>
     </rect>
    </property>
+   <property name="styleSheet">
+    <string notr="true">QWidget#verticalWidget {
+	border-color:red;
+	border-width:3px;
+	border-style:inset;
+
+	background-color: black;
+}</string>
+   </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QLabel" name="label">
@@ -41,6 +50,11 @@
        <font>
         <pointsize>36</pointsize>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QLabel#label {
+	color: red;
+}</string>
       </property>
       <property name="text">
        <string>Операція пройдена успішно</string>
@@ -62,6 +76,17 @@
        <font>
         <pointsize>22</pointsize>
        </font>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QPushButton#pushButton {
+	color : rgb(255,0,0);
+	border-style:inset;
+	border-width:2px;
+}
+QPushButton#pushButton:hover {
+	color : black;
+	background:red;
+}</string>
       </property>
       <property name="text">
        <string>Повернутися</string>

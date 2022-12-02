@@ -5,6 +5,8 @@
 #ifndef BOOBLEEQUE_ATM_TRANSFER_H
 #define BOOBLEEQUE_ATM_TRANSFER_H
 
+#include <utility>
+
 #include "credentials.h"
 #include "types.h"
 #include "tariff.h"
@@ -14,14 +16,14 @@ private:
     String _recipientName;
     Card _recipientCard;
     uint _money;
-    Unique<Tariff> _tariff;
+    Shared<Tariff> _tariff;
 public:
     TransferDetails(
-            const String &recipientName,
+            String recipientName,
             const Card &recipientCard,
             const uint money,
-            Unique<Tariff> tariff
-    ) : _recipientName(recipientName), _recipientCard(recipientCard), _money(money), _tariff(std::move(tariff)) {
+            Shared<Tariff> tariff
+    ) : _recipientName(std::move(recipientName)), _recipientCard(recipientCard), _money(money), _tariff(std::move(tariff)) {
     }
 
     const String &getRecipientName() const {
@@ -43,6 +45,8 @@ public:
 
 class TransferRequest {
 public:
+    TransferRequest(const Card &destination, uint money, bool afterTariff);
+
     const Card &getDestination() const;
 
     uint getMoney() const;

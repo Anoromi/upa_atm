@@ -16,7 +16,7 @@ using ullong = unsigned long long;
 using llong = long long;
 
 
-using String = std::string;
+using String = std::wstring;
 template<typename T>
 using Unique = std::unique_ptr<T>;
 

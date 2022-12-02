@@ -1,10 +1,14 @@
 #include "login.h"
+
 #include "backend/database/DatabaseException.h"
 #include "backend/database/db_card.h"
 #include "backend/database/db_category.h"
 #include "backend/database/db_holder.h"
 #include "backend/database/db_parent_relation.h"
 #include "backend/database/db_transaction.h"
+#include "navigationwindow.h"
+
+
 #include <QApplication>
 #include <QSqlDatabase>
 #include <QSqlQuery>
@@ -69,7 +73,7 @@ void dbtest()
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    Login w;
+    NavigationWindow w;
     w.show();
 
     try {

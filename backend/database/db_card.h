@@ -63,11 +63,11 @@ public:
 
     void to(DBCard& other) const;
 
-    static ullong create(const DBCard& card);
-    static Vector<DBCard> selectAll();
-    static DBCard selectByNumber(ullong number);
-    static void update(const DBCard& card);
-    static void remove(ullong number);
+    static ullong create(const DBCard& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static Vector<DBCard> selectAll(const QSqlDatabase& db = QSqlDatabase::database());
+    static DBCard selectByNumber(ullong number, const QSqlDatabase& db = QSqlDatabase::database());
+    static void update(const DBCard& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static void remove(ullong number, const QSqlDatabase& db = QSqlDatabase::database());
 };
 
 #endif // DB_CARD_H

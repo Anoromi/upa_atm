@@ -34,12 +34,12 @@ public:
 
     void to(DBParentRelation& other) const;
 
-    static ullong create(const DBParentRelation& card);
-    static Vector<DBParentRelation> selectAll();
-    static Vector<DBParentRelation> selectByParentId(ullong id);
-    static DBParentRelation selectByChildId(ullong id);
-    static void update(const DBParentRelation& card);
-    static void remove(ullong id);
+    static ullong create(const DBParentRelation& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static Vector<DBParentRelation> selectAll(const QSqlDatabase& db = QSqlDatabase::database());
+    static Vector<DBParentRelation> selectByParentId(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
+    static DBParentRelation selectByChildId(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
+    static void update(const DBParentRelation& card, const QSqlDatabase& db = QSqlDatabase::database());
+    static void remove(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
 };
 
 

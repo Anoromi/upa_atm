@@ -13,9 +13,8 @@ void createDatabaseSchema();
 //const char* getTableName(const char* classname);
 
 template <typename Entity>
-Vector<Entity> selectAllT(const char* table_name)
+Vector<Entity> selectAllT(const char* table_name, const QSqlDatabase& db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.exec(QString("SELECT * FROM ") + QString(table_name));
     Vector<Entity> resultset;

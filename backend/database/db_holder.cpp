@@ -18,9 +18,8 @@ void DBHolder::to(DBHolder& other) const
     }
 }
 
-ullong DBHolder::create(const DBHolder& holder)
+ullong DBHolder::create(const DBHolder& holder, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("INSERT INTO holder (name, surname, phone_number)"
                   "VALUES (?,?,?)");
@@ -32,14 +31,13 @@ ullong DBHolder::create(const DBHolder& holder)
     return query.lastInsertId().toLongLong();
 }
 
-Vector<DBHolder> DBHolder::selectAll()
+Vector<DBHolder> DBHolder::selectAll(const QSqlDatabase &db)
 {
-    return selectAllT<DBHolder>("holder");
+    return selectAllT<DBHolder>("holder", db);
 }
 
-DBHolder DBHolder::selectById(ullong id)
+DBHolder DBHolder::selectById(ullong id, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("SELECT * FROM holder WHERE id = ?");
     query.bindValue(0, id);
@@ -50,14 +48,13 @@ DBHolder DBHolder::selectById(ullong id)
     throw DatabaseException("No holder with given id."); // todo replace with more specific exception & add id to msg
 }
 
-void DBHolder::update(const DBHolder& holder)
+void DBHolder::update(const DBHolder& holder, const QSqlDatabase &db)
 {
     if (!holder.getId()) {
         throw DatabaseException("Cannot update category with unknown id.");
     }
-    DBHolder old = DBHolder::selectById(holder.getId().value());
+    DBHolder old = DBHolder::selectById(holder.getId().value(), db);
     holder.to(old);
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("UPDATE holder SET "
                   "name = ?,"
@@ -72,9 +69,8 @@ void DBHolder::update(const DBHolder& holder)
     query.exec();
 }
 
-void DBHolder::remove(ullong id)
+void DBHolder::remove(ullong id, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("DELETE FROM holder WHERE id = ?");
     query.bindValue(0, id);

@@ -15,9 +15,8 @@ void DBCategory::to(DBCategory& other) const
     }
 }
 
-ullong DBCategory::create(const DBCategory& category)
+ullong DBCategory::create(const DBCategory& category, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("INSERT INTO category (name, fee_rate)"
                   "VALUES (?,?)");
@@ -28,14 +27,13 @@ ullong DBCategory::create(const DBCategory& category)
     return query.lastInsertId().toLongLong();
 }
 
-Vector<DBCategory> DBCategory::selectAll()
+Vector<DBCategory> DBCategory::selectAll(const QSqlDatabase &db)
 {
-    return selectAllT<DBCategory>("category");
+    return selectAllT<DBCategory>("category", db);
 }
 
-DBCategory DBCategory::selectById(ullong id)
+DBCategory DBCategory::selectById(ullong id, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("SELECT * FROM category WHERE id = ?");
     query.bindValue(0, id);
@@ -46,14 +44,13 @@ DBCategory DBCategory::selectById(ullong id)
     throw DatabaseException("No category with given id."); // todo replace with more specific exception & add id to msg
 }
 
-void DBCategory::update(const DBCategory& category)
+void DBCategory::update(const DBCategory& category, const QSqlDatabase &db)
 {
     if (!category.getId()) {
         throw DatabaseException("Cannot update category with unknown id.");
     }
-    DBCategory old = DBCategory::selectById(category.getId().value());
+    DBCategory old = DBCategory::selectById(category.getId().value(), db);
     category.to(old);
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("UPDATE category SET "
                   "name = ?,"
@@ -66,9 +63,8 @@ void DBCategory::update(const DBCategory& category)
     query.exec();
 }
 
-void DBCategory::remove(ullong id)
+void DBCategory::remove(ullong id, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("DELETE FROM category WHERE id = ?");
     query.bindValue(0, id);

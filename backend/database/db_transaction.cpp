@@ -2,9 +2,8 @@
 #include "backend/database/db_util.h"
 #include "backend/database/SqlQuery.h"
 
-ullong DBTransaction::create(const DBTransaction& transaction)
+ullong DBTransaction::create(const DBTransaction& transaction, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("INSERT INTO bank_transaction (sender_id, receiver_id, amount, time, description)"
                   "VALUES (?,?,?,?,?)");
@@ -21,14 +20,13 @@ ullong DBTransaction::create(const DBTransaction& transaction)
     return query.lastInsertId().toLongLong();
 }
 
-Vector<DBTransaction> DBTransaction::selectAll()
+Vector<DBTransaction> DBTransaction::selectAll(const QSqlDatabase &db)
 {
-    return selectAllT<DBTransaction>("bank_transaction");
+    return selectAllT<DBTransaction>("bank_transaction", db);
 }
 
-DBTransaction DBTransaction::selectById(ullong id)
+DBTransaction DBTransaction::selectById(ullong id, const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.prepare("SELECT * FROM bank_transaction WHERE id = ?");
     query.bindValue(0, id);

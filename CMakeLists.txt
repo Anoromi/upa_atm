@@ -29,8 +29,25 @@ set(PROJECT_SOURCES
         login.ui
         mainwindow.ui
         ${TS_FILES}
-        middleware/credentials.h middleware/credentials.cpp middleware/transfer.cpp middleware/transfer.h middleware/types.h middleware/tariff.cpp middleware/tariff.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/deposit.h
-        middleware/exceptions.h backend/bank.h backend/bankProvider.h backend/bankProvider.cpp middleware/unsignedConnection.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/connectionDetails.h backend/user_card.h backend/bank.cpp)
+        middleware/credentials.h middleware/credentials.cpp
+        middleware/transfer.cpp middleware/transfer.h
+        middleware/types.h middleware/tariff.cpp
+        middleware/tariff.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/deposit.h
+        middleware/exceptions.h
+        backend/bank.h backend/bank.cpp
+        backend/bankProvider.h backend/bankProvider.cpp
+        middleware/unsignedConnection.h middleware/signedConnection.cpp
+        middleware/signedConnection.h middleware/connectionDetails.h
+        backend/database/db_card.h backend/database/db_category.h backend/database/db_parent_relation.h backend/database/db_transaction.h
+        backend/database/DatabaseException.h
+        backend/database/db_util.h backend/database/db_util.cpp
+        backend/database/SqlQuery.h
+        backend/database/db_card.cpp
+        backend/database/db_category.cpp
+        backend/database/db_holder.cpp
+        backend/database/db_parent_relation.cpp
+        backend/database/db_transaction.cpp
+)
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(upa_atm

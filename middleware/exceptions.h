@@ -37,8 +37,6 @@ public:
     }
 };
 
-#include "types.h"
-
 class UnexpectedException{
 private:
     String _message;
@@ -61,4 +59,5 @@ public:
 private:
     Card _card;
 };
+
 #endif //UPA_ATM_EXCEPTIONS_H

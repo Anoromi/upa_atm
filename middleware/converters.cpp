@@ -35,7 +35,7 @@ std::variant<Card, String> parseCard(const String &text) {
     for (int i = 0; i < 16; i++) {
         if (text[i] < '0' || text[i] > '9')
             return L"Неправильний символ у карці";
-        card = card * 10 + (text[i] - 'a');
+        card = card * 10 + (text[i] - '0');
     }
     return card;
 }
@@ -79,7 +79,7 @@ std::variant<Pin, String> parsePin(const String &text) {
     for (int i = 0; i < 4; i++) {
         if (text[i] < '0' || text[i] > '9')
             return L"Пін повинен містити лише цифри";
-        result = result * 10 + (text[i] - 'a');
+        result = result * 10 + (text[i] - '0');
     }
     return Pin(result);
 }

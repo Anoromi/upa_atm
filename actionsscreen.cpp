@@ -1,14 +1,13 @@
 #include "actionsscreen.h"
 #include "ui_actionsscreen.h"
 
-ActionsScreen::ActionsScreen(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::ActionsScreen)
-{
+ActionsScreen::ActionsScreen(Shared<SignedConnection>& s, QWidget *parent) :
+        QWidget(parent),
+        ui(new Ui::ActionsScreen),
+        s(s) {
     ui->setupUi(this);
 }
 
-ActionsScreen::~ActionsScreen()
-{
+ActionsScreen::~ActionsScreen() {
     delete ui;
 }

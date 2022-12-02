@@ -37,13 +37,16 @@ public:
     }
 };
 
-#include "types.h"
+class BlockedCard {
+};
 
 class UnexpectedException{
 private:
     String _message;
 public:
-    explicit UnexpectedException(const String &message) : _message(message) {}
+    explicit UnexpectedException(const String &message) : _message(message) {
+        qDebug() << "Unexpected exception created with " << message;
+    }
 
     const String &message() const {
         return _message;

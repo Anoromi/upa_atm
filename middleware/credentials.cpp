@@ -1,7 +1,9 @@
 //
 // Created by Andrii on 10/22/2022.
 //
+#include <QDebug>
 #include "credentials.h"
+#include "exceptions.h"
 
 
 //Card::Card(char *numbers) : _cardNumber(0) {
@@ -15,8 +17,13 @@
 //}
 
 Card::Card(ullong cardNumber) : _cardNumber(cardNumber) {
-    if(cardNumber > 9999999999999999)
+
+//    if(1234123412341234uLL > 9999999999999999uLL)
+//        throw UnexpectedException(L"");
+    if(cardNumber > 9999999999999999ULL) {
+        qDebug() << cardNumber;
         throw Card::TooBigNumber(cardNumber);
+    }
 }
 
 ullong Card::getCardNumber() const {

@@ -7,7 +7,7 @@
 #include <QMessageBox>
 
 Login::Login(UnsignedConnection uConnection,
-             std::function<void(SignedConnection)> enter, QWidget *parent)
+             std::function<void(Shared<SignedConnection>)> enter, QWidget *parent)
         : QMainWindow(parent), ui(new Ui::Login), _uConnection(uConnection), _enter(std::move(enter)) {
     ui->setupUi(this);
 }
@@ -19,19 +19,27 @@ Login::~Login() {
 
 void Login::on_confirmLogin_clicked() {
     auto cardRes = parseCard(ui->cardNumberField->text().toStdWString());
+    qDebug() << cardRes.index() << ',' ;
     if (cardRes.index() == 1) {
         errorMessage(std::get<String>(cardRes));
         return;
     }
-    auto pinRes = parsePin(ui->cardNumberField->text().toStdWString());
-    if (cardRes.index() == 1) {
-        errorMessage(std::get<String>(cardRes));
+    auto pinRes = parsePin(ui->passwordField->text().toStdWString());
+    qDebug() << pinRes.index();
+    if (pinRes.index() == 1) {
+        errorMessage(std::get<String>(pinRes));
         return;
     }
     Card card = std::get<Card>(cardRes);
     Pin pin = std::get<Pin>(pinRes);
-//    auto pinNumber =
-//    if(_uConnection.validateCredentials())
-//    _enter();
+    try {
+        // TODO add validation once it works
+//        if (_uConnection.validateCredentials({card, pin})) {
+//        }
+        _enter(_uConnection.createConnection({card, pin}));
+    }
+    catch (BlockedCard) {
+        errorMessage(L"Ваша карта заблокована");
+    }
 }
 

@@ -17,10 +17,7 @@ public:
     }
 
     Shared<SignedConnection> createConnection(const Credentials &c) {
-        if (bank.areValidCredentials(c)) {
-            return Shared<SignedConnection>(new SignedConnection({c, true}));
-        }
-        throw UnexpectedException(L"Invalid data");
+        return Shared<SignedConnection>(new SignedConnection({c, true}));
     }
 };
 

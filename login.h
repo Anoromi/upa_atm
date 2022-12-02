@@ -14,7 +14,7 @@ Q_OBJECT
 
 public:
     Login(UnsignedConnection uConnection,
-          std::function<void(SignedConnection)> enter,
+          std::function<void(Shared<SignedConnection>)> enter,
           QWidget *parent = nullptr);
 
     ~Login();
@@ -25,8 +25,9 @@ private slots:
 
 private:
     Ui::Login *ui;
-    std::function<void(SignedConnection)> _enter;
+    std::function<void(Shared<SignedConnection>)> _enter;
     UnsignedConnection _uConnection;
+
 };
 
 #endif // LOGIN_H

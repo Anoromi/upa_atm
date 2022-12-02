@@ -23,6 +23,7 @@ void Login::on_confirmLogin_clicked() {
         errorMessage(std::get<String>(cardRes));
         return;
     }
+    Pin
 //    auto pinNumber =
 //    if(_uConnection.validateCredentials())
 //    _enter();

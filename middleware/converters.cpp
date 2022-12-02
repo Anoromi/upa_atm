@@ -70,3 +70,16 @@ String moneyToString(const uint money) {
 QString stringToQ(const String &s) {
     return QString::fromWCharArray(s.c_str());
 }
+
+std::variant<Pin, String> parsePin(const String &text) {
+    if (text.length() != 4)
+        return L"Пін повинен складатися з 4 цифр";
+
+    ushort result = 0;
+    for (int i = 0; i < 4; i++) {
+        if (text[i] < '0' || text[i] > '9')
+            return L"Пін повинен містити лише цифри";
+        result = result * 10 + (text[i] - 'a');
+    }
+    return Pin(result);
+}

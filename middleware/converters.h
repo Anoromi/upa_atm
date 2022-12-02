@@ -17,4 +17,6 @@ String moneyToString(uint money);
 std::variant<Card, String> parseCard(const String &text);
 
 QString stringToQ(const String& s);
+
+std::variant<Pin, String> parsePin(const String& text);
 #endif //UPA_ATM_CONVERTERS_H

@@ -13,9 +13,9 @@ private:
 public:
     static Bank& getBank() {
         if(_bank == nullptr) {
-
+            _bank = new Bank();
         }
-        throw std::exception();
+        return *_bank;
     }
 };
 

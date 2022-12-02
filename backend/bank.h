@@ -14,14 +14,16 @@ private:
     class InternalBank {
     private:
         QSqlDatabase _db;
-        llong getSpendableMoney(const Credentials &c);
+        uint getSpendableMoney(const Credentials &c);
         uint cardBalance(const Card &c);
         void addMoney(const Card &c, uint change);
         void removeMoney(const Card &c, uint change);
 
+
         void addTransaction(std::optional<Card> sender,
                             std::optional<Card> receiver,
                             uint amount, uint fee);
+
     public:
         InternalBank() : _db(QSqlDatabase::database()) {}
 

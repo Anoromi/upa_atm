@@ -55,6 +55,8 @@ set(PROJECT_SOURCES
         success_screen.h success_screen.cpp success_screen.ui
         navigationwindow.h navigationwindow.cpp navigationwindow.ui
         actionsscreen.h actionsscreen.cpp actionsscreen.ui
+        frontend/depositscreen.h frontend/depositscreen.cpp frontend/depositscreen.ui
+        frontend/withdrawalscreen.h frontend/withdrawalscreen.cpp frontend/withdrawalscreen.ui
     )
 
 

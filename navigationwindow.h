@@ -17,6 +17,11 @@ public:
 
 private:
     Ui::NavigationWindow *ui;
+    void pushNav(QWidget*);
+    void popNav();
+
+
+
 };
 
 #endif // NAVIGATIONWINDOW_H

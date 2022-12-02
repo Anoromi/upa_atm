@@ -2,22 +2,31 @@
 #define LOGIN_H
 
 #include <QMainWindow>
+#include "middleware/signedConnection.h"
+#include "middleware/unsignedConnection.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class Login; }
 QT_END_NAMESPACE
 
 class Login : public QMainWindow {
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    Login(QWidget *parent = nullptr);
+    Login(UnsignedConnection uConnection,
+          std::function<void(SignedConnection)> enter,
+          QWidget *parent = nullptr);
+
     ~Login();
 
 private slots:
+
     void on_confirmLogin_clicked();
 
 private:
     Ui::Login *ui;
+    std::function<void(SignedConnection)> _enter;
+    UnsignedConnection _uConnection;
 };
+
 #endif // LOGIN_H

@@ -10,18 +10,18 @@
 
 class UnsignedConnection {
 private:
-    Bank& bank = BankProvider::getBank();
+    Bank &bank = BankProvider::getBank();
 public:
-    UnsignedConnection() = default;
-
-    bool validateCredentials(const Credentials& c) {
+    bool validateCredentials(const Credentials &c) {
         return bank.areValidCredentials(c);
     }
 
-    Unique<SignedConnection> createConnection(const Credentials& c) {
-        if( bank.areValidCredentials(c)) {
-//            return Unique(SignedConnection());
+    Shared<SignedConnection> createConnection(const Credentials &c) {
+        if (bank.areValidCredentials(c)) {
+            return Shared<SignedConnection>(new SignedConnection({c, true}));
         }
+        throw UnexpectedException(L"Invalid data");
     }
 };
+
 #endif //UPA_ATM_UNSIGNEDCONNECTION_H

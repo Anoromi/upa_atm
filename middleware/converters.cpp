@@ -12,20 +12,19 @@ std::variant<uint, String> parseMoney(const String &text) {
         if (text[i] < '0' || text[i] > '9') {
             return L"Неправильний символ у числі";
         }
-        i = i * 10 + (text[i] - '0');
+        //i = i * 10 + (text[i] - '0');
     }
     if (i + 2 == text.length() && text[i] == '.') {
         for (; i < text.length(); i++) {
             if (text[i] < '0' || text[i] > '9') {
                 return L"Неправильний символ у числі";
             }
-            i = i * 10 + (text[i] - '0');
+            //i = i * 10 + (text[i] - '0');
         }
-        return number;
     } else if (i + 2 != text.length() && text[i] == '.') {
         return L"Потрібно ввести копійки після крапки";
     }
-    return number * 100;
+    return static_cast<uint>(std::stod(text) * 100);
 }
 
 std::variant<Card, String> parseCard(const String &text) {
@@ -35,8 +34,8 @@ std::variant<Card, String> parseCard(const String &text) {
     for (int i = 0; i < 16; i++) {
         if (text[i] < '0' || text[i] > '9')
             return L"Неправильний символ у карці";
-        card = card * 10 + (text[i] - '0');
     }
+    card = std::stoll(text);
     return card;
 }
 
@@ -79,7 +78,7 @@ std::variant<Pin, String> parsePin(const String &text) {
     for (int i = 0; i < 4; i++) {
         if (text[i] < '0' || text[i] > '9')
             return L"Пін повинен містити лише цифри";
-        result = result * 10 + (text[i] - '0');
     }
+    result = std::stoi(text);
     return Pin(result);
 }

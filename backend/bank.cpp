@@ -143,12 +143,20 @@ DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const
 
 void Bank::InternalBank::depositMoney(const Credentials &c, const DepositRequest &request)
 {
-    // todo rewrite
     DepositDetails details = getDepositDetails(c, request);
     _db.transaction();
-    addTransaction(Optional<Card>(), c.card(), details.getMoney(),
-                   details.getTariff().getFee(details.getMoney()));
-    _db.transaction();
+    try {
+        addMoney(request.getFrom().card(), details.getMoney());
+        addTransaction(Optional<Card>(), c.card(), details.getMoney(),
+                       details.getTariff().getFee(details.getMoney()));
+        if (!_db.commit()) {
+            _db.rollback();
+            throw UnexpectedException(L"Cound not commit to db");
+        }
+    } catch(...) {
+       _db.rollback();
+       throw;
+    }
 }
 
 WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials& c, const WithdrawalRequest& request) {

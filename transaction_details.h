@@ -16,7 +16,7 @@ public:
     explicit transaction_details(
             String message,
             std::optional<Card> receiver,
-            Shared<Tariff> &tariff,
+            const Tariff &tariff,
             uint money,
             std::function<void(bool)> move,
             QWidget *parent = nullptr
@@ -34,7 +34,7 @@ private:
     Ui::transaction_details *ui;
     const String _message;
     const std::optional<Card> _receiver;
-    const Shared<Tariff> _tariff;
+    const Tariff& _tariff;
     const uint _money;
     std::function<void(bool)> _navigateNext;
 

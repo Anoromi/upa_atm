@@ -18,11 +18,16 @@ public:
 
     ~ActionsScreen();
 
+private slots:
+    void on_transfer_clicked();
+
 private:
     Ui::ActionsScreen *ui;
-    Shared<SignedConnection> s;
+    Shared<SignedConnection> _connect;
     std::function<void(QWidget *destination)> _push;
     std::function<void()> _pop;
+
+
 
     void endSession();
 };

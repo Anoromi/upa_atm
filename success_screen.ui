@@ -57,7 +57,7 @@
 }</string>
       </property>
       <property name="text">
-       <string>Операція пройдена успішно</string>
+       <string>Операція пройшла успішно</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -78,10 +78,12 @@
        </font>
       </property>
       <property name="styleSheet">
-       <string notr="true">QPushButton#pushButton {
+       <string notr="true">QPushButton#end_button {
 	color : rgb(255,0,0);
 	border-style:inset;
 	border-width:2px;
+
+	background: rgb(0,0,0);
 }
 QPushButton#pushButton:hover {
 	color : black;

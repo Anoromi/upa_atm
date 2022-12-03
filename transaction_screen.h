@@ -3,30 +3,38 @@
 
 #include <QWidget>
 #include "middleware/signedConnection.h"
+#include "actionsscreen.h"
 #include <functional>
 
 namespace Ui {
-class transaction_screen;
+class TransactionScreen;
 }
 
-class transaction_screen : public QWidget
-{
+class TransactionScreen : public QWidget {
     Q_OBJECT
 
 
+
 public:
-    transaction_screen(QWidget *parent, const SignedConnection &connection,
-                       std::function<void(TransferRequest, TransferDetails)> toDetails);
+
+    TransactionScreen(QWidget *parent, const SignedConnection &connection,
+                       std::function<void(QWidget* push)> parentPush);
 
 //    explicit transaction_screen(QWidget *parent = nullptr, Shared<std::function>);
-    ~transaction_screen();
+    ~TransactionScreen();
 
 private slots:
-    void on_pushButton_clicked();
+
+    void on_submitButton_clicked();
+
 private:
-    Ui::transaction_screen *ui;
+
+    void toDetails(const TransferRequest&, const TransferDetails&);
+
+    Ui::TransactionScreen *ui;
     SignedConnection _connection;
-    std::function<void(TransferRequest, TransferDetails)> _moveToDetails;
+    const std::function<void(QWidget* push)>& _mainMenuPush;
+    
 };
 
 #endif // TRANSACTION_SCREEN_H

@@ -1,125 +1,171 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>transaction_screen</class>
- <widget class="QWidget" name="transaction_screen">
+ <class>TransactionScreen</class>
+ <widget class="QWidget" name="TransactionScreen">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>783</width>
+    <height>575</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <widget class="QWidget" name="gridWidget" native="true">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>800</width>
-     <height>600</height>
-    </rect>
-   </property>
-   <layout class="QGridLayout" name="gridLayout_2" rowminimumheight="0,0,0,0,0,0">
-    <item row="3" column="0">
-     <widget class="QLabel" name="label_3">
-      <property name="font">
-       <font>
-        <pointsize>20</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Кількість</string>
-      </property>
-     </widget>
-    </item>
-    <item row="3" column="1">
-     <widget class="QLineEdit" name="money">
-      <property name="font">
-       <font>
-        <pointsize>18</pointsize>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="0" colspan="2">
-     <widget class="QCheckBox" name="withTariff">
-      <property name="font">
-       <font>
-        <pointsize>16</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>З урахуванням тарифу</string>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="1">
-     <widget class="QLineEdit" name="card">
-      <property name="font">
-       <font>
-        <pointsize>18</pointsize>
-       </font>
-      </property>
-     </widget>
-    </item>
-    <item row="2" column="0">
-     <widget class="QLabel" name="label">
-      <property name="font">
-       <font>
-        <pointsize>20</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Карта</string>
-      </property>
-     </widget>
-    </item>
-    <item row="5" column="0" colspan="2">
-     <widget class="QPushButton" name="submitButton">
-      <property name="font">
-       <font>
-        <pointsize>26</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Далі</string>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="2">
-     <widget class="QLabel" name="label_2">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>28</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Введіть деталі транзакції</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
-    </item>
-   </layout>
-  </widget>
+  <property name="styleSheet">
+   <string notr="true">background: rgb(0,0,0)</string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="2" column="0">
+    <widget class="QLabel" name="cardText">
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255,0,0);
+background-color: rgb(0,0,0);</string>
+     </property>
+     <property name="text">
+      <string>Карта</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1">
+    <widget class="QLineEdit" name="card">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255,0,0);
+background-color: rgb(0,0,0);
+
+border-style: inset;
+border-color: rgb(255,0,0);
+border-width: 2px;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="7" column="0">
+    <widget class="QCheckBox" name="withTariff">
+     <property name="font">
+      <font>
+       <pointsize>16</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255,0,0);</string>
+     </property>
+     <property name="text">
+      <string>З урахуванням тарифу</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="0">
+    <widget class="QLabel" name="moneyText">
+     <property name="font">
+      <font>
+       <pointsize>20</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255,0,0);
+background-color: rgb(0,0,0);</string>
+     </property>
+     <property name="text">
+      <string>Сума</string>
+     </property>
+    </widget>
+   </item>
+   <item row="5" column="1">
+    <widget class="QLineEdit" name="money">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255,0,0);
+background-color: rgb(0,0,0);
+
+border-style: inset;
+border-color: rgb(255,0,0);
+border-width: 2px;</string>
+     </property>
+    </widget>
+   </item>
+   <item row="8" column="0" colspan="2">
+    <widget class="QPushButton" name="submitButton">
+     <property name="font">
+      <font>
+       <pointsize>26</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton#submitButton {
+	color: rgb(255,0,0);
+	background-color: rgb(0,0,0);
+
+	border-style: inset;
+	border-color: rgb(255,0,0);
+	border-width: 2px;
+}
+
+
+QPushButton#submitButton::hover {
+	color: rgb(0,0,0);
+	background-color: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+	border-width: 2px;
+}</string>
+     </property>
+     <property name="text">
+      <string>Далі</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="captionText">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>28</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">color: rgb(255,0,0);
+background-color: rgb(0,0,0);
+</string>
+     </property>
+     <property name="text">
+      <string>Введіть деталі транзакції</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
- <tabstops>
-  <tabstop>card</tabstop>
-  <tabstop>money</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

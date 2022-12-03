@@ -27,17 +27,151 @@
 }</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="2" column="0">
-       <widget class="QPushButton" name="pushButton_2">
+      <item row="3" column="0">
+       <widget class="QPushButton" name="transfer">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
+	border-width: 2px;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
+}</string>
+        </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Переказати кошти</string>
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="pushButton">
+      <item row="3" column="1">
+       <widget class="QPushButton" name="refilMobile">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
+	border-width: 2px;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
+}</string>
+        </property>
         <property name="text">
-         <string>PushButton</string>
+         <string>Поповнити мобільний</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QPushButton" name="refil">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
+	border-width: 2px;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
+}</string>
+        </property>
+        <property name="text">
+         <string>Поповнити рахунок</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="withdraw">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
+	border-width: 2px;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
+}</string>
+        </property>
+        <property name="text">
+         <string>Зняти кошти</string>
         </property>
        </widget>
       </item>
@@ -46,6 +180,12 @@
    </item>
    <item row="0" column="0">
     <widget class="QWidget" name="cardInfo" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
      <property name="styleSheet">
       <string notr="true">QWidget#cardInfo {
 	border-style: outset;
@@ -59,6 +199,11 @@
      <layout class="QGridLayout" name="gridLayout">
       <item row="3" column="0">
        <widget class="QLabel" name="balanceText">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">QLabel#balanceText {
 	color:red;
@@ -72,6 +217,11 @@
       </item>
       <item row="3" column="2">
        <widget class="QLabel" name="balance">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">QLabel#balance {
 	color:red;
@@ -79,12 +229,17 @@
 }</string>
         </property>
         <property name="text">
-         <string/>
+         <string>0</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
        <widget class="QLabel" name="cardNumber">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">QLabel#cardNumber {
 	color:red;
@@ -92,12 +247,17 @@
 }</string>
         </property>
         <property name="text">
-         <string/>
+         <string>0000000000000000</string>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="cardNumberText">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
         <property name="styleSheet">
          <string notr="true">QLabel#cardNumberText {
 	color: red;

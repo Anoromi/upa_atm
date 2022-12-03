@@ -56,6 +56,7 @@ set(PROJECT_SOURCES
         actionsscreen.h actionsscreen.cpp actionsscreen.ui
         frontend/depositscreen.h frontend/depositscreen.cpp frontend/depositscreen.ui
         frontend/withdrawalscreen.h frontend/withdrawalscreen.cpp frontend/withdrawalscreen.ui
+        withdrawmoney.h withdrawmoney.cpp withdrawmoney.ui
     )
 
 
@@ -78,9 +79,7 @@ else ()
         # Define properties for Android with Qt 5 after find_package() calls as:
         #    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
     else ()
-        add_executable(upa_atm
-                ${PROJECT_SOURCES}
-                )
+        add_executable(main ${PROJECT_SOURCE_DIR}/main.cpp)
     endif ()
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})

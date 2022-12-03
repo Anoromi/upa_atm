@@ -13,17 +13,16 @@
 //    ui->setupUi(this);
 //}
 
-TransactionScreen::TransactionScreen(
-    QWidget* parent,
-    const SignedConnection& connection,
-    std::function<void(QWidget* push)> parentPush
+TransactionScreen::TransactionScreen(SignedConnection &connection, std::function<void()> back,
+                                     std::function<void(TransferRequest, TransferDetails)> toDetails,
+                                     QWidget *parent
 )
-    :
-    QWidget(parent),
-    _connection(connection),
-    _mainMenuPush(parentPush),
-    ui(new Ui::TransactionScreen)
-{
+        :
+        QWidget(parent),
+        _connection(connection),
+        _toDetails(std::move(toDetails)),
+        _back(std::move(back)),
+        ui(new Ui::TransactionScreen) {
     ui->setupUi(this);
 }
 
@@ -32,35 +31,32 @@ TransactionScreen::~TransactionScreen() {
 }
 
 
-
-void TransactionScreen::toDetails(const TransferRequest& request, const TransferDetails& details) {
-    this->_mainMenuPush(
-        new transaction_details(
-            L"",
-            request.getDestination(),
-            details.getTariff(),
-            details.getMoney(),
-            [this](bool b) {
-                if (b) {
-                    _mainMenuPush(this);
-                }
-                else {
-                    ;
-                }
-            }
-        )
+void TransactionScreen::toDetails(const TransferRequest &request, const TransferDetails &details) {
+    this->_toDetails(
+//            new transaction_details(
+//                    L"",
+//                    request.getDestination(),
+//                    details.getTariff(),
+//                    details.getMoney(),
+//                    [this](bool b) {
+//                        if (b) {
+//                            _mainMenuPush(this);
+//                        } else { ;
+//                        }
+//                    }
+//            )
     );
 }
 
 void TransactionScreen::on_submitButton_clicked() {
     auto cardRes = parseCard(ui->card->text().toStdWString());
     if (cardRes.index() == 1) {
-        errorMessage(std::get<String>(cardRes));
+        showErrorMessage(std::get<String>(cardRes));
         return;
     }
     auto moneyRes = parseMoney(ui->money->text().toStdWString());
     if (moneyRes.index() == 1) {
-        errorMessage(std::get<String>(moneyRes));
+        showErrorMessage(std::get<String>(moneyRes));
         return;
     }
     Card c = std::get<Card>(cardRes);
@@ -72,8 +68,8 @@ void TransactionScreen::on_submitButton_clicked() {
         toDetails(request, std::move(details));
     }
     catch (const BadMoney &m) {
-        errorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
-                                           << L", а запитали " << moneyToString(m.getRequested())).str());
+        showErrorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
+                                               << L", а запитали " << moneyToString(m.getRequested())).str());
     }
 }
 

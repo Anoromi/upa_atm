@@ -11,8 +11,13 @@
 class UnsignedConnection {
 private:
     Bank &bank = BankProvider::getBank();
+    uint incorrectVerifications;
 public:
     bool validateCredentials(const Credentials &c) {
+        if(incorrectVerifications++ >= 3) {
+            bank.blockCard(c.card());
+        }
+
         return bank.areValidCredentials(c);
     }
 

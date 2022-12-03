@@ -10,14 +10,9 @@
 
 class DepositRequest {
 public:
-    Credentials _from;
     uint _money;
 
-    inline DepositRequest(Credentials from, uint money, bool afterTariff) : _from(from), _money(money) {}
-
-    const Credentials &getFrom() const {
-        return _from;
-    }
+    inline DepositRequest(uint money) : _money(money) {}
 
     uint getMoney() const {
         return _money;
@@ -53,18 +48,13 @@ public:
 
 class WithdrawalRequest {
 private:
-    Credentials _from;
     uint _money;
     bool _afterTariff;
 public:
 
 
-    inline WithdrawalRequest(Credentials from, uint money, bool afterTariff) : _from(from), _money(money),
-                                                                               _afterTariff(afterTariff) {}
-
-    const Credentials &getFrom() const {
-        return _from;
-    }
+    inline WithdrawalRequest(uint money, bool afterTariff) : _money(money),
+                                                             _afterTariff(afterTariff) {}
 
     uint getMoney() const {
         return _money;

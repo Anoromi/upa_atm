@@ -15,9 +15,13 @@ private:
     class InternalBank {
     private:
         QSqlDatabase _db;
+
         uint getSpendableMoney(const Credentials &c);
+
         uint cardBalance(const Card &c);
+
         void addMoney(const Card &c, uint change);
+
         void removeMoney(const Card &c, uint change);
 
 
@@ -29,17 +33,26 @@ private:
         InternalBank() : _db(QSqlDatabase::database()) {}
 
         bool areValidCredentials(const Credentials &c);
+
         TransferDetails getTransferDetails(const Credentials &c,
                                            const TransferRequest &request);
 
         void transferMoney(const Credentials &c, const TransferRequest &request);
+
         DepositDetails getDepositDetails(const Credentials &c,
                                          const DepositRequest &request);
 
         void depositMoney(const Credentials &c, const DepositRequest &request);
+
         WithdrawalDetails getWithdrawalDetails(const Credentials &, const WithdrawalRequest &);
+
         void withdrawMoney(const Credentials &, const WithdrawalRequest &);
+
         void limitChildMoney(const Credentials &, const Card &card, const uint &money);
+
+        CardInfo getCardInfo(const Credentials &);
+
+        void blockCard(const Card &card);
     };
 
     InternalBank _internalBank;
@@ -58,6 +71,12 @@ public:
     inline bool areValidCredentials(const Credentials &c) {
         return _internalBank.areValidCredentials(c);
     }
+
+    inline void blockCard(const Card &card) {
+        return _internalBank.blockCard(card);
+    }
+
+
 private:
 
 public:
@@ -68,6 +87,7 @@ public:
     constexpr static Bank::Request<WithdrawalDetails, WithdrawalRequest> getWithdrawalDetails = &InternalBank::getWithdrawalDetails;
     constexpr static Bank::Request<void, WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
     constexpr static Bank::Request<void, Card, uint> limitChildMoney = &InternalBank::limitChildMoney;
+    constexpr static Bank::Request<void> getCardInfo = &InternalBank::getCardInfo;
     // todo Request<CardInfo> getCardInfo
 };
 

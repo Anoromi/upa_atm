@@ -5,7 +5,6 @@
 #include "backend/database/db_transaction.h"
 #include "backend/database/db_category.h"
 #include "backend/database/db_parent_relation.h"
-#include "qsqlquery.h"
 #include "middleware/card_info.h"
 
 uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
@@ -73,6 +72,7 @@ void Bank::InternalBank::addTransaction(std::optional<Card> sender,
 
 bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
     try {
+        // todo expiration date
         DBCard card = DBCard::selectByNumber(c.card().getCardNumber());
         return card.getPin().value() == c.pin().getPin();
     } catch (...) {
@@ -235,6 +235,9 @@ void Bank::InternalBank::limitChildMoney(const Credentials &parentCred, const Ca
 }
 
 CardInfo Bank::InternalBank::getCardInfo(const Credentials &c) {
+    DBCard card = DBCard::selectByNumber(c.card().getCardNumber(), _db);
+    DBHolder holder = DBHolder::selectById(card.getHolderId().value(), _db);
+    return {holder.getFullName().toStdWString(), (uint) card.getBalance().value()};
 }
 
 void Bank::InternalBank::blockCard(const Card &card) {

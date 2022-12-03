@@ -38,6 +38,12 @@ public:
     inline Optional<QString> getName() const {return _name;}
     inline Optional<QString> getSurname() const {return _surname;}
     inline Optional<QString> getPhoneNumber() const {return _phone_number;}
+    QString getFullName() const {
+        QString name = getName().has_value() ? getName().value() : "";
+        QString surname = getSurname().has_value() ? getSurname().value() : "";
+        if (name.isEmpty()) return surname;
+        return name + QString(" ") + surname;
+    }
 
     void to(DBHolder& other) const;
 

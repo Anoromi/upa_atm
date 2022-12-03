@@ -88,8 +88,7 @@ public:
     constexpr static Bank::Request<WithdrawalDetails, WithdrawalRequest> getWithdrawalDetails = &InternalBank::getWithdrawalDetails;
     constexpr static Bank::Request<void, WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
     constexpr static Bank::Request<void, Card, uint> limitChildMoney = &InternalBank::limitChildMoney;
-    constexpr static Bank::Request<void> getCardInfo = &InternalBank::getCardInfo;
-    // todo Request<CardInfo> getCardInfo
+    constexpr static Bank::Request<CardInfo> getCardInfo = &InternalBank::getCardInfo;
 };
 
 #endif //UPA_ATM_BANK_H

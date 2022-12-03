@@ -137,13 +137,7 @@ void Bank::InternalBank::transferMoney(const Credentials &c, const TransferReque
 
 DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
 {
-    // todo rewrite
-    QSqlQuery query(_db);
-    query.prepare("SELECT balance FROM card WHERE number = ?");
-    query.addBindValue(c.card().getCardNumber());
-    query.exec();
-    query.next();
-    uint previousBalance = query.value(0).toUInt();
+    uint previousBalance = cardBalance(c.card());
     return {request.getMoney(), Unique<Tariff>(new WholeTariff(10)), previousBalance};
 }
 

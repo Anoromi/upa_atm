@@ -47,7 +47,7 @@ Vector<DBParentRelation> DBParentRelation::selectByParentId(ullong id, const QSq
     return result;
 }
 
-DBParentRelation DBParentRelation::selectByChildId(ullong id, const QSqlDatabase &db)
+Optional<DBParentRelation> DBParentRelation::selectByChildId(ullong id, const QSqlDatabase &db)
 {
     SqlQuery query(db);
     query.prepare("SELECT * FROM parent_relation WHERE child_card_id = ?");
@@ -56,7 +56,7 @@ DBParentRelation DBParentRelation::selectByChildId(ullong id, const QSqlDatabase
     if (query.next()) {
         return query.record();
     }
-    throw DatabaseException("No child card with given id."); // todo replace with more specific exception & add id to msg
+    return Optional<DBParentRelation>();
 }
 
 void DBParentRelation::update(const DBParentRelation& parentRelation, const QSqlDatabase &db)
@@ -64,7 +64,11 @@ void DBParentRelation::update(const DBParentRelation& parentRelation, const QSql
     if (!parentRelation.getChildCardId()) {
         throw DatabaseException("Cannot update parent relation with unknown child id.");
     }
-    DBParentRelation old = DBParentRelation::selectByChildId(parentRelation.getChildCardId().value(), db);
+    Optional<DBParentRelation> maybeOld = DBParentRelation::selectByChildId(parentRelation.getChildCardId().value(), db);
+    if (!maybeOld.has_value()) {
+        throw DatabaseException("no relation with given child id");
+    }
+    DBParentRelation old = maybeOld.value();
     parentRelation.to(old);
     SqlQuery query(db);
     query.prepare("UPDATE parent_relation SET "

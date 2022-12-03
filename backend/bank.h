@@ -5,12 +5,9 @@
 #ifndef UPA_ATM_BANK_H
 #define UPA_ATM_BANK_H
 
-
 #include <QSqlDatabase>
-#include <QSqlQuery>
-#include <QSqlQueryModel>
-#include "middleware/transfer.h"
 #include "middleware/deposit.h"
+#include "middleware/transfer.h"
 #include "middleware/exceptions.h"
 
 class Bank {
@@ -18,41 +15,31 @@ private:
     class InternalBank {
     private:
         QSqlDatabase _db;
-
-        uint getExpendableMoney(const Credentials &c);
-
+        uint getSpendableMoney(const Credentials &c);
         uint cardBalance(const Card &c);
-
         void addMoney(const Card &c, uint change);
-
         void removeMoney(const Card &c, uint change);
 
-        void addTransaction(std::optional<Card> sender, std::optional<Card> receiver, uint amount, uint fee);
+
+        void addTransaction(std::optional<Card> sender,
+                            std::optional<Card> receiver,
+                            uint amount, uint fee);
 
     public:
-        InternalBank() : _db(QSqlDatabase::addDatabase("QSQLITE")) {
-            _db.setHostName("upa");
-            _db.open();
-        }
+        InternalBank() : _db(QSqlDatabase::database()) {}
 
         bool areValidCredentials(const Credentials &c);
-
-
-        TransferDetails getTransferDetails(const Credentials &c, const TransferRequest &request);
-
+        TransferDetails getTransferDetails(const Credentials &c,
+                                           const TransferRequest &request);
 
         void transferMoney(const Credentials &c, const TransferRequest &request);
-
-        DepositDetails getDepositDetails(const Credentials &c, const DepositRequest &request);
+        DepositDetails getDepositDetails(const Credentials &c,
+                                         const DepositRequest &request);
 
         void depositMoney(const Credentials &c, const DepositRequest &request);
-
         WithdrawalDetails getWithdrawalDetails(const Credentials &, const WithdrawalRequest &);
-
         void withdrawMoney(const Credentials &, const WithdrawalRequest &);
-
         void limitChildMoney(const Credentials &, const Card &card, const uint &money);
-
     };
 
     InternalBank _internalBank;
@@ -71,8 +58,6 @@ public:
     inline bool areValidCredentials(const Credentials &c) {
         return _internalBank.areValidCredentials(c);
     }
-
-
 private:
 
 public:
@@ -84,8 +69,5 @@ public:
     constexpr static Bank::Request<void, WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
     constexpr static Bank::Request<void, Card, uint> limitChildMoney = &InternalBank::limitChildMoney;
 };
-
-
-
 
 #endif //UPA_ATM_BANK_H

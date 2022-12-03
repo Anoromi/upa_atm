@@ -48,7 +48,6 @@ set(PROJECT_SOURCES
         backend/database/db_holder.cpp
         backend/database/db_parent_relation.cpp
         backend/database/db_transaction.cpp
-        backend/database/sqltransaction.h backend/database/sqltransaction.cpp
 
         transaction_screen.h transaction_screen.cpp transaction_screen.ui middleware/converters.cpp middleware/converters.h frontend/error_message.cpp frontend/error_message.h
         transaction_details.h transaction_details.cpp transaction_details.ui

@@ -7,6 +7,7 @@
 
 #include "types.h"
 #include "credentials.h"
+#include <QDebug>
 
 class BadMoney {
 private:
@@ -46,7 +47,7 @@ private:
     String _message;
 public:
     explicit UnexpectedException(const String &message) : _message(message) {
-        qDebug() << "Unexpected exception created with " << message;
+        qDebug() << "Unexpected exception created with" << message;
     }
 
     const String &message() const {

@@ -14,8 +14,8 @@
 #include <QSqlQuery>
 #include <vector>
 #include "backend/database/SqlQuery.h"
-#include "backend/database/sqltransaction.h"
 #include "backend/database/db_util.h"
+
 void selectAllHolders()
 {
     Vector<DBHolder> holders = DBHolder::selectAll();
@@ -28,32 +28,8 @@ void selectAllHolders()
     }
 };
 
-void transactionTest()
-{
-    {
-        SqlTransaction transaction;
-        qDebug() << "holders:" << DBHolder::selectAll().size();
-        qDebug() << "cards:" << DBCard::selectAll().size();
-        try {
-            DBHolder::create(DBHolder(0, "holder_test", "holder_test", "test number"), transaction);
-            DBCard::create(DBCard(1234123412341234, 1234, QDate(), 3, 1000,1), transaction);
-        } catch (...) {
-            qDebug() << "rollback!!";
-            transaction.rollback();
-        }
-        qDebug() << "holders:" << DBHolder::selectAll().size();
-        qDebug() << "cards:" << DBCard::selectAll().size();
-        try {
-            DBHolder::create(DBHolder(0, "holder_test", "holder_test", "test number"), transaction);
-        } catch(...) {
-            qDebug() << "we cannot use this transaction!";
-        }
-    }
-}
-
 void dbtest()
 {
-    initDatabase("bank.db", true);
     selectAllHolders();
     QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
@@ -91,22 +67,46 @@ void dbtest()
                 card.getHolderId().value() <<
                 card.getBalance().value() <<
                 card.getCategoryId().value();
-    DBCard::remove(5111050540403030);
+    //DBCard::remove(5111050540403030);
     DBCard::remove(20);
 };
+
+void transtest()
+{
+    DBTransaction a;
+    a.setFee(0);
+    a.setSenderId(5111050540403030);
+    a.setAmount(50);
+    a.setTime(QDateTime(QDate(2022,12,2), QTime(10,0,0)));
+    DBTransaction::create(a);
+    a.setTime(QDateTime(QDate(2022,12,2), QTime(15,0,0)));
+    DBTransaction::create(a);
+    a.setTime(QDateTime(QDate(2022,12,3), QTime(15,0,0)));
+    DBTransaction::create(a);
+    a.setTime(QDateTime(QDate(2022,12,1), QTime(15,0,0)));
+    DBTransaction::create(a);
+    Vector<DBTransaction> v =
+            DBTransaction::selectSpendingsByPeriod(5111050540403030,
+                                                   QDate(2022,12,2).startOfDay(),
+                                                   QDate(2022,12,2).endOfDay());
+    for (auto& t : v) {
+        qDebug() << t.getTime().value();
+    }
+}
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     NavigationWindow w;
     w.show();
-
+    // remove true to save data
+    initDatabase("bank.db", true); // todo move it somewhere else?
     try {
         dbtest();
     } catch (const DatabaseException& ex) {
         qDebug() << "ERROR: " << ex.what();
     }
-    transactionTest();
+    transtest();
     return a.exec();
 //    return 0;
 }

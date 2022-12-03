@@ -5,14 +5,15 @@
 ullong DBTransaction::create(const DBTransaction& transaction, const QSqlDatabase &db)
 {
     SqlQuery query(db);
-    query.prepare("INSERT INTO bank_transaction (sender_id, receiver_id, amount, time, description)"
-                  "VALUES (?,?,?,?,?)");
+    query.prepare("INSERT INTO bank_transaction (sender_id, receiver_id, amount, fee, time, description)"
+                  "VALUES (?,?,?,?,?,?)");
     int i = 0;
     query.bindValue(i++, transaction.getSenderId() ?
                         transaction.getSenderId().value() : QVariant());
     query.bindValue(i++, transaction.getReceiverId() ?
                         transaction.getReceiverId().value() : QVariant());
     query.bindValue(i++, transaction.getAmount().value());
+    query.bindValue(i++, transaction.getFee().value());
     query.bindValue(i++, transaction.getTime().value());
     query.bindValue(i++, transaction.getDescription() ?
                         transaction.getDescription().value() : QVariant());
@@ -35,4 +36,24 @@ DBTransaction DBTransaction::selectById(ullong id, const QSqlDatabase &db)
         return query.record();
     }
     throw DatabaseException("No transaction with given id."); // todo replace with more specific exception & add id to msg
+}
+
+Vector<DBTransaction> DBTransaction::selectSpendingsByPeriod(ullong card_id,
+                                                     QDateTime start,
+                                                     QDateTime end,
+                                                     const QSqlDatabase& db)
+{
+    SqlQuery query(db);
+    query.prepare("SELECT * FROM bank_transaction "
+                  "WHERE sender_id = ? AND (time BETWEEN ? AND ?)");
+    int i = 0;
+    query.bindValue(i++, card_id);
+    query.bindValue(i++, start);
+    query.bindValue(i++, end);
+    query.exec();
+    Vector<DBTransaction> result;
+    while (query.next()) {
+        result.push_back(query.record());
+    }
+    return result;
 }

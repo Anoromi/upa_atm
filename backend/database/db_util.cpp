@@ -35,8 +35,8 @@ void clearDatabase()
     QSqlDatabase db = QSqlDatabase::database();
     SqlQuery query(db);
     query.exec("DROP TABLE IF EXISTS parent_relation");
-    query.exec("DROP TABLE IF EXISTS card");
     query.exec("DROP TABLE IF EXISTS bank_transaction");
+    query.exec("DROP TABLE IF EXISTS card");
     query.exec("DROP TABLE IF EXISTS category");
     query.exec("DROP TABLE IF EXISTS holder");
 }
@@ -103,6 +103,7 @@ inline void createTableTransaction(QSqlDatabase& db)
                                   "sender_id INTEGER,"
                                   "receiver_id INTEGER,"
                                   "amount INTEGER NOT NULL,"
+                                  "fee INTEGER NOT NULL,"
                                   "time TEXT NOT NULL,"
                                   "description TEXT,"
                                   "FOREIGN KEY (sender_id) REFERENCES card (number)"

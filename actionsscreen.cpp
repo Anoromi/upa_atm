@@ -31,11 +31,12 @@ void ActionsScreen::endSession() {
 }
 
 void ActionsScreen::on_transfer_clicked() {
-    _push(new TransactionScreen(
-              *this->_connect,
-              _push,
-              nullptr,
-          )
-    );
+//    _push(new TransactionScreen(
+//              *this->_connect,
+//              _push,
+//              nullptr,
+//              nullptr
+//          )
+//    );
 }
 

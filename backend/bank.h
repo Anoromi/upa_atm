@@ -16,6 +16,7 @@ private:
     class InternalBank {
     private:
         QSqlDatabase _db;
+        Set<ullong> _blocked_cards;
 
         uint getSpendableMoney(const Credentials &c);
 
@@ -29,6 +30,10 @@ private:
         void addTransaction(std::optional<Card> sender,
                             std::optional<Card> receiver,
                             uint amount, uint fee);
+
+        bool isBlocked(const Credentials &c) {
+            return _blocked_cards.find(c.card().getCardNumber()) != _blocked_cards.end();
+        }
 
     public:
         InternalBank() : _db(QSqlDatabase::database()) {}

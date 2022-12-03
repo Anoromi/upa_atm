@@ -70,10 +70,17 @@ void Bank::InternalBank::addTransaction(std::optional<Card> sender,
 }
 
 bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
+    if (isBlocked(c)) {
+        return false; // maybe throw an exception?
+    }
     try {
-        // todo expiration date
-        DBCard card = DBCard::selectByNumber(c.card().getCardNumber());
-        return card.getPin().value() == c.pin().getPin();
+        Card card = c.card();
+        DBCard cardInfo = DBCard::selectByNumber(card.getCardNumber());
+        if (QDate::currentDate() > cardInfo.getExpirationDate().value()) {
+            blockCard(card);
+            return false;
+        }
+        return cardInfo.getPin().value() == c.pin().getPin();
     } catch (...) {
         return false;
     }
@@ -94,9 +101,6 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
         throw UnexpectedException(L"Holder with id wasn't found");
     }
 
-    String holderName = receiverInfo.getSurname().value().toStdWString() + L" " +
-                        receiverInfo.getName().value().toStdWString();
-
     DBCategory category;
     try {
         category = DBCategory::selectById(receiver.getCategoryId().value());
@@ -114,7 +118,8 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
     if (actualInitial > spendable) {
         throw BadMoney(actualInitial, spendable);
     }
-    return {holderName, request.getDestination(), actualInitial, std::move(tariff)};
+    return {receiverInfo.getFullName().toStdWString(),
+                request.getDestination(), actualInitial, std::move(tariff)};
 }
 
 void Bank::InternalBank::transferMoney(const Credentials &c, const TransferRequest &request) {
@@ -164,16 +169,6 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c,
     } catch (...) {
         throw UnexpectedException(L"Cannot withdraw: unknown account");
     }
-    const ullong sHolder = sender.getHolderId().value();
-    DBHolder senderInfo;
-    try {
-        senderInfo = DBHolder::selectById(sHolder);
-    } catch (...) {
-        throw UnexpectedException(L"Holder with id wasn't found");
-    }
-
-    String holderName = senderInfo.getSurname().value().toStdWString() + L" " +
-                        senderInfo.getName().value().toStdWString();
 
     DBCategory category;
     try {
@@ -240,5 +235,5 @@ CardInfo Bank::InternalBank::getCardInfo(const Credentials &c) {
 }
 
 void Bank::InternalBank::blockCard(const Card &card) {
-
+    _blocked_cards.insert(card.getCardNumber());
 }

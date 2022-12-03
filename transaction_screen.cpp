@@ -32,7 +32,7 @@ TransactionScreen::~TransactionScreen() {
 
 
 void TransactionScreen::toDetails(const TransferRequest &request, const TransferDetails &details) {
-    this->_toDetails(
+//    this->_toDetails(
 //            new transaction_details(
 //                    L"",
 //                    request.getDestination(),
@@ -45,7 +45,7 @@ void TransactionScreen::toDetails(const TransferRequest &request, const Transfer
 //                        }
 //                    }
 //            )
-    );
+//    );
 }
 
 void TransactionScreen::on_submitButton_clicked() {

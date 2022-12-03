@@ -41,7 +41,6 @@ void Bank::InternalBank::addMoney(const Card &c, uint change) {
 void Bank::InternalBank::removeMoney(const Card &c, uint change) {
     uint balance = cardBalance(c);
     if (balance < change) {
-        // todo replace with explicit exception
         throw UnexpectedException(L"Trying to remove too much money");
     }
     DBCard card;

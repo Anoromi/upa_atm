@@ -70,7 +70,6 @@ private:
     uint _money;
     Unique<Tariff> _tariff;
 public:
-    // todo why it was private??
     inline WithdrawalDetails(uint money, Unique<Tariff> tariff) : _money(money), _tariff(std::move(tariff)) {}
 
     uint getMoney() const {

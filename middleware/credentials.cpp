@@ -3,23 +3,9 @@
 //
 #include <QDebug>
 #include "credentials.h"
-#include "exceptions.h"
-
-
-//Card::Card(char *numbers) : _cardNumber(0) {
-//    for (size_t s = 0; s < 16; s++) {
-//        char c = numbers[s];
-//        if (c < '0' || c > '9')
-//            throw Card::BadChar(c);
-//        _cardNumber *= 10;
-//        _cardNumber += c - '0';
-//    }
-//}
 
 Card::Card(ullong cardNumber) : _cardNumber(cardNumber) {
 
-//    if(1234123412341234uLL > 9999999999999999uLL)
-//        throw UnexpectedException(L"");
     if(cardNumber > 9999999999999999ULL) {
         qDebug() << cardNumber;
         throw Card::TooBigNumber(cardNumber);

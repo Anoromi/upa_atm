@@ -38,27 +38,32 @@ private:
     public:
         InternalBank() : _db(QSqlDatabase::database()) {}
 
+        /*
+         * Returns true if
+         * 1. card with given number exists
+         * 2. pin is correct
+         * 3. card is not expired
+         * 4. card is not blocked
+         *
+         * Blocks card if it is expired.
+         */
         bool areValidCredentials(const Credentials &c);
 
-        TransferDetails getTransferDetails(const Credentials &c,
-                                           const TransferRequest &request);
+        void blockCard(const Card &card);
+        CardInfo getCardInfo(const Credentials &с);
 
         void transferMoney(const Credentials &c, const TransferRequest &request);
-
-        DepositDetails getDepositDetails(const Credentials &c,
-                                         const DepositRequest &request);
-
         void depositMoney(const Credentials &c, const DepositRequest &request);
+        void withdrawMoney(const Credentials &с, const WithdrawalRequest &request);
 
-        WithdrawalDetails getWithdrawalDetails(const Credentials &, const WithdrawalRequest &);
+        TransferDetails getTransferDetails(const Credentials &c, const TransferRequest &request);
+        DepositDetails getDepositDetails(const Credentials &c, const DepositRequest &request);
+        WithdrawalDetails getWithdrawalDetails(const Credentials &c, const WithdrawalRequest &request);
 
-        void withdrawMoney(const Credentials &, const WithdrawalRequest &);
-
-        void limitChildMoney(const Credentials &, const Card &card, const uint &money);
-
-        CardInfo getCardInfo(const Credentials &);
-
-        void blockCard(const Card &card);
+        /*
+         * If parent relation is not exist
+         */
+        void limitChildMoney(const Credentials &с, const Card &card, const uint &money);
     };
 
     InternalBank _internalBank;

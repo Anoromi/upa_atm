@@ -1,7 +1,6 @@
 #include "backend/database/db_card.h"
 #include "backend/database/SqlQuery.h"
 #include "backend/database/db_util.h"
-#include <string>
 
 void DBCard::to(DBCard& other) const {
     if (_number) {

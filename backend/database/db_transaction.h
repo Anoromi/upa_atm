@@ -13,7 +13,7 @@ private:
     Optional<ullong> _sender_id;
     Optional<ullong> _receiver_id;
     Optional<ullong> _amount;
-    Optional<ullong> _fee; // replace with ullong
+    Optional<ullong> _fee;
     Optional<QDateTime> _time;
     Optional<QString> _description;
 public:

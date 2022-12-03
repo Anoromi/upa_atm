@@ -103,8 +103,7 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
     } catch (...) {
         throw;
     }
-    // todo where is delete? make it Unique
-    PercentageTariff *tariff = new PercentageTariff(category.getFeeRate().value());
+    auto tariff = std::make_unique<PercentageTariff>(category.getFeeRate().value());
     uint actualInitial;
     if (request.isAfterTariff()) {
         actualInitial = tariff->getInitial(request.getMoney());
@@ -115,7 +114,7 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
     if (actualInitial > spendable) {
         throw BadMoney(actualInitial, spendable);
     }
-    return {holderName, request.getDestination(), actualInitial, Unique<Tariff>(tariff)};
+    return {holderName, request.getDestination(), actualInitial, std::move(tariff)};
 }
 
 void Bank::InternalBank::transferMoney(const Credentials &c, const TransferRequest &request) {
@@ -182,8 +181,7 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials& c,
     } catch (...) {
         throw;
     }
-    // todo where is delete? make it Unique
-    PercentageTariff *tariff = new PercentageTariff(category.getFeeRate().value());
+    auto tariff = std::make_unique<PercentageTariff>(category.getFeeRate().value());
     uint actualInitial;
     if (request.isAfterTariff()) {
         actualInitial = tariff->getInitial(request.getMoney());
@@ -194,7 +192,7 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials& c,
     if (actualInitial > spendable) {
         throw BadMoney(actualInitial, spendable);
     }
-    return {actualInitial, Unique<Tariff>(tariff)};
+    return {actualInitial, std::move(tariff)};
 }
 
 void Bank::InternalBank::withdrawMoney(const Credentials& c, const WithdrawalRequest& request) {

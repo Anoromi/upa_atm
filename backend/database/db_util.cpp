@@ -1,19 +1,6 @@
 #include "backend/database/SqlQuery.h"
 #include "backend/database/db_util.h"
 
-static const char* dbcard = "class DBCard";
-
-
-//const char* getTableName(const char* classname)
-//{
-//    if (strcmp(dbcard, classname) == 0) return "card";
-//    if (strcmp("class DBCategory", classname) == 0) return "category";
-//    if (strcmp("class DBHolder", classname) == 0) return "holder";
-//    if (strcmp("class DBParentRelation", classname) == 0) return "parent_relation";
-//    if (strcmp("class DBTransaction", classname) == 0) return "bank_transaction";
-//    throw DatabaseException("getTableName: Unknown entity class.");
-//};
-
 void executeStatement(QSqlDatabase& db, const char* stmttext)
 {
     SqlQuery query(db);
@@ -125,10 +112,4 @@ void createDatabaseSchema()
     createTableTransaction(db);
     qDebug() << db.tables();
     db.close();
-}
-
-template<typename T>
-void create(T& entity)
-{
-
 }

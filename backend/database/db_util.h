@@ -10,8 +10,6 @@ void initDatabase(const char* path, bool clear = false);
 void clearDatabase();
 void createDatabaseSchema();
 
-//const char* getTableName(const char* classname);
-
 template <typename Entity>
 Vector<Entity> selectAllT(const char* table_name, const QSqlDatabase& db)
 {

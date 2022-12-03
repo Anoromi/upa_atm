@@ -2,6 +2,7 @@
 #include "transaction_details.h"
 #include "transaction_screen.h"
 #include "ui_actionsscreen.h"
+#include "withdrawmoney.h"
 
 ActionsScreen::ActionsScreen(Shared<SignedConnection> &s, std::function<void(QWidget *destination)> push,
                              std::function<void()> pop, QWidget *parent) :
@@ -37,5 +38,10 @@ void ActionsScreen::on_transfer_clicked() {
               _push
           )
     );
+}
+
+
+void ActionsScreen::on_withdraw_clicked() {
+    _push(new WithdrawMoney(this));
 }
 

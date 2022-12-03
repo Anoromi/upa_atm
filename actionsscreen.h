@@ -21,6 +21,8 @@ public:
 private slots:
     void on_transfer_clicked();
 
+    void on_withdraw_clicked();
+
 private:
     Ui::ActionsScreen *ui;
     Shared<SignedConnection> _connect;

@@ -15,6 +15,9 @@ public:
     explicit WithdrawalScreen(QWidget *parent = nullptr);
     ~WithdrawalScreen();
 
+private slots:
+    void on_confirm_clicked();
+
 private:
     Ui::WithdrawalScreen *ui;
 };

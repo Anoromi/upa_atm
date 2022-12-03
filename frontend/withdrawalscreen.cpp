@@ -11,3 +11,8 @@ WithdrawalScreen::WithdrawalScreen(QWidget *parent) :
 WithdrawalScreen::~WithdrawalScreen() {
     delete ui;
 }
+
+void WithdrawalScreen::on_confirm_clicked() {
+
+}
+

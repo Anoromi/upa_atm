@@ -136,10 +136,13 @@ QPushButton::hover {
       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000; border-style:inset; border-color:red; background:black; border-width:1px;&quot;&gt;Введіть бажану суму для поповнення. Надлишок буде повернутий банкоматом як решта&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="styleSheet">
-      <string notr="true">color: rgb(255,0,0);
+      <string notr="true">QLineEdit {
+color: rgb(255,0,0);
 border-color: rgb(255,0,0);
 border-style:inset;
-border-width:2px;</string>
+border-width:2px;
+}
+</string>
      </property>
     </widget>
    </item>

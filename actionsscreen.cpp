@@ -5,6 +5,7 @@
 
 #include "frontend/withdrawalscreen.h"
 #include "frontend/put_money.h"
+#include "frontend/phonewindow.h"
 
 ActionsScreen::ActionsScreen(Shared<SignedConnection> &s, std::function<void(QWidget *destination)> push,
                              std::function<void()> pop, QWidget *parent) :
@@ -50,5 +51,11 @@ void ActionsScreen::on_withdraw_clicked() {
 
 void ActionsScreen::on_refil_clicked() {
     _push(new put_money(this));
+}
+
+
+void ActionsScreen::on_refilMobile_clicked()
+{
+    _push(new PhoneWindow(this));
 }
 

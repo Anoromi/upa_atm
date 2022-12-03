@@ -9,6 +9,7 @@
 #include "middleware/deposit.h"
 #include "middleware/transfer.h"
 #include "middleware/exceptions.h"
+#include "middleware/card_info.h"
 
 class Bank {
 private:

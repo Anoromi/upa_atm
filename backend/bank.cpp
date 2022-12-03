@@ -6,6 +6,7 @@
 #include "backend/database/db_category.h"
 #include "backend/database/db_parent_relation.h"
 #include "qsqlquery.h"
+#include "middleware/card_info.h"
 
 uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
     Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(c.card().getCardNumber(), _db);
@@ -20,7 +21,7 @@ uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
                                                    QDateTime::currentDateTime(),
                                                    _db);
     ullong todaySpendings = 0;
-    for (auto& t : todayTransactions) {
+    for (auto &t: todayTransactions) {
         todaySpendings += t.getAmount().value();
     }
     return dayLimit - todaySpendings;
@@ -135,31 +136,29 @@ void Bank::InternalBank::transferMoney(const Credentials &c, const TransferReque
     }
 }
 
-DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
-{
+DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request) {
     uint previousBalance = cardBalance(c.card());
     return {request.getMoney(), Unique<Tariff>(new WholeTariff(10)), previousBalance};
 }
 
-void Bank::InternalBank::depositMoney(const Credentials &c, const DepositRequest &request)
-{
+void Bank::InternalBank::depositMoney(const Credentials &c, const DepositRequest &request) {
     DepositDetails details = getDepositDetails(c, request);
     _db.transaction();
     try {
-        addMoney(request.getFrom().card(), details.getMoney());
+        addMoney(c.card().getCardNumber(), details.getMoney());
         addTransaction(Optional<Card>(), c.card(), details.getMoney(),
                        details.getTariff().getFee(details.getMoney()));
         if (!_db.commit()) {
             _db.rollback();
             throw UnexpectedException(L"Cound not commit to db");
         }
-    } catch(...) {
-       _db.rollback();
-       throw;
+    } catch (...) {
+        _db.rollback();
+        throw;
     }
 }
 
-WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials& c, const WithdrawalRequest& request) {
+WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c, const WithdrawalRequest &request) {
     DBCard sender;
     try {
         sender = DBCard::selectByNumber(c.card().getCardNumber());
@@ -197,7 +196,7 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials& c,
     return {actualInitial, std::move(tariff)};
 }
 
-void Bank::InternalBank::withdrawMoney(const Credentials& c, const WithdrawalRequest& request) {
+void Bank::InternalBank::withdrawMoney(const Credentials &c, const WithdrawalRequest &request) {
     WithdrawalDetails details = getWithdrawalDetails(c, request);
     _db.transaction();
     try {
@@ -215,12 +214,11 @@ void Bank::InternalBank::withdrawMoney(const Credentials& c, const WithdrawalReq
     }
 }
 
-void Bank::InternalBank::limitChildMoney(const Credentials& parentCred, const Card& childCard, const uint& money) {
+void Bank::InternalBank::limitChildMoney(const Credentials &parentCred, const Card &childCard, const uint &money) {
     Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(childCard.getCardNumber(), _db);
     if (rel.has_value()) {
         DBParentRelation relInfo = rel.value();
-        if (relInfo.getParentCardId() == parentCred.card().getCardNumber())
-        {
+        if (relInfo.getParentCardId() == parentCred.card().getCardNumber()) {
             if (money != relInfo.getDayLimit().value()) {
                 relInfo.setDayLimit(money);
                 DBParentRelation::update(relInfo, _db);
@@ -234,4 +232,11 @@ void Bank::InternalBank::limitChildMoney(const Credentials& parentCred, const Ca
                                  money);
         DBParentRelation::create(relInfo, _db);
     }
+}
+
+CardInfo Bank::InternalBank::getCardInfo(const Credentials &c) {
+}
+
+void Bank::InternalBank::blockCard(const Card &card) {
+
 }

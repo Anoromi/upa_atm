@@ -103,7 +103,7 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
     } catch (...) {
         throw;
     }
-
+    // todo where is delete? make it Unique
     PercentageTariff *tariff = new PercentageTariff(category.getFeeRate().value());
     uint actualInitial;
     if (request.isAfterTariff()) {
@@ -138,6 +138,7 @@ void Bank::InternalBank::transferMoney(const Credentials &c, const TransferReque
 
 DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
 {
+    // todo rewrite
     QSqlQuery query(_db);
     query.prepare("SELECT balance FROM card WHERE number = ?");
     query.addBindValue(c.card().getCardNumber());
@@ -149,19 +150,69 @@ DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const
 
 void Bank::InternalBank::depositMoney(const Credentials &c, const DepositRequest &request)
 {
+    // todo rewrite
     DepositDetails details = getDepositDetails(c, request);
     _db.transaction();
-    addTransaction(c.card(), std::optional<Card>(), details.getMoney(),
+    addTransaction(Optional<Card>(), c.card(), details.getMoney(),
                    details.getTariff().getFee(details.getMoney()));
     _db.transaction();
 }
 
-WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &, const WithdrawalRequest &) {
-    throw UnexpectedException(L"not implemented");
+WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials& c, const WithdrawalRequest& request) {
+    DBCard sender;
+    try {
+        sender = DBCard::selectByNumber(c.card().getCardNumber());
+    } catch (...) {
+        throw UnexpectedException(L"Cannot withdraw: unknown account");
+    }
+    const ullong sHolder = sender.getHolderId().value();
+    DBHolder senderInfo;
+    try {
+        senderInfo = DBHolder::selectById(sHolder);
+    } catch (...) {
+        throw UnexpectedException(L"Holder with id wasn't found");
+    }
+
+    String holderName = senderInfo.getSurname().value().toStdWString() + L" " +
+                        senderInfo.getName().value().toStdWString();
+
+    DBCategory category;
+    try {
+        category = DBCategory::selectById(sender.getCategoryId().value());
+    } catch (...) {
+        throw;
+    }
+    // todo where is delete? make it Unique
+    PercentageTariff *tariff = new PercentageTariff(category.getFeeRate().value());
+    uint actualInitial;
+    if (request.isAfterTariff()) {
+        actualInitial = tariff->getInitial(request.getMoney());
+    } else {
+        actualInitial = request.getMoney();
+    }
+    uint spendable = getSpendableMoney(c);
+    if (actualInitial > spendable) {
+        throw BadMoney(actualInitial, spendable);
+    }
+    return {actualInitial, Unique<Tariff>(tariff)};
 }
 
-void Bank::InternalBank::withdrawMoney(const Credentials &, const WithdrawalRequest &) {
-    throw UnexpectedException(L"not implemented");
+void Bank::InternalBank::withdrawMoney(const Credentials& c, const WithdrawalRequest& request) {
+    WithdrawalDetails details = getWithdrawalDetails(c, request);
+    _db.transaction();
+    try {
+        removeMoney(c.card(), details.getMoney());
+        addTransaction(c.card(), Optional<Card>(),
+                       details.getMoney(),
+                       details.getTariff()->getFee(request.getMoney()));
+        if (!_db.commit()) {
+            _db.rollback();
+            throw UnexpectedException(L"Cound not commit to db");
+        }
+    } catch (...) {
+        _db.rollback();
+        throw;
+    }
 }
 
 void Bank::InternalBank::limitChildMoney(const Credentials& parentCred, const Card& childCard, const uint& money) {

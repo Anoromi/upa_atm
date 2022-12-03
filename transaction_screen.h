@@ -13,12 +13,10 @@ class TransactionScreen;
 class TransactionScreen : public QWidget {
     Q_OBJECT
 
-
-
 public:
 
-    TransactionScreen(QWidget *parent, const SignedConnection &connection,
-                       std::function<void(QWidget* push)> parentPush);
+    TransactionScreen(QWidget *parent, const SignedConnection& connection,
+                       const std::function<void(QWidget*)>& toDetails);
 
 //    explicit transaction_screen(QWidget *parent = nullptr, Shared<std::function>);
     ~TransactionScreen();
@@ -33,7 +31,7 @@ private:
 
     Ui::TransactionScreen *ui;
     SignedConnection _connection;
-    const std::function<void(QWidget* push)>& _mainMenuPush;
+    std::function<void(QWidget* push)> _mainMenuPush;
     
 };
 

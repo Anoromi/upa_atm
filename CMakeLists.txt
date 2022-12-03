@@ -57,6 +57,7 @@ set(PROJECT_SOURCES
         actionsscreen.h actionsscreen.cpp actionsscreen.ui
         frontend/depositscreen.h frontend/depositscreen.cpp frontend/depositscreen.ui
         frontend/withdrawalscreen.h frontend/withdrawalscreen.cpp frontend/withdrawalscreen.ui
+        withdrawmoney.h withdrawmoney.cpp withdrawmoney.ui
     )
 
 

@@ -16,6 +16,7 @@
 
 #include "backend/database/SqlQuery.h"
 #include "backend/database/db_util.h"
+#include "tests/basic_db_test.h"
 
 void selectAllHolders()
 {
@@ -36,5 +37,6 @@ int main(int argc, char *argv[])
     w.show();
     // remove true to save data
     initDatabase("bank.db", true); // todo move it somewhere else?
+    basic_db_test();
     return a.exec();
 }

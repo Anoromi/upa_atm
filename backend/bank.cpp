@@ -23,6 +23,7 @@ uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
     for (auto &t: todayTransactions) {
         todaySpendings += t.getAmount().value();
     }
+    // TODO dayLimit can be smaller than totalSpendings after changing it to a smaller number.
     return dayLimit - todaySpendings;
 }
 
@@ -85,7 +86,7 @@ void Bank::InternalBank::addTransaction(std::optional<Card> sender,
 
 bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
     if (isBlocked(c)) {
-        return false; // maybe throw an exception?
+        throw BlockedCard();
     }
     try {
         Card card = c.card();
@@ -133,7 +134,7 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
         throw BadMoney(actualInitial, spendable);
     }
     return {receiverInfo.getFullName().toStdWString(),
-                request.getDestination(), actualInitial, std::move(tariff)};
+            request.getDestination(), actualInitial, std::move(tariff)};
 }
 
 void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRequest &request) {

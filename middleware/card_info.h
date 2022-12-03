@@ -11,6 +11,14 @@ class CardInfo {
 public:
     CardInfo(const String &name, uint balance) : _name(name), _balance(balance) {}
 
+    const String &getName() const {
+        return _name;
+    }
+
+    uint getBalance() const {
+        return _balance;
+    }
+
 private:
     String _name;
     uint _balance;

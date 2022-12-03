@@ -57,7 +57,7 @@ set(PROJECT_SOURCES
         frontend/depositscreen.h frontend/depositscreen.cpp frontend/depositscreen.ui
         frontend/withdrawalscreen.h frontend/withdrawalscreen.cpp frontend/withdrawalscreen.ui
         withdrawmoney.h withdrawmoney.cpp withdrawmoney.ui
-        frontend/parseOrError.h middleware/card_info.h)
+        frontend/parseOrError.h middleware/card_info.h tests/basic_db_test.cpp tests/basic_db_test.h)
 
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

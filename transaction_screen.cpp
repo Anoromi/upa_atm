@@ -16,7 +16,7 @@
 TransactionScreen::TransactionScreen(
     QWidget* parent,
     const SignedConnection& connection,
-    std::function<void(QWidget* push)> parentPush
+    const std::function<void(QWidget* push)>& parentPush
 )
     :
     QWidget(parent),
@@ -35,7 +35,8 @@ TransactionScreen::~TransactionScreen() {
 
 void TransactionScreen::toDetails(const TransferRequest& request, const TransferDetails& details) {
     this->_mainMenuPush(
-        new transaction_details(
+        new TransactionDetails
+        (
             L"",
             request.getDestination(),
             details.getTariff(),

@@ -23,6 +23,8 @@ private slots:
 
     void on_withdraw_clicked();
 
+    void on_refil_clicked();
+
 private:
     Ui::ActionsScreen *ui;
     Shared<SignedConnection> _connect;

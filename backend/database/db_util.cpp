@@ -1,25 +1,49 @@
 #include "backend/database/SqlQuery.h"
 #include "backend/database/db_util.h"
+#include "backend/database/db_category.h"
+#include "backend/database/db_holder.h"
+#include "backend/database/db_card.h"
 
-void executeStatement(QSqlDatabase& db, const char* stmttext)
+void executeStatement(const QSqlDatabase &db, const char *stmttext)
 {
     SqlQuery query(db);
     query.exec(stmttext);
+}
+
+void populateDatabase(const QSqlDatabase &db)
+{
+    qDebug() << "Populating database...";
+    ullong cat1 = DBCategory::create({0,"Premium", 0}, db);
+    qDebug() << "Created category with id" << cat1;
+    ullong cat2 = DBCategory::create({0,"Universal", 0.05}, db);
+    qDebug() << "Created category with id" << cat2;
+    ullong hold1 = DBHolder::create({0,"Oleg", "Olegonka", "+380501234567"}, db);
+    qDebug() << "Created holder with id" << hold1;
+    ullong hold2 = DBHolder::create({0,"Vasyl", "Pupok", "+380507654321"}, db);
+    qDebug() << "Created holder with id" << hold2;
+    ullong card1 = DBCard::create({1234567891011121,1234, QDate(2025,6,6), hold1, 100000, cat1}, db);
+    qDebug() << "Created card with id" << card1 << "pin:" << 1234;
+    ullong card2 = DBCard::create({5168123412341234,3221, QDate(2023,7,5), hold2, 50000, cat2}, db);
+    qDebug() << "Created card with id" << card2 << "pin:" << 3221;
 }
 
 void initDatabase(const char* path, bool clear)
 {
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(path);
+    db.open();
     if (clear) {
-        clearDatabase();
+        clearDatabase(db);
     }
-    createDatabaseSchema();
+    createDatabaseSchema(db);
+    if (clear) {
+        populateDatabase(db);
+    }
 }
 
-void clearDatabase()
+void clearDatabase(const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
+    qDebug() << "Clearing tables...";
     SqlQuery query(db);
     query.exec("DROP TABLE IF EXISTS parent_relation");
     query.exec("DROP TABLE IF EXISTS bank_transaction");
@@ -28,7 +52,7 @@ void clearDatabase()
     query.exec("DROP TABLE IF EXISTS holder");
 }
 
-inline void createTableCard(QSqlDatabase& db)
+inline void createTableCard(const QSqlDatabase &db)
 {
     static const char* stmttext = "CREATE TABLE IF NOT EXISTS card ("
                                "number INTEGER NOT NULL,"
@@ -46,7 +70,7 @@ inline void createTableCard(QSqlDatabase& db)
     executeStatement(db, stmttext);
 }
 
-inline void createTableCategory(QSqlDatabase& db)
+inline void createTableCategory(const QSqlDatabase &db)
 {
     static const char* stmttext = "CREATE TABLE IF NOT EXISTS category ("
                                   "id INTEGER PRIMARY KEY,"
@@ -56,7 +80,7 @@ inline void createTableCategory(QSqlDatabase& db)
     executeStatement(db, stmttext);
 }
 
-inline void createTableHolder(QSqlDatabase& db)
+inline void createTableHolder(const QSqlDatabase &db)
 {
     static const char* stmttext = "CREATE TABLE IF NOT EXISTS holder ("
                                   "id INTEGER PRIMARY KEY,"
@@ -68,7 +92,7 @@ inline void createTableHolder(QSqlDatabase& db)
 }
 
 
-inline void createTableParentRelation(QSqlDatabase& db)
+inline void createTableParentRelation(const QSqlDatabase &db)
 {
     static const char* stmttext = "CREATE TABLE IF NOT EXISTS parent_relation ("
                                   "parent_card_id INTEGER NOT NULL,"
@@ -83,7 +107,7 @@ inline void createTableParentRelation(QSqlDatabase& db)
     executeStatement(db, stmttext);
 }
 
-inline void createTableTransaction(QSqlDatabase& db)
+inline void createTableTransaction(const QSqlDatabase &db)
 {
     static const char* stmttext = "CREATE TABLE IF NOT EXISTS bank_transaction ("
                                   "id INTEGER PRIMARY KEY,"
@@ -101,15 +125,13 @@ inline void createTableTransaction(QSqlDatabase& db)
     executeStatement(db, stmttext);
 }
 
-void createDatabaseSchema()
+void createDatabaseSchema(const QSqlDatabase &db)
 {
-    QSqlDatabase db = QSqlDatabase::database();
-    db.open();
+    qDebug() << "Creating database schema...";
     createTableHolder(db);
     createTableCard(db);
     createTableCategory(db);
     createTableParentRelation(db);
     createTableTransaction(db);
-    qDebug() << db.tables();
-    db.close();
+    qDebug() << "Created tables:" << db.tables();
 }

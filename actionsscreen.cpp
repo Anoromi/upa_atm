@@ -32,9 +32,9 @@ void ActionsScreen::endSession() {
 
 void ActionsScreen::on_transfer_clicked() {
     _push(new TransactionScreen(
-              this,
               *this->_connect,
-              _push
+              _push,
+              nullptr,
           )
     );
 }

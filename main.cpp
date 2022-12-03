@@ -109,5 +109,4 @@ int main(int argc, char *argv[])
     }
     transtest();
     return a.exec();
-//    return 0;
 }

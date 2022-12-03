@@ -13,6 +13,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <vector>
+
 #include "backend/database/SqlQuery.h"
 #include "backend/database/db_util.h"
 

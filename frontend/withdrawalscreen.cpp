@@ -8,7 +8,6 @@ WithdrawalScreen::WithdrawalScreen(QWidget *parent) :
     ui->setupUi(this);
 }
 
-WithdrawalScreen::~WithdrawalScreen()
-{
+WithdrawalScreen::~WithdrawalScreen() {
     delete ui;
 }

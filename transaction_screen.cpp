@@ -2,8 +2,10 @@
 
 #include <utility>
 #include "ui_transaction_screen.h"
+#include "transaction_details.h"
 #include "middleware/converters.h"
 #include "frontend/error_message.h"
+
 
 //transaction_screen::transaction_screen(QWidget *parent) :
 //        QWidget(parent),
@@ -11,11 +13,46 @@
 //    ui->setupUi(this);
 //}
 
-transaction_screen::~transaction_screen() {
+TransactionScreen::TransactionScreen(
+    QWidget* parent,
+    const SignedConnection& connection,
+    std::function<void(QWidget* push)> parentPush
+)
+    :
+    QWidget(parent),
+    _connection(connection),
+    _mainMenuPush(parentPush),
+    ui(new Ui::TransactionScreen)
+{
+    ui->setupUi(this);
+}
+
+TransactionScreen::~TransactionScreen() {
     delete ui;
 }
 
-void transaction_screen::on_pushButton_clicked() {
+
+
+void TransactionScreen::toDetails(const TransferRequest& request, const TransferDetails& details) {
+    this->_mainMenuPush(
+        new transaction_details(
+            L"",
+            request.getDestination(),
+            details.getTariff(),
+            details.getMoney(),
+            [this](bool b) {
+                if (b) {
+                    _mainMenuPush(this);
+                }
+                else {
+                    ;
+                }
+            }
+        )
+    );
+}
+
+void TransactionScreen::on_submitButton_clicked() {
     auto cardRes = parseCard(ui->card->text().toStdWString());
     if (cardRes.index() == 1) {
         errorMessage(std::get<String>(cardRes));
@@ -32,18 +69,11 @@ void transaction_screen::on_pushButton_clicked() {
     try {
         TransferRequest request = TransferRequest(c, money, afterTariff);
         TransferDetails details = _connection.getTransferDetails(request);
-        _moveToDetails(request, std::move(details));
+        toDetails(request, std::move(details));
     }
     catch (const BadMoney &m) {
         errorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
                                            << L", а запитали " << moneyToString(m.getRequested())).str());
     }
-
-}
-
-transaction_screen::transaction_screen(QWidget *parent, const SignedConnection &connection,
-                                       std::function<void(TransferRequest, TransferDetails)> toDetails)
-        : QWidget(parent), _connection(connection), _moveToDetails(std::move(toDetails)), ui(new Ui::transaction_screen) {
-    ui->setupUi(this);
 }
 

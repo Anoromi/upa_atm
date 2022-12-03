@@ -5,7 +5,7 @@
 transaction_details::transaction_details(
         String message,
         std::optional<Card> receiver,
-        Shared<Tariff> &tariff,
+        const Tariff& tariff,
         uint money,
         std::function<void(bool)> move,
         QWidget *parent

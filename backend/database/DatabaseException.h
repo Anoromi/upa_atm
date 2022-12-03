@@ -1,6 +1,7 @@
 #ifndef DATABASEEXCEPTION_H
 #define DATABASEEXCEPTION_H
 #include <QSqlError>
+#include <stdexcept>
 
 inline const char* makeErrorMsg(const QString& query, const QSqlError& error, const char* src);
 

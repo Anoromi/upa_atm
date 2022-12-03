@@ -12,9 +12,7 @@ success_screen::~success_screen() {
     delete ui;
 }
 
-
-void success_screen::on_end_button_clicked()
-{
+void success_screen::on_end_button_clicked() {
     _end();
 }
 

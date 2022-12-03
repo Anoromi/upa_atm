@@ -2,7 +2,7 @@
 #include "ui_transaction_details.h"
 #include "middleware/converters.h"
 
-transaction_details::transaction_details(
+TransactionDetails::TransactionDetails (
         String message,
         std::optional<Card> receiver,
         const Tariff& tariff,
@@ -12,7 +12,7 @@ transaction_details::transaction_details(
 ) :
 
         QWidget(parent),
-        ui(new Ui::transaction_details),
+        ui(new Ui::TransactionDetails),
         _message(std::move(message)),
         _receiver(receiver),
         _tariff(tariff),
@@ -32,17 +32,17 @@ transaction_details::transaction_details(
     ui->gridLayout->update();
 }
 
-transaction_details::~transaction_details() {
+TransactionDetails::~TransactionDetails() {
     delete ui;
 }
 
-void transaction_details::on_continue_2_clicked()
+void TransactionDetails::on_continue_2_clicked()
 {
     _navigateNext(true);
 }
 
 
-void transaction_details::on_cancel_clicked()
+void TransactionDetails::on_cancel_clicked()
 {
     _navigateNext(false);
 }

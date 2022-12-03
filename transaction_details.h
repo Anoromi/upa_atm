@@ -6,14 +6,14 @@
 #include "middleware/tariff.h"
 
 namespace Ui {
-    class transaction_details;
+    class TransactionDetails;
 }
 
-class transaction_details : public QWidget {
+class TransactionDetails : public QWidget {
 Q_OBJECT
 
 public:
-    explicit transaction_details(
+    explicit TransactionDetails(
             String message,
             std::optional<Card> receiver,
             const Tariff &tariff,
@@ -22,7 +22,7 @@ public:
             QWidget *parent = nullptr
     );
 
-    ~transaction_details();
+    ~TransactionDetails();
 
 private slots:
 
@@ -31,7 +31,7 @@ private slots:
     void on_cancel_clicked();
 
 private:
-    Ui::transaction_details *ui;
+    Ui::TransactionDetails *ui;
     const String _message;
     const std::optional<Card> _receiver;
     const Tariff& _tariff;

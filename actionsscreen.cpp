@@ -13,32 +13,32 @@
 #include "middleware/converters.h"
 
 void ActionsScreen::updateCardInfo() {
-	CardInfo info = _connect->getCardInfo();
-	QString buff;
-	buff.setNum(_connect->credentials().card().getCardNumber());
-	ui->cardNumber->setText(buff);
-	ui->balance->setText(stringToQ(moneyToString(info.getBalance())));
+    CardInfo info = _connect->getCardInfo();
+    QString buff;
+    buff.setNum(_connect->credentials().card().getCardNumber());
+    ui->cardNumber->setText(buff);
+    ui->balance->setText(stringToQ(moneyToString(info.getBalance())));
 }
 
-ActionsScreen::ActionsScreen(Shared<SignedConnection>& s, std::function<void(QWidget* destination)> push,
-	std::function<void()> pop, QWidget* parent) :
-	QWidget(parent),
-	ui(new Ui::ActionsScreen),
-	_connect(s),
-	_push(std::move(push)),
-	_pop(std::move(pop)) {
-	ui->setupUi(this);
+ActionsScreen::ActionsScreen(Shared<SignedConnection> &s, std::function<void(QWidget *destination)> push,
+                             std::function<void()> pop, QWidget *parent) :
+        QWidget(parent),
+        ui(new Ui::ActionsScreen),
+        _connect(s),
+        _push(std::move(push)),
+        _pop(std::move(pop)) {
+    ui->setupUi(this);
 
-	updateCardInfo();
+    updateCardInfo();
 }
 
 
 ActionsScreen::~ActionsScreen() {
-	delete ui;
+    delete ui;
 }
 
 void ActionsScreen::endSession() {
-	_pop();
+    _pop();
 }
 
 void ActionsScreen::on_transfer_clicked() {
@@ -69,21 +69,20 @@ void ActionsScreen::on_transfer_clicked() {
 }
 
 void ActionsScreen::toDetails(
-	String message,
-	std::optional<Card> receiver,
-	Shared<Tariff> tariff,
-	uint money,
-	std::function<void()> performAction
+        String message,
+        std::optional<Card> receiver,
+        Shared<Tariff> tariff,
+        uint money,
+        std::function<void()> performAction
 ) {
-	_push(new TransactionDetails(std::move(message), receiver, tariff, money,
-		[this, performAction = std::move(performAction)](bool v) {
-			if (v) {
-				performAction();
-			}
-			else {
-				_pop();
-			}
-		}));
+    _push(new TransactionDetails(std::move(message), receiver, tariff, money,
+                                 [this, performAction = std::move(performAction)](bool v) {
+                                     if (v) {
+                                         performAction();
+                                     } else {
+                                         _pop();
+                                     }
+                                 }));
 }
 
 
@@ -111,26 +110,26 @@ void ActionsScreen::on_withdraw_clicked() {
 
 
 void ActionsScreen::on_refil_clicked() {
-	_push(
-		new PutMoney(
-			[this](const DepositRequest& request, const DepositDetails& details) {
-				try {
-		this->_connect->depositMoney(request);
-	}
-	catch (UnexpectedException& e) {
-		showErrorMessage(e.message());
-		return;
-	}
-	_push(new success_screen([this]() {this->_push(this); }));
-			},
-			[this]() { this->_pop(); },
-				*this->_connect
-				)
-	);
+    _push(
+            new PutMoney(
+                    [this](const DepositRequest &request, const DepositDetails &details) {
+                        try {
+                            this->_connect->depositMoney(request);
+                        }
+                        catch (UnexpectedException &e) {
+                            showErrorMessage(e.message());
+                            return;
+                        }
+                        _push(new success_screen([this]() { this->_push(this); }));
+                    },
+                    [this]() { this->_pop(); },
+                    *this->_connect
+            )
+    );
 }
 
 
 void ActionsScreen::on_refilMobile_clicked() {
-	_push(new PhoneWindow(this));
+    _push(new PhoneWindow(this));
 }
 

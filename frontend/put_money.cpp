@@ -4,18 +4,18 @@
 #include "middleware/converters.h"
 
 PutMoney::PutMoney
-(
-    std::function<void(const DepositRequest&, const DepositDetails&)> proceed, 
-    std::function<void()> back, 
-    const SignedConnection& connection, 
-    QWidget* parent
-):
-    _proceed(proceed),
-    _back(back),
-    _connection(connection),
-    QWidget(parent),
-    ui(new Ui::PutMoney)
-{
+        (
+                std::function<void(const DepositRequest &, const DepositDetails &)> proceed,
+                std::function<void()> back,
+                const SignedConnection &connection,
+                QWidget *parent
+        ) :
+        _proceed(proceed),
+        _back(back),
+        _connection(connection),
+        QWidget(parent),
+        ui(new Ui::PutMoney) {
+    ui->setupUi(this);
 }
 
 PutMoney::~PutMoney() {
@@ -33,7 +33,7 @@ void PutMoney::on_put_clicked() {
         DepositDetails details(_connection.getDepositDetails(request));
         _proceed(request, details);
     }
-    catch (UnexpectedException& e) {
+    catch (UnexpectedException &e) {
         showErrorMessage(e.message());
     }
 }

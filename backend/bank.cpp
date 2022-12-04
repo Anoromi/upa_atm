@@ -132,7 +132,7 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
 void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRequest &request) {
     TransferDetails details = getTransferDetails(from, request);
     uint moneyToRemove = details.getMoney();
-    uint fee = details.getTariff().getFee(request.getMoney());
+    uint fee = details.getTariff()->getFee(request.getMoney());
     addTransaction(from.card(),
                    request.getDestination().getCardNumber(),
                    moneyToRemove,

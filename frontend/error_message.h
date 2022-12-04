@@ -8,5 +8,5 @@
 #include <QMessageBox>
 #include "middleware/types.h"
 
-void errorMessage(const String& message);
+void showErrorMessage(const String& message);
 #endif //UPA_ATM_ERROR_MESSAGE_H

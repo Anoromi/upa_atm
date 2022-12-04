@@ -23,7 +23,8 @@ public:
             const Card &recipientCard,
             const uint money,
             Shared<Tariff> tariff
-    ) : _recipientName(std::move(recipientName)), _recipientCard(recipientCard), _money(money), _tariff(std::move(tariff)) {
+    ) : _recipientName(std::move(recipientName)), _recipientCard(recipientCard), _money(money),
+        _tariff(std::move(tariff)) {
     }
 
     const String &getRecipientName() const {
@@ -38,8 +39,8 @@ public:
         return _money;
     }
 
-    const Tariff &getTariff() const {
-        return *_tariff.get();
+    Shared<Tariff> getTariff() const {
+        return _tariff;
     }
 };
 

@@ -23,13 +23,8 @@ private:
 
     void popNav();
 
-    void pushLoginScreen();
-
     void pushActionsScreen(Shared<SignedConnection> s);
 
-    void pushSuccessScreen();
-
-    void pushDetailsScreen();
 
 
 };

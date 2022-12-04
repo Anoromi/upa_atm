@@ -2,10 +2,10 @@
 #include "ui_transaction_details.h"
 #include "middleware/converters.h"
 
-TransactionDetails::TransactionDetails (
+TransactionDetails::TransactionDetails(
         String message,
         std::optional<Card> receiver,
-        const Tariff& tariff,
+        const Shared<Tariff> tariff,
         uint money,
         std::function<void(bool)> move,
         QWidget *parent
@@ -36,14 +36,12 @@ TransactionDetails::~TransactionDetails() {
     delete ui;
 }
 
-void TransactionDetails::on_continue_2_clicked()
-{
+void TransactionDetails::on_continue_2_clicked() {
     _navigateNext(true);
 }
 
 
-void TransactionDetails::on_cancel_clicked()
-{
+void TransactionDetails::on_cancel_clicked() {
     _navigateNext(false);
 }
 

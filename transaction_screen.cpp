@@ -15,16 +15,17 @@
 //}
 
 TransactionScreen::TransactionScreen(
-    QWidget* parent,
-    const SignedConnection& connection,
-    const std::function<void(QWidget* push)>& parentPush
+        QWidget *parent,
+        const SignedConnection &connection,
+        std::function<void(TransferRequest, TransferDetails)> toDetails,
+        std::function<void()> back
 )
-    :
-    QWidget(parent),
-    _connection(connection),
-    _mainMenuPush(parentPush),
-    ui(new Ui::TransactionScreen)
-{
+        :
+        QWidget(parent),
+        _connection(connection),
+        _toDetails(std::move(toDetails)),
+        _back(std::move(back)),
+        ui(new Ui::TransactionScreen) {
     ui->setupUi(this);
 }
 
@@ -33,41 +34,39 @@ TransactionScreen::~TransactionScreen() {
 }
 
 
-
-void TransactionScreen::toDetails(const TransferRequest& request, const TransferDetails& details) {
-    this->_mainMenuPush(
-        new TransactionDetails
-        (
-            details.getRecipientName(),
-            details.getRecipientCard(),
-            details.getTariff(),
-            details.getMoney(),
-            [this, &request](bool b) {
-                if (b) {
-                    _mainMenuPush(this);
-                }
-                else {
-                    try{
-                        _connection.transferMoney(request);
-                    } catch (UnexpectedException& e) {
-                        errorMessage(L"Something went wrong");
-                    }
-                    _mainMenuPush(new success_screen([this](){_mainMenuPush(this);}));
-                }
-            }
-        )
-    );
-}
+//void TransactionScreen::toDetails(const TransferRequest &request, const TransferDetails &details) {
+//    this->toDetails(
+//            new TransactionDetails
+//                    (
+//                            details.getRecipientName(),
+//                            details.getRecipientCard(),
+//                            details.getTariff(),
+//                            details.getMoney(),
+//                            [this, &request](bool b) {
+//                                if (b) {
+//                                    _mainMenuPush(this);
+//                                } else {
+//                                    try {
+//                                        _connection.transferMoney(request);
+//                                    } catch (UnexpectedException &e) {
+//                                        showErrorMessage(L"Something went wrong");
+//                                    }
+//                                    _mainMenuPush(new success_screen([this]() { _mainMenuPush(this); }));
+//                                }
+//                            }
+//                    )
+//    );
+//}
 
 void TransactionScreen::on_submitButton_clicked() {
     auto cardRes = parseCard(ui->card->text().toStdWString());
     if (cardRes.index() == 1) {
-        errorMessage(std::get<String>(cardRes));
+        showErrorMessage(std::get<String>(cardRes));
         return;
     }
     auto moneyRes = parseMoney(ui->money->text().toStdWString());
     if (moneyRes.index() == 1) {
-        errorMessage(std::get<String>(moneyRes));
+        showErrorMessage(std::get<String>(moneyRes));
         return;
     }
     Card c = std::get<Card>(cardRes);
@@ -76,14 +75,14 @@ void TransactionScreen::on_submitButton_clicked() {
     try {
         TransferRequest request = TransferRequest(c, money, afterTariff);
         TransferDetails details = _connection.getTransferDetails(request);
-        toDetails(request, std::move(details));
+        _toDetails(request, std::move(details));
     }
     catch (const BadMoney &m) {
-        errorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
-                                           << L", а запитали " << moneyToString(m.getRequested())).str());
+        showErrorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
+                                               << L", а запитали " << moneyToString(m.getRequested())).str());
     }
-    catch (UnexpectedException& e) {
-        errorMessage(L"Такого рахунку не існує");
+    catch (UnexpectedException &e) {
+        showErrorMessage(L"Такого рахунку не існує");
     }
 }
 

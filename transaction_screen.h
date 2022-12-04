@@ -7,16 +7,18 @@
 #include <functional>
 
 namespace Ui {
-class TransactionScreen;
+    class TransactionScreen;
 }
 
 class TransactionScreen : public QWidget {
-    Q_OBJECT
+Q_OBJECT
 
 public:
 
-    TransactionScreen(QWidget *parent, const SignedConnection& connection,
-                       const std::function<void(QWidget*)>& toDetails);
+    TransactionScreen(QWidget *parent, const SignedConnection &connection,
+                      std::function<void(TransferRequest, TransferDetails)> toDetails,
+                      std::function<void()> back
+    );
 
 //    explicit transaction_screen(QWidget *parent = nullptr, Shared<std::function>);
     ~TransactionScreen();
@@ -27,12 +29,11 @@ private slots:
 
 private:
 
-    void toDetails(const TransferRequest&, const TransferDetails&);
 
     Ui::TransactionScreen *ui;
     SignedConnection _connection;
-    std::function<void(QWidget* push)> _mainMenuPush;
-    
+    std::function<void(TransferRequest, TransferDetails)> _toDetails;
+    std::function<void()> _back;
 };
 
 #endif // TRANSACTION_SCREEN_H

@@ -4,7 +4,7 @@
 
 #include "error_message.h"
 
-void errorMessage(const String& message) {
+void showErrorMessage(const String& message) {
     QMessageBox msg;
     msg.setText(QString::fromWCharArray(message.c_str()));
     msg.exec();

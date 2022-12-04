@@ -19,6 +19,7 @@ public:
     ~ActionsScreen();
 
 private slots:
+
     void on_transfer_clicked();
 
     void on_withdraw_clicked();
@@ -33,9 +34,20 @@ private:
     std::function<void(QWidget *destination)> _push;
     std::function<void()> _pop;
 
+    void updateCardInfo();
 
 
     void endSession();
+
+
+    void toDetails(
+            String message,
+            std::optional<Card> receiver,
+            Shared<Tariff> tariff,
+            uint money,
+            std::function<void()> performAction
+    );
+
 };
 
 #endif // ACTIONSSCREEN_H

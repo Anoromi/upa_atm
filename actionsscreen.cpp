@@ -61,13 +61,13 @@ void ActionsScreen::toDetails(
         uint money,
         std::function<void()> performAction
 ) {
-    new TransactionDetails(std::move(message), receiver, tariff, money,
-                           [this, performAction = std::move(performAction)](bool v) {
-                               if (v)
-                                   performAction();
-                               else
-                                   _pop();
-                           });
+    _push(new TransactionDetails(std::move(message), receiver, tariff, money,
+                                 [this, performAction = std::move(performAction)](bool v) {
+                                     if (v)
+                                         performAction();
+                                     else
+                                         _pop();
+                                 }));
 }
 
 

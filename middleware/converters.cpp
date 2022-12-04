@@ -6,20 +6,19 @@
 #include <sstream>
 
 std::variant<uint, String> parseMoney(const String &text) {
-    uint number = 0;
+    if (text.length() == 0)
+        return L"Потрібно ввести хоаб одну цифру";
     int i = 0;
     for (; text[i] != '.' && i < text.length(); i++) {
         if (text[i] < '0' || text[i] > '9') {
             return L"Неправильний символ у числі";
         }
-        //i = i * 10 + (text[i] - '0');
     }
     if (i + 2 == text.length() && text[i] == '.') {
         for (; i < text.length(); i++) {
             if (text[i] < '0' || text[i] > '9') {
                 return L"Неправильний символ у числі";
             }
-            //i = i * 10 + (text[i] - '0');
         }
     } else if (i + 2 != text.length() && text[i] == '.') {
         return L"Потрібно ввести копійки після крапки";

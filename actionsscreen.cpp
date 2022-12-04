@@ -42,29 +42,30 @@ void ActionsScreen::endSession() {
 }
 
 void ActionsScreen::on_transfer_clicked() {
-	_push(new TransactionScreen(
-		nullptr,
-		*this->_connect,
-		[this](auto request, auto details) {
-			toDetails(L"Перевести гроші", request.getDestination(), details.getTariff(), details.getMoney(),
-			[this, request]() {
-					try {
-		this->_connect->transferMoney(request);
-	}
-	catch (UnexpectedException& e) {
-		showErrorMessage(e.message());
-		return;
-	}
-	_push(
-		new success_screen(
-			[this]() { this->_push(this); }
-		)
-	);
-				});
-		},
-		_pop
-			)
-	);
+    _push(new TransactionScreen(
+                  nullptr,
+                  *this->_connect,
+                  [this](auto request, auto details) {
+                      toDetails(L"Перевести гроші", request.getDestination(), details.getTariff(), details.getMoney(),
+                                [this, request]() {
+                                    try {
+                                        this->_connect->transferMoney(request);
+                                    } catch (UnexpectedException &e) {
+                                        showErrorMessage(e.message());
+                                        return;
+                                    }
+                                    _push(new success_screen([this]() {
+                                        _pop();
+                                        _pop();
+                                        _pop();
+                                        updateCardInfo();
+
+                                    }));
+                                });
+                  },
+                  _pop
+          )
+    );
 }
 
 void ActionsScreen::toDetails(
@@ -87,26 +88,25 @@ void ActionsScreen::toDetails(
 
 
 void ActionsScreen::on_withdraw_clicked() {
-	_push(
-		new WithdrawalScreen(
-			[this](const WithdrawalRequest& request, const WithdrawalDetails& details) {
-				try {
-		this->_connect->withdrawMoney(request);
-	}
-	catch (UnexpectedException& e) {
-		showErrorMessage(e.message());
-		return;
-	}
-	_push(
-		new success_screen(
-			[this]() {this->_push(this); }
-		)
-	);
-			},
-			[this]() {this->_pop(); },
-				*this->_connect
-				)
-	);
+    _push(
+            new WithdrawalScreen(
+                    [this](const WithdrawalRequest &request, const WithdrawalDetails &details) {
+                        try {
+                            this->_connect->withdrawMoney(request);
+                        } catch (UnexpectedException &e) {
+                            showErrorMessage(e.message());
+                            return;
+                        }
+                        _push(
+                                new success_screen(
+                                        [this]() { this->_push(this); }
+                                )
+                        );
+                    },
+                    [this]() { this->_pop(); },
+                    *this->_connect
+            )
+    );
 }
 
 

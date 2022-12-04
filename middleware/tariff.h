@@ -18,10 +18,13 @@ private:
 
 public:
     inline String getTariff(uint money) const { return getTariff_v(money); };
+
     inline uint getFee(uint money) const { return getFee_v(money); }
+
     inline uint getLeftOver(uint money) const { return money - getFee(money); };
 
     inline Tariff() = default;
+
     virtual ~Tariff() {}
 };
 
@@ -30,9 +33,8 @@ private:
     double _percentage;
 
 public:
-    explicit inline PercentageTariff(double percentage) : Tariff(), _percentage(percentage)
-    {
-        if(percentage < 0 || percentage >= 1) {
+    explicit inline PercentageTariff(double percentage) : Tariff(), _percentage(percentage) {
+        if (percentage < 0 || percentage >= 1) {
             throw UnexpectedException(L"PercentageTariff: wrong %");
         }
     }
@@ -40,7 +42,8 @@ public:
 private:
     inline String getTariff_v(uint money) const override {
         std::wstringstream st;
-        st << _percentage;
+        st << L"Відсотковий тариф: ";
+        st << _percentage * 100 << "%";
         return st.str();
     }
 
@@ -63,7 +66,7 @@ private:
     }
 
     inline uint getFee_v(uint money) const override {
-        if(money < _loss) {
+        if (money < _loss) {
             return money;
         }
         return _loss;

@@ -80,9 +80,9 @@ private:
     uint _money;
     Unique<Tariff> _tariff;
 
+public:
     inline WithdrawalDetails(uint money, Unique<Tariff> tariff) : _money(money), _tariff(std::move(tariff)) {}
 
-public:
     uint getMoney() const {
         return _money;
     }

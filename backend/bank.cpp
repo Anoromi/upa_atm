@@ -23,7 +23,7 @@ uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
     for (auto& t : todayTransactions) {
         todaySpendings += t.getAmount().value();
     }
-    return dayLimit - todaySpendings;
+    return dayLimit < todaySpendings ? 0 : dayLimit - todaySpendings;
 }
 
 uint Bank::InternalBank::cardBalance(const Card &c) {
@@ -54,21 +54,34 @@ void Bank::InternalBank::removeMoney(const Card &c, uint change) {
 void Bank::InternalBank::addTransaction(std::optional<Card> sender,
                                         std::optional<Card> receiver,
                                         uint amount, uint fee) {
-    if (sender.has_value()) {
-        removeMoney(sender.value(), amount);
-    }
-    if (receiver.has_value()) {
-        addMoney(receiver.value(), amount - fee);
-    }
+    _db.transaction();
+        try {
+            if (sender.has_value()) {
+                removeMoney(sender.value(), amount + fee);
+            }
+            if (receiver.has_value()) {
+                addMoney(receiver.value(), amount);
+            }
+            DBTransaction bankTransaction;
+            if (sender.has_value()) {
+                bankTransaction.setSenderId(sender.value().getCardNumber());
+            }
 
-    DBTransaction bankTransaction;
-    if (sender.has_value())
-        bankTransaction.setSenderId(sender.value().getCardNumber());
-    if (receiver.has_value())
-        bankTransaction.setReceiverId(receiver.value().getCardNumber());
-    bankTransaction.setAmount(amount);
-    bankTransaction.setFee(fee);
-    bankTransaction.setTime(QDateTime::currentDateTime());
+            if (receiver.has_value()) {
+                bankTransaction.setReceiverId(receiver.value().getCardNumber());
+            }
+            bankTransaction.setAmount(amount);
+            bankTransaction.setFee(fee);
+            bankTransaction.setTime(QDateTime::currentDateTime());
+            DBTransaction::create(bankTransaction, _db);
+            if (!_db.commit()) {
+                _db.rollback();
+                throw UnexpectedException(L"Cound not commit to db");
+            }
+        } catch (...) {
+            _db.rollback();
+            throw;
+        }
 }
 
 bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
@@ -119,22 +132,13 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
     return {holderName, request.getDestination(), actualInitial, Unique<Tariff>(tariff)};
 }
 
-void Bank::InternalBank::transferMoney(const Credentials &c, const TransferRequest &request) {
-    TransferDetails details = getTransferDetails(c, request);
-    _db.transaction();
-    try {
-        removeMoney(c.card(), details.getMoney());
-        addTransaction(c.card(), request.getDestination().getCardNumber(), details.getMoney(),
-                       details.getTariff().getFee(details.getMoney()));
-        addMoney(request.getDestination(), details.getMoney());
-        if (!_db.commit()) {
-            _db.rollback();
-            throw UnexpectedException(L"Cound not commit to db");
-        }
-    } catch (...) {
-        _db.rollback();
-        throw;
-    }
+void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRequest &request) {
+    TransferDetails details = getTransferDetails(from, request);
+        uint moneyToAdd = details.getMoney();
+        uint fee = details.getTariff().getFee(moneyToAdd);
+        addTransaction(from.card(),
+                       request.getDestination().getCardNumber(),
+                       moneyToAdd, fee);
 }
 
 DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
@@ -148,21 +152,46 @@ DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const
     return {request.getMoney(), Unique<Tariff>(new WholeTariff(10)), previousBalance};
 }
 
-void Bank::InternalBank::depositMoney(const Credentials &c, const DepositRequest &request)
-{
-    DepositDetails details = getDepositDetails(c, request);
-    _db.transaction();
-    addTransaction(c.card(), std::optional<Card>(), details.getMoney(),
-                   details.getTariff().getFee(details.getMoney()));
-    _db.transaction();
+void Bank::InternalBank::depositMoney(const Credentials &to, const DepositRequest &request) {
+    DepositDetails details = getDepositDetails(to, request);
+    uint moneyToAdd = details.getMoney();
+    uint fee = details.getTariff().getFee(moneyToAdd);
+    addTransaction(Optional<Card>(), to.card(), moneyToAdd, fee);
 }
 
-WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &, const WithdrawalRequest &) {
-    throw UnexpectedException(L"not implemented");
+WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c, const WithdrawalRequest &request) {
+    DBCard sender;
+    try {
+        sender = DBCard::selectByNumber(c.card().getCardNumber());
+    } catch (...) {
+        throw UnexpectedException(L"Cannot withdraw: unknown account");
+    }
+
+    DBCategory category;
+    try {
+        category = DBCategory::selectById(sender.getCategoryId().value());
+    } catch (...) {
+        throw;
+    }
+    auto tariff = std::make_unique<PercentageTariff>(category.getFeeRate().value());
+    uint actualInitial;
+    if (request.isAfterTariff()) {
+        actualInitial = tariff->getInitial(request.getMoney());
+    } else {
+        actualInitial = request.getMoney();
+    }
+    uint spendable = getSpendableMoney(c);
+    if (actualInitial > spendable) {
+        throw BadMoney(actualInitial, spendable);
+    }
+    return {actualInitial, std::move(tariff)};
 }
 
-void Bank::InternalBank::withdrawMoney(const Credentials &, const WithdrawalRequest &) {
-    throw UnexpectedException(L"not implemented");
+void Bank::InternalBank::withdrawMoney(const Credentials &c, const WithdrawalRequest &request) {
+    WithdrawalDetails details = getWithdrawalDetails(c, request);
+    addTransaction(c.card(), Optional<Card>(),
+                       details.getMoney(),
+                       details.getTariff()->getFee(request.getMoney()));
 }
 
 void Bank::InternalBank::limitChildMoney(const Credentials& parentCred, const Card& childCard, const uint& money) {

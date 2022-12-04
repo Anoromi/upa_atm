@@ -5,18 +5,21 @@
 #include <middleware/signedConnection.h>
 
 namespace Ui {
-class put_money;
+    class PutMoney;
 }
 
-class put_money : public QWidget
+class PutMoney : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit put_money(
+    explicit PutMoney(
+            std::function<void(const DepositRequest&, const DepositDetails&)> proceed,
+            std::function<void()> back,
+            const SignedConnection& connection,
             QWidget *parent = nullptr
             );
-    ~put_money();
+    ~PutMoney();
 
 private slots:
     void on_put_clicked();
@@ -24,7 +27,10 @@ private slots:
     void on_back_clicked();
 
 private:
-    Ui::put_money *ui;
+    std::function<void(const DepositRequest&, const DepositDetails&)> _proceed;
+    std::function<void()> _back;
+    SignedConnection _connection;
+    Ui::PutMoney *ui;
 };
 
 #endif // PUT_MONEY_H

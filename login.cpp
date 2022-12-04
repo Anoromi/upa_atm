@@ -38,5 +38,8 @@ void Login::on_confirmLogin_clicked() {
     catch (BlockedCard) {
         showErrorMessage(L"Ваша карта заблокована");
     }
+    catch (UnexpectedException& e) {
+        showErrorMessage(e.message());
+    }
 }
 

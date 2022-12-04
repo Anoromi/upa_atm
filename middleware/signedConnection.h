@@ -28,6 +28,8 @@ public:
 
     WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &r);
 
+
+
     inline const Credentials &credentials() const { return _details.getCredentials(); }
 
     inline const CardInfo getCardInfo() {

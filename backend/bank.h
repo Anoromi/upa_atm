@@ -61,7 +61,6 @@ public:
     template<typename R, typename... Ad>
     R authorizedCall(const Credentials &cr, Request<R, Ad...> request, const Ad &... ar) {
         if (!_internalBank.areValidCredentials(cr)) {
-            // todo make this InvalidCredentialsException
             throw UnexpectedException(L"Credentials aren't valid");
         }
         return (_internalBank.*request)(cr, ar...);

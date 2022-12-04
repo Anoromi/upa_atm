@@ -71,7 +71,8 @@ void TransactionScreen::on_submitButton_clicked() {
     Card c = std::get<Card>(cardRes);
     uint money = std::get<uint>(moneyRes);
     if (money > _connection.getCardInfo().getBalance()) {
-        showErrorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(_connection.getCardInfo().getBalance())
+        showErrorMessage((std::wstringstream() << L"Ви не можете витратити більше "
+                                               << moneyToString(_connection.getCardInfo().getBalance())
                                                << L", а запитали " << moneyToString(money)).str());
         return;
     }
@@ -84,6 +85,9 @@ void TransactionScreen::on_submitButton_clicked() {
     catch (const BadMoney &m) {
         showErrorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
                                                << L", а запитали " << moneyToString(m.getRequested())).str());
+    }
+    catch (const BadRecipient &b) {
+        showErrorMessage(L"Даної картки не існує");
     }
     catch (UnexpectedException &e) {
         showErrorMessage(L"Такого рахунку не існує");

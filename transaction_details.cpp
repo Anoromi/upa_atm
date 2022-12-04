@@ -27,8 +27,8 @@ TransactionDetails::TransactionDetails(
     }
     ui->money->setText(stringToQ(moneyToString(money)));
     ui->message->setText(stringToQ(message));
-    ui->tariff_definition->setText(stringToQ(message));
-    ui->tariff_cost->setText(stringToQ(message));
+    ui->tariff_definition->setText(stringToQ(_tariff->getTariff(money)));
+    ui->tariff_cost->setText(stringToQ(moneyToString(_tariff->getFee(money))));
     ui->gridLayout->update();
 }
 

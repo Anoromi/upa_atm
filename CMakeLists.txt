@@ -60,7 +60,7 @@ set(PROJECT_SOURCES
         frontend/phonewindow.h frontend/phonewindow.cpp frontend/phonewindow.ui
         middleware/cardinfo.h
         tests/basic_db_test.h tests/basic_db_test.cpp
-    )
+        middleware/top_up.h)
 
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

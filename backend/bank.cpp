@@ -142,7 +142,7 @@ void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRe
 DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
 {
     uint previousBalance = cardBalance(c.card());
-    auto tariff = Unique<Tariff>(new WholeTariff(10)); // todo where to get this number?
+    auto tariff = Unique<Tariff>(new WholeTariff(10));
     uint fee = tariff->getFee(request.getMoney());
     return {request.getMoney() - fee, std::move(tariff), previousBalance};
 }

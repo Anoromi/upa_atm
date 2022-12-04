@@ -19,7 +19,6 @@ public:
                       std::function<void()> back
     );
 
-//    explicit transaction_screen(QWidget *parent = nullptr, Shared<std::function>);
     ~TransactionScreen();
 
 private slots:

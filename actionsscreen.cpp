@@ -50,11 +50,17 @@ void ActionsScreen::on_transfer_clicked() {
                                 [this, request]() {
                                     try {
                                         this->_connect->transferMoney(request);
-                                    } catch (UnexpectedException& e) {
+                                    } catch (UnexpectedException &e) {
                                         showErrorMessage(e.message());
                                         return;
                                     }
-                                    _push(new success_screen([this](){this->_push(this);}));
+                                    _push(new success_screen([this]() {
+                                        _pop();
+                                        _pop();
+                                        _pop();
+                                        updateCardInfo();
+
+                                    }));
                                 });
                   },
                   _pop
@@ -81,24 +87,24 @@ void ActionsScreen::toDetails(
 
 void ActionsScreen::on_withdraw_clicked() {
     _push(
-          new WithdrawalScreen(
-                    [this](const WithdrawalRequest& request, const WithdrawalDetails& details) {
-                         try {
+            new WithdrawalScreen(
+                    [this](const WithdrawalRequest &request, const WithdrawalDetails &details) {
+                        try {
                             this->_connect->withdrawMoney(request);
-                         } catch (UnexpectedException& e) {
+                        } catch (UnexpectedException &e) {
                             showErrorMessage(e.message());
                             return;
-                         }
+                        }
                         _push(
-                                    new success_screen(
-                                        [this](){this->_push(this);}
-                                    )
+                                new success_screen(
+                                        [this]() { this->_push(this); }
+                                )
                         );
                     },
-                    [this](){this->_pop();},
+                    [this]() { this->_pop(); },
                     *this->_connect
-                    )
-         );
+            )
+    );
 }
 
 

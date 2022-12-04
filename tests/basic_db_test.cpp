@@ -29,9 +29,9 @@ string testTransaction(const Credentials &from,
         auto request = TransferRequest(to.getCardNumber(), amount, isTarrifed);
         auto details = connection->getTransferDetails(request);
         qDebug() << "Details: "
-                 << details.getTariff().getTariff(amount)
+                 << details.getTariff()->getTariff(amount)
                  << details.getRecipientCard().getCardNumber() << details.getMoney()
-                 << details.getRecipientName() << details.getTariff().getFee(amount);
+                 << details.getRecipientName() << details.getTariff()->getFee(amount);
         connection->transferMoney(request);
         qDebug() << "After transfer: "
                  << connection->getCardInfo().getBalance()

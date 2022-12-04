@@ -48,6 +48,7 @@ void Bank::InternalBank::removeMoney(const Card &c, uint change) {
     card.setNumber(c.getCardNumber());
     card.setBalance(balance - change);
     DBCard::update(card, _db);
+    int x = 5;
 }
 
 void Bank::InternalBank::addTransaction(std::optional<Card> sender,

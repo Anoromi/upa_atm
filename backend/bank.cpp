@@ -84,7 +84,7 @@ void Bank::InternalBank::addTransaction(std::optional<Card> sender,
 
 bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
     if (isBlocked(c)) {
-        return false; // maybe throw an exception?
+        throw BlockedCard();
     }
     try {
         Card card = c.card();
@@ -220,4 +220,8 @@ CardInfo Bank::InternalBank::getCardInfo(const Credentials &c) {
     DBCard card = DBCard::selectByNumber(c.card().getCardNumber(), _db);
     DBHolder holder = DBHolder::selectById(card.getHolderId().value(), _db);
     return {holder.getFullName().toStdWString(), (uint) card.getBalance().value()};
+}
+
+void Bank::InternalBank::blockCard(const Card &card) {
+    _blocked_cards.insert(card.getCardNumber());
 }

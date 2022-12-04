@@ -31,7 +31,9 @@ public:
 
     inline const Credentials &credentials() const { return _details.getCredentials(); }
 
-        inline const CardInfo getCardInfo() { return bank.authorizedCall(credentials(), Bank::getCardInfo); }
+    inline const CardInfo getCardInfo() {
+        return bank.authorizedCall(credentials(), Bank::getCardInfo);
+    }
 };
 
 class ParentConnection {
@@ -40,9 +42,7 @@ private:
     ChildCard _childCard;
     Bank bank = BankProvider::getBank();
 public:
-
-
-    inline const Credentials& credentials() const { return _details.getCredentials();}
+   inline const Credentials &credentials() const { return _details.getCredentials(); }
 
    void limitChildMoney(uint money);
 };

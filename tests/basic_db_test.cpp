@@ -3,7 +3,7 @@
 //
 
 #include "basic_db_test.h"
-#include "backend/bank.h"
+#include "middleware/deposit.h"
 #include "middleware/signedConnection.h"
 #include "middleware/unsignedConnection.h"
 
@@ -33,7 +33,7 @@ void test2() {
                 Credentials(Card(1234567891011121), Pin(1234)));
 
         qDebug() << connection->getCardInfo().getBalance() << connection.get()->getCardInfo().getName();
-        auto request = DepositRequest(100000);
+        auto request = DepositRequest(connection->credentials(), 10000, false);
         auto details = connection->getDepositDetails(request);
         qDebug() << details.getMoney() << details.getTariff().getFee(100);
         connection->depositMoney(request);
@@ -52,7 +52,7 @@ void test3() {
                 Credentials(Card(1234567891011121), Pin(1234)));
 
         qDebug() << connection->getCardInfo().getBalance() << connection.get()->getCardInfo().getName();
-        auto request = WithdrawalRequest(10000, true);
+        auto request = WithdrawalRequest(connection->credentials(), 10000, false);
         auto details = connection->getWithdrawalDetails(request);
         qDebug() << details.getMoney() << details.getTariff()->getTariff(10000);
         connection->withdrawMoney(request);
@@ -68,7 +68,7 @@ void test3() {
 }
 
 void basic_db_test() {
-//    test1();
+    test1();
 //    test2();
-    test3();
+//    test3();
 }

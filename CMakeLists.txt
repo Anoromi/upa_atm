@@ -60,6 +60,7 @@ set(PROJECT_SOURCES
         frontend/phonewindow.h frontend/phonewindow.cpp frontend/phonewindow.ui
         withdrawmoney.h withdrawmoney.cpp withdrawmoney.ui
         middleware/cardinfo.h
+        tests/basic_db_test.h tests/basic_db_test.cpp
     )
 
 

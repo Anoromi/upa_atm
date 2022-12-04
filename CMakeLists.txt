@@ -59,7 +59,7 @@ set(PROJECT_SOURCES
         frontend/put_money.h frontend/put_money.cpp frontend/put_money.ui
         frontend/phonewindow.h frontend/phonewindow.cpp frontend/phonewindow.ui
         withdrawmoney.h withdrawmoney.cpp withdrawmoney.ui
-
+        middleware/cardinfo.h
     )
 
 

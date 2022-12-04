@@ -9,12 +9,15 @@
 #include "middleware/deposit.h"
 #include "middleware/transfer.h"
 #include "middleware/exceptions.h"
+#include "middleware/cardinfo.h"
 
 class Bank {
 private:
     class InternalBank {
     private:
         QSqlDatabase _db;
+        Set<ullong> _blocked_cards;
+
         uint getSpendableMoney(const Credentials &c);
         uint cardBalance(const Card &c);
         void addMoney(const Card &c, uint change);
@@ -24,6 +27,9 @@ private:
         void addTransaction(std::optional<Card> sender,
                             std::optional<Card> receiver,
                             uint amount, uint fee);
+        inline bool isBlocked(const Credentials &c) {
+            return _blocked_cards.find(c.card().getCardNumber()) != _blocked_cards.end();
+        }
 
     public:
         InternalBank() : _db(QSqlDatabase::database()) {}
@@ -40,6 +46,8 @@ private:
         WithdrawalDetails getWithdrawalDetails(const Credentials &, const WithdrawalRequest &);
         void withdrawMoney(const Credentials &, const WithdrawalRequest &);
         void limitChildMoney(const Credentials &, const Card &card, const uint &money);
+        CardInfo getCardInfo(const Credentials &);
+        void blockCard(const Card &card);
     };
 
     InternalBank _internalBank;
@@ -68,6 +76,7 @@ public:
     constexpr static Bank::Request<WithdrawalDetails, WithdrawalRequest> getWithdrawalDetails = &InternalBank::getWithdrawalDetails;
     constexpr static Bank::Request<void, WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
     constexpr static Bank::Request<void, Card, uint> limitChildMoney = &InternalBank::limitChildMoney;
+    constexpr static Bank::Request<CardInfo> getCardInfo = &InternalBank::getCardInfo;
 };
 
 #endif //UPA_ATM_BANK_H

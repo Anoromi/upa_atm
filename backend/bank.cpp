@@ -5,7 +5,6 @@
 #include "backend/database/db_transaction.h"
 #include "backend/database/db_category.h"
 #include "backend/database/db_parent_relation.h"
-#include "qsqlquery.h"
 
 uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
     Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(c.card().getCardNumber(), _db);
@@ -20,7 +19,7 @@ uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
                                                    QDateTime::currentDateTime(),
                                                    _db);
     ullong todaySpendings = 0;
-    for (auto& t : todayTransactions) {
+    for (auto &t : todayTransactions) {
         todaySpendings += t.getAmount().value();
     }
     return dayLimit < todaySpendings ? 0 : dayLimit - todaySpendings;
@@ -48,46 +47,53 @@ void Bank::InternalBank::removeMoney(const Card &c, uint change) {
     card.setNumber(c.getCardNumber());
     card.setBalance(balance - change);
     DBCard::update(card, _db);
-    int x = 5;
 }
 
 void Bank::InternalBank::addTransaction(std::optional<Card> sender,
                                         std::optional<Card> receiver,
                                         uint amount, uint fee) {
     _db.transaction();
-        try {
-            if (sender.has_value()) {
-                removeMoney(sender.value(), amount + fee);
-            }
-            if (receiver.has_value()) {
-                addMoney(receiver.value(), amount);
-            }
-            DBTransaction bankTransaction;
-            if (sender.has_value()) {
-                bankTransaction.setSenderId(sender.value().getCardNumber());
-            }
-
-            if (receiver.has_value()) {
-                bankTransaction.setReceiverId(receiver.value().getCardNumber());
-            }
-            bankTransaction.setAmount(amount);
-            bankTransaction.setFee(fee);
-            bankTransaction.setTime(QDateTime::currentDateTime());
-            DBTransaction::create(bankTransaction, _db);
-            if (!_db.commit()) {
-                _db.rollback();
-                throw UnexpectedException(L"Cound not commit to db");
-            }
-        } catch (...) {
-            _db.rollback();
-            throw;
+    try {
+        if (sender.has_value()) {
+            removeMoney(sender.value(), amount + fee);
         }
+        if (receiver.has_value()) {
+            addMoney(receiver.value(), amount);
+        }
+        DBTransaction bankTransaction;
+        if (sender.has_value()) {
+            bankTransaction.setSenderId(sender.value().getCardNumber());
+        }
+
+        if (receiver.has_value()) {
+            bankTransaction.setReceiverId(receiver.value().getCardNumber());
+        }
+        bankTransaction.setAmount(amount);
+        bankTransaction.setFee(fee);
+        bankTransaction.setTime(QDateTime::currentDateTime());
+        DBTransaction::create(bankTransaction, _db);
+        if (!_db.commit()) {
+            _db.rollback();
+            throw UnexpectedException(L"Cound not commit to db");
+        }
+    } catch (...) {
+        _db.rollback();
+        throw;
+    }
 }
 
 bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
+    if (isBlocked(c)) {
+        return false; // maybe throw an exception?
+    }
     try {
-        DBCard card = DBCard::selectByNumber(c.card().getCardNumber());
-        return card.getPin().value() == c.pin().getPin();
+        Card card = c.card();
+        DBCard cardInfo = DBCard::selectByNumber(card.getCardNumber());
+        if (QDate::currentDate() > cardInfo.getExpirationDate().value()) {
+            blockCard(card);
+            return false;
+        }
+        return cardInfo.getPin().value() == c.pin().getPin();
     } catch (...) {
         return false;
     }
@@ -143,12 +149,7 @@ void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRe
 
 DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
 {
-    QSqlQuery query(_db);
-    query.prepare("SELECT balance FROM card WHERE number = ?");
-    query.addBindValue(c.card().getCardNumber());
-    query.exec();
-    query.next();
-    uint previousBalance = query.value(0).toUInt();
+    uint previousBalance = cardBalance(c.card());
     return {request.getMoney(), Unique<Tariff>(new WholeTariff(10)), previousBalance};
 }
 
@@ -213,4 +214,10 @@ void Bank::InternalBank::limitChildMoney(const Credentials& parentCred, const Ca
                                  money);
         DBParentRelation::create(relInfo, _db);
     }
+}
+
+CardInfo Bank::InternalBank::getCardInfo(const Credentials &c) {
+    DBCard card = DBCard::selectByNumber(c.card().getCardNumber(), _db);
+    DBHolder holder = DBHolder::selectById(card.getHolderId().value(), _db);
+    return {holder.getFullName().toStdWString(), (uint) card.getBalance().value()};
 }

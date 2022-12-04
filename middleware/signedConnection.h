@@ -11,7 +11,7 @@
 
 class SignedConnection {
     ConnectionDetails _details;
-    Bank& bank = BankProvider::getBank();
+    Bank &bank = BankProvider::getBank();
 public:
 
     explicit SignedConnection(const ConnectionDetails &details);
@@ -29,7 +29,9 @@ public:
 
     WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &r);
 
-    inline const Credentials& credentials() const { return _details.getCredentials();}
+    inline const Credentials &credentials() const { return _details.getCredentials(); }
+
+        inline const CardInfo getCardInfo() { return bank.authorizedCall(credentials(), Bank::getCardInfo); }
 };
 
 class ParentConnection {

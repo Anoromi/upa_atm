@@ -5,12 +5,10 @@
 #include <QSqlDatabase>
 #include "backend/database/SqlQuery.h"
 
-void executeStatement(QSqlDatabase& db, const char* stmttext);
+void executeStatement(const QSqlDatabase &db, const char *stmttext);
 void initDatabase(const char* path, bool clear = false);
-void clearDatabase();
-void createDatabaseSchema();
-
-//const char* getTableName(const char* classname);
+void clearDatabase(const QSqlDatabase &db);
+void createDatabaseSchema(const QSqlDatabase &db);
 
 template <typename Entity>
 Vector<Entity> selectAllT(const char* table_name, const QSqlDatabase& db)

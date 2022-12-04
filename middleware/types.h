@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 #include <optional>
+#include <set>
 
 using ushort = unsigned short;
 using uint = unsigned int;
@@ -28,5 +29,8 @@ using Vector = std::vector<T>;
 
 template<typename T>
 using Optional = std::optional<T>;
+
+template <typename T>
+using Set = std::set<T>;
 
 #endif //BOOBLEEQUE_ATM_TYPES_H

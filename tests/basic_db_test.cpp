@@ -29,6 +29,7 @@ string testTransaction(const Credentials &from,
         auto request = TransferRequest(to.getCardNumber(), amount, isTarrifed);
         auto details = connection->getTransferDetails(request);
         qDebug() << "Details: "
+                 << details.getTariff().getTariff(amount)
                  << details.getRecipientCard().getCardNumber() << details.getMoney()
                  << details.getRecipientName() << details.getTariff().getFee(amount);
         connection->transferMoney(request);
@@ -68,6 +69,7 @@ string testDeposit(const Credentials &to,
         auto request = DepositRequest(connection->credentials(), amount, false);
         auto details = connection->getDepositDetails(request);
         qDebug() << "Details:"
+                 << details.getTariff().getTariff(amount)
                  << details.getMoney()
                  << details.getTariff().getFee(amount);
         connection->depositMoney(request);
@@ -90,31 +92,41 @@ string testDeposit(const Credentials &to,
     }
 }
 
-void test3() {
+/*
+ * returns error name if it occures
+ * or lefover on card after withrdrawal
+ */
+string testWithdraw(const Credentials &from,
+                    uint amount,
+                    bool isTarrifed) {
     try {
-        auto connection = UnsignedConnection().createConnection(
-                Credentials(Card(1234567891011121), Pin(1234)));
-
-        qDebug() << "before withdraw: "
+        auto connection = UnsignedConnection().createConnection(from);
+        qDebug() << "Before deposit: "
                  << connection->getCardInfo().getBalance()
                  << connection.get()->getCardInfo().getName();
-        auto request = WithdrawalRequest(connection->credentials(), 10000, false);
+        auto request = WithdrawalRequest(connection->credentials(), amount, false);
         auto details = connection->getWithdrawalDetails(request);
-        qDebug() << "Details: " <<
-                    details.getMoney() <<
-                    details.getTariff()->getTariff(10000);
+        qDebug() << "Details:"
+                 << details.getTariff()->getTariff(amount)
+                 << details.getMoney()
+                 << details.getTariff()->getFee(amount);
         connection->withdrawMoney(request);
-        qDebug() << "After withdraw: " <<
-                    connection->getCardInfo().getBalance() <<
-                    connection.get()->getCardInfo().getName();
+        qDebug() << "After deposit: "
+                 << connection->getCardInfo().getBalance()
+                 << connection.get()->getCardInfo().getName();
+        auto res = to_string(connection->getCardInfo().getBalance());
+        qDebug() << "result:" << res.c_str();
+        return res;
     }
     catch (BadMoney &) {
-        qDebug() << "Bad money works";
+        return "Bad money";
     }
     catch (BadRecipient &) {
-        qDebug() << "Bad recipient works";
+        return "Bad recipient";
     }
-
+    catch (UnexpectedException &) {
+        return "Bad credentials";
+    }
 }
 
 void restoreTestData(const QSqlDatabase &db) {
@@ -184,8 +196,29 @@ void deposittests() {
               [] {return "100" == testDeposit({1234567891011121,1234}, 5, true);});
 }
 
+void withdrawtests() {
+    QSqlDatabase db = QSqlDatabase::database();
+    db.open();
+    restoreTestData(db);
+    checkTest("withdraw1",
+              [] {return "Bad credentials" == testWithdraw({123,123}, 0, false);});
+    checkTest("withdraw2",
+              [] {return "Bad credentials" == testWithdraw({1234567891011121,123}, 0, false);});
+    checkTest("withdraw3",
+              [] {return "0" == testWithdraw({1234567891011121,1234}, 100, false);});
+    restoreTestData(db);
+    checkTest("withdraw4",
+              [] {return "0" == testWithdraw({1234567891011121,1234}, 100, true);});
+    restoreTestData(db);
+    checkTest("withdraw5",
+              [] {return "0" == testWithdraw({5168123412341234,3221}, 50, false);});
+    checkTest("withdraw6",
+              [] {return "Bad money" == testWithdraw({5168123412341234,3221}, 50, true);});
+}
+
 void basic_db_test() {
 
     transactiontests();
     deposittests();
+    withdrawtests();
 }

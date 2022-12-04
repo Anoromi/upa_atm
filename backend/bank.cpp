@@ -155,31 +155,14 @@ void Bank::InternalBank::depositMoney(const Credentials &to, const DepositReques
 }
 
 WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c, const WithdrawalRequest &request) {
-    DBCard sender;
-    try {
-        sender = DBCard::selectByNumber(c.card().getCardNumber());
-    } catch (...) {
-        throw UnexpectedException(L"Cannot withdraw: unknown account");
-    }
-
-    DBCategory category;
-    try {
-        category = DBCategory::selectById(sender.getCategoryId().value());
-    } catch (...) {
-        throw;
-    }
+    DBCard sender = DBCard::selectByNumber(c.card().getCardNumber());
+    DBCategory category = DBCategory::selectById(sender.getCategoryId().value());
     auto tariff = std::make_unique<PercentageTariff>(category.getFeeRate().value());
-    uint actualInitial;
+    uint moneyToBeWithdrawed = request.getMoney();
     if (request.isAfterTariff()) {
-        //actualInitial = tariff->getInitial(request.getMoney());
-    } else {
-        actualInitial = request.getMoney();
+        moneyToBeWithdrawed -= tariff->getFee(moneyToBeWithdrawed);
     }
-    uint spendable = getSpendableMoney(c.card());
-    if (actualInitial > spendable) {
-        throw BadMoney(actualInitial, spendable);
-    }
-    return {actualInitial, std::move(tariff)};
+    return {moneyToBeWithdrawed, std::move(tariff)};
 }
 
 void Bank::InternalBank::withdrawMoney(const Credentials &c, const WithdrawalRequest &request) {

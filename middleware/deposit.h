@@ -32,10 +32,11 @@ private:
     uint _previousBalance;
 
 public:
-    DepositDetails(uint money, Unique<Tariff> &&tariff, uint resultingBalance) : _money(money),
-                                                                                 _tariff(std::move(tariff)),
-                                                                                 _previousBalance(
-                                                                                         resultingBalance) {}
+    DepositDetails(uint money, Unique<Tariff> &&tariff, uint resultingBalance)
+        : _money(money),
+          _tariff(std::move(tariff)),
+          _previousBalance(resultingBalance)
+    {}
 
     uint getMoney() const {
         return _money;
@@ -59,8 +60,10 @@ private:
 public:
 
 
-    inline WithdrawalRequest(Credentials from, uint money, bool afterTariff) : _from(from), _money(money),
-                                                                               _afterTariff(afterTariff) {}
+    inline WithdrawalRequest(Credentials from, uint money, bool afterTariff)
+        : _from(from), _money(money),
+          _afterTariff(afterTariff)
+    {}
 
     const Credentials &getFrom() const {
         return _from;

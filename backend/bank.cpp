@@ -108,6 +108,10 @@ bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
 }
 
 TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, const TransferRequest &request) {
+    if (c.card().getCardNumber() == request.getDestination().getCardNumber()) {
+        throw UnexpectedException(L"Trying to make transaction to your own card!");
+    }
+
     DBCard sender = DBCard::selectByNumber(c.card().getCardNumber());
     DBCard receiver;
     try {

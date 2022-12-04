@@ -137,12 +137,15 @@ QPushButton::hover {
      </property>
      <property name="styleSheet">
       <string notr="true">QLineEdit {
-color: rgb(255,0,0);
-border-color: rgb(255,0,0);
-border-style:inset;
-border-width:2px;
+	color: rgb(255,0,0);
+	border-color: rgb(255,0,0);
+	border-style:inset;
+	border-width:2px;
 }
 </string>
+     </property>
+     <property name="text">
+      <string/>
      </property>
     </widget>
    </item>

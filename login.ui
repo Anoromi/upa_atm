@@ -184,7 +184,7 @@ QPushButton#confirmLogin:hover {
 }</string>
          </property>
          <property name="text">
-          <string>Confirm</string>
+          <string>Увійти</string>
          </property>
         </widget>
        </item>

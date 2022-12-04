@@ -36,7 +36,7 @@ void ActionsScreen::endSession() {
 
 void ActionsScreen::on_transfer_clicked() {
     _push(new TransactionScreen(
-              this,
+              nullptr,
               *this->_connect,
               _push
           )
@@ -45,12 +45,12 @@ void ActionsScreen::on_transfer_clicked() {
 
 
 void ActionsScreen::on_withdraw_clicked() {
-    _push(new WithdrawalScreen(this));
+    _push(new WithdrawalScreen());
 }
 
 
 void ActionsScreen::on_refil_clicked() {
-    _push(new put_money(this));
+    _push(new put_money());
 }
 
 

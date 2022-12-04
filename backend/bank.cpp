@@ -160,7 +160,7 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c,
     auto tariff = std::make_unique<PercentageTariff>(category.getFeeRate().value());
     uint moneyToBeWithdrawed = request.getMoney();
     if (request.isAfterTariff()) {
-        moneyToBeWithdrawed -= tariff->getFee(moneyToBeWithdrawed);
+        moneyToBeWithdrawed += tariff->getFee(moneyToBeWithdrawed);
     }
     return {moneyToBeWithdrawed, std::move(tariff)};
 }

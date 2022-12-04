@@ -18,9 +18,9 @@ using namespace std;
  * b - leftover on receiver card
  */
 string testTransaction(const Credentials &from,
-                           const Card &to,
-                           uint amount,
-                           bool isTarrifed) {
+                       const Card &to,
+                       uint amount,
+                       bool isTarrifed) {
     try {
         auto connection = UnsignedConnection().createConnection(from);
         qDebug() << "Before transfer: "
@@ -53,47 +53,40 @@ string testTransaction(const Credentials &from,
     }
 }
 
-void test1_1() {
+/*
+ * returns error name if it occures
+ * or lefover on card after deposit
+ */
+string testDeposit(const Credentials &to,
+                   uint amount,
+                   bool isTarrifed) {
     try {
-        auto connection = UnsignedConnection().createConnection(
-                Credentials(Card(5168123412341234), Pin(3221)));
-        qDebug() << "Before transfer: "
+        auto connection = UnsignedConnection().createConnection(to);
+        qDebug() << "Before deposit: "
                  << connection->getCardInfo().getBalance()
                  << connection.get()->getCardInfo().getName();
-        auto request = TransferRequest(Card(5168123412341234), 50000, true);
-        auto details = connection->getTransferDetails(request);
-        qDebug() << "Details: "
-                 << details.getRecipientCard().getCardNumber() << details.getMoney()
-                 << details.getRecipientName() << details.getTariff().getFee(100);
-        connection->transferMoney(request);
-        qDebug() << "After transfer: "
-                 << connection->getCardInfo().getBalance()
-                 << connection.get()->getCardInfo().getName();
-    }
-    catch (BadMoney &) {
-        qDebug() << "Bad money works";
-    }
-    catch (BadRecipient &) {
-        qDebug() << "Bad recipient works";
-    }
-}
-
-void test2() {
-    try {
-        auto connection = UnsignedConnection().createConnection(
-                Credentials(Card(1234567891011121), Pin(1234)));
-
-        qDebug() << connection->getCardInfo().getBalance() << connection.get()->getCardInfo().getName();
-        auto request = DepositRequest(connection->credentials(), 10000, false);
+        auto request = DepositRequest(connection->credentials(), amount, false);
         auto details = connection->getDepositDetails(request);
-        qDebug() << details.getMoney() << details.getTariff().getFee(100);
+        qDebug() << "Details:"
+                 << details.getMoney()
+                 << details.getTariff().getFee(amount);
         connection->depositMoney(request);
+        qDebug() << "After deposit: "
+                 << connection->getCardInfo().getBalance()
+                 << connection.get()->getCardInfo().getName();
+        connection->getCardInfo();
+        auto res = to_string(connection->getCardInfo().getBalance());
+        qDebug() << "result:" << res.c_str();
+        return res;
     }
     catch (BadMoney &) {
-        qDebug() << "Bad money works";
+        return "Bad money";
     }
     catch (BadRecipient &) {
-        qDebug() << "Bad recipient works";
+        return "Bad recipient";
+    }
+    catch (UnexpectedException &) {
+        return "Bad credentials";
     }
 }
 
@@ -140,7 +133,8 @@ void checkTest(const char* name, bool (*condition)()) {
     qDebug() << "============================================";
 }
 
-void basic_db_test() {
+void transactiontests()
+{
     // tried to make this work on test.db
     // but BankProvider thus Bank uses bank.db anyway
     // so we need to turn tests off for know if we want to work
@@ -170,6 +164,28 @@ void basic_db_test() {
     restoreTestData(db);
     checkTest("trans9",
               [] {return "0 148" == testTransaction({5168123412341234,3221}, {1234567891011121}, 48, true);});
+}
 
+void deposittests() {
+    QSqlDatabase db = QSqlDatabase::database();
+    db.open();
     restoreTestData(db);
+    checkTest("deposit1",
+              [] {return "Bad credentials" == testDeposit({123,123}, 0, false);});
+    checkTest("deposit2",
+              [] {return "Bad credentials" == testDeposit({1234567891011121,123}, 0, false);});
+    checkTest("deposit3",
+              [] {return "150" == testDeposit({1234567891011121,1234}, 50, false);});
+    restoreTestData(db);
+    checkTest("deposit4",
+              [] {return "140" == testDeposit({1234567891011121,1234}, 50, true);});
+    restoreTestData(db);
+    checkTest("deposit5",
+              [] {return "100" == testDeposit({1234567891011121,1234}, 5, true);});
+}
+
+void basic_db_test() {
+
+    transactiontests();
+    deposittests();
 }

@@ -116,26 +116,13 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
         throw BadRecipient(request.getDestination());
     }
     const ullong rHolder = receiver.getHolderId().value();
-    DBHolder receiverInfo;
-    try {
-        receiverInfo = DBHolder::selectById(rHolder);
-    } catch (...) {
-        throw BadRecipient(request.getDestination());
-    }
-
-    DBCategory category;
-    try {
-        category = DBCategory::selectById(sender.getCategoryId().value());
-    } catch (...) {
-        throw;
-    }
-
+    DBHolder receiverInfo = DBHolder::selectById(rHolder);;
+    DBCategory category = DBCategory::selectById(sender.getCategoryId().value());
     auto tariff = Unique<Tariff>(new PercentageTariff(category.getFeeRate().value()));
     uint actual = request.getMoney();
     if (request.isAfterTariff()) {
         actual += tariff->getFee(request.getMoney());
     }
-
     return {receiverInfo.getFullName().toStdWString(),
             request.getDestination(),
             actual,
@@ -155,13 +142,15 @@ void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRe
 DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
 {
     uint previousBalance = cardBalance(c.card());
-    return {request.getMoney(), Unique<Tariff>(new WholeTariff(10)), previousBalance};
+    auto tariff = Unique<Tariff>(new WholeTariff(10)); // todo where to get this number?
+    uint fee = tariff->getFee(request.getMoney());
+    return {request.getMoney() - fee, std::move(tariff), previousBalance};
 }
 
 void Bank::InternalBank::depositMoney(const Credentials &to, const DepositRequest &request) {
     DepositDetails details = getDepositDetails(to, request);
-    uint moneyToAdd = details.getMoney();
-    uint fee = details.getTariff().getFee(moneyToAdd);
+    uint fee = details.getTariff().getFee(request.getMoney());
+    uint moneyToAdd = request.getMoney();
     addTransaction(Optional<Card>(), to.card(), moneyToAdd, fee);
 }
 

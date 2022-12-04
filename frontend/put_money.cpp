@@ -26,6 +26,7 @@ void PutMoney::on_put_clicked() {
     std::variant<uint, String> readMoney(parseMoney(this->ui->moneyLine->text().toStdWString()));
     if (readMoney.index() == 1) {
         showErrorMessage(std::get<String>(readMoney));
+        return;
     }
     uint money = std::get<uint>(readMoney);
     try {
@@ -35,6 +36,7 @@ void PutMoney::on_put_clicked() {
     }
     catch (UnexpectedException &e) {
         showErrorMessage(e.message());
+        return;
     }
 }
 

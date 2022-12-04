@@ -33,9 +33,6 @@ void Login::on_confirmLogin_clicked() {
     Card card = std::get<Card>(cardRes);
     Pin pin = std::get<Pin>(pinRes);
     try {
-        // TODO add validation once it works
-//        if (_uConnection.validateCredentials({card, pin})) {
-//        }
         _enter(_uConnection.createConnection({card, pin}));
     }
     catch (BlockedCard) {

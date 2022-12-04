@@ -1,6 +1,7 @@
 #include "transaction_screen.h"
 
 #include <utility>
+#include "success_screen.h"
 #include "ui_transaction_screen.h"
 #include "transaction_details.h"
 #include "middleware/converters.h"
@@ -37,16 +38,21 @@ void TransactionScreen::toDetails(const TransferRequest& request, const Transfer
     this->_mainMenuPush(
         new TransactionDetails
         (
-            L"",
-            request.getDestination(),
+            details.getRecipientName(),
+            details.getRecipientCard(),
             details.getTariff(),
             details.getMoney(),
-            [this](bool b) {
+            [this, &request](bool b) {
                 if (b) {
                     _mainMenuPush(this);
                 }
                 else {
-                    ;
+                    try{
+                        _connection.transferMoney(request);
+                    } catch (UnexpectedException& e) {
+                        errorMessage(L"Something went wrong");
+                    }
+                    _mainMenuPush(new success_screen([this](){_mainMenuPush(this);}));
                 }
             }
         )
@@ -75,6 +81,9 @@ void TransactionScreen::on_submitButton_clicked() {
     catch (const BadMoney &m) {
         errorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
                                            << L", а запитали " << moneyToString(m.getRequested())).str());
+    }
+    catch (UnexpectedException& e) {
+        errorMessage(L"Такого рахунку не існує");
     }
 }
 

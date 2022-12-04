@@ -24,8 +24,8 @@ private:
         void removeMoney(const Card &c, uint change);
 
         /*
-         * amount + fee will be charged from sender
-         * amount will be send to receiver
+         * amount will be charged from sender
+         * amount - fee will be send to receiver
          */
         void addTransaction(std::optional<Card> sender,
                             std::optional<Card> receiver,

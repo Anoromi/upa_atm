@@ -11,6 +11,12 @@
 
 using namespace std;
 
+/*
+ * returns error name if it occures
+ * or string in format 'a b'
+ * a - leftover on sender card
+ * b - leftover on receiver card
+ */
 string testTransaction(const Credentials &from,
                            const Card &to,
                            uint amount,
@@ -157,16 +163,13 @@ void basic_db_test() {
               [] {return "0 150" == testTransaction({1234567891011121,1234}, {5168123412341234}, 100, true);});
     restoreTestData(db);
     checkTest("trans7",
-              [] {return "50 100" == testTransaction({5168123412341234,3221}, {1234567891011121}, 50, false);});
-    restoreTestData(db);
-    checkTest("trans8",
               [] {return "0 150" == testTransaction({5168123412341234,3221}, {1234567891011121}, 50, false);});
     restoreTestData(db);
-    checkTest("trans9",
+    checkTest("trans8",
               [] {return "2 148" == testTransaction({5168123412341234,3221}, {1234567891011121}, 48, false);});
     restoreTestData(db);
-    checkTest("trans10",
-              [] {return "0 150" == testTransaction({5168123412341234,3221}, {1234567891011121}, 48, true);});
+    checkTest("trans9",
+              [] {return "0 148" == testTransaction({5168123412341234,3221}, {1234567891011121}, 48, true);});
 
     restoreTestData(db);
 }

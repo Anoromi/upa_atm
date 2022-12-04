@@ -52,22 +52,25 @@ void Bank::InternalBank::removeMoney(const Card &c, uint change) {
     DBCard::update(card, _db);
 }
 
+/*
+ * amount will be charged from sender
+ * amount - fee will be send to receiver
+ */
 void Bank::InternalBank::addTransaction(std::optional<Card> sender,
                                         std::optional<Card> receiver,
                                         uint amount, uint fee) {
     _db.transaction();
     try {
         if (sender.has_value()) {
-            removeMoney(sender.value(), amount + fee);
+            removeMoney(sender.value(), amount);
         }
         if (receiver.has_value()) {
-            addMoney(receiver.value(), amount);
+            addMoney(receiver.value(), amount - fee);
         }
         DBTransaction bankTransaction;
         if (sender.has_value()) {
             bankTransaction.setSenderId(sender.value().getCardNumber());
         }
-
         if (receiver.has_value()) {
             bankTransaction.setReceiverId(receiver.value().getCardNumber());
         }
@@ -126,19 +129,27 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
     } catch (...) {
         throw;
     }
+
+    auto tariff = Unique<Tariff>(new PercentageTariff(category.getFeeRate().value()));
+    uint actual = request.getMoney();
+    if (request.isAfterTariff()) {
+        actual += tariff->getFee(request.getMoney());
+    }
+
     return {receiverInfo.getFullName().toStdWString(),
             request.getDestination(),
-            request.getMoney(),
-            Unique<Tariff>(new PercentageTariff(category.getFeeRate().value()))};
+            actual,
+            std::move(tariff)};
 }
 
 void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRequest &request) {
     TransferDetails details = getTransferDetails(from, request);
-    uint moneyToAdd = details.getMoney();
-    uint fee = details.getTariff().getFee(moneyToAdd);
+    uint moneyToRemove = details.getMoney();
+    uint fee = details.getTariff().getFee(request.getMoney());
     addTransaction(from.card(),
                    request.getDestination().getCardNumber(),
-                   moneyToAdd, fee);
+                   moneyToRemove,
+                   request.isAfterTariff() ? fee : 0);
 }
 
 DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
@@ -171,7 +182,7 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c,
     auto tariff = std::make_unique<PercentageTariff>(category.getFeeRate().value());
     uint actualInitial;
     if (request.isAfterTariff()) {
-        actualInitial = tariff->getInitial(request.getMoney());
+        //actualInitial = tariff->getInitial(request.getMoney());
     } else {
         actualInitial = request.getMoney();
     }

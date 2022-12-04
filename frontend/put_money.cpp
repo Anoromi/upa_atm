@@ -8,7 +8,15 @@ put_money::put_money(QWidget *parent) :
     ui->setupUi(this);
 }
 
-put_money::~put_money()
-{
+put_money::~put_money() {
     delete ui;
 }
+
+void put_money::on_put_clicked() {
+
+}
+
+void put_money::on_back_clicked() {
+
+}
+

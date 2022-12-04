@@ -20,7 +20,6 @@ public:
 
     void transferMoney(const TransferRequest &);
 
-
     void withdrawMoney(const WithdrawalRequest &);
 
     DepositDetails getDepositDetails(const DepositRequest &r);

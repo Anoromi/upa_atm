@@ -12,3 +12,14 @@ PhoneWindow::~PhoneWindow()
 {
     delete ui;
 }
+
+void PhoneWindow::on_confirm_clicked() {
+
+}
+
+
+void PhoneWindow::on_cancel_clicked()
+{
+
+}
+

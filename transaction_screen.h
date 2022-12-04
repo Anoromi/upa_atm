@@ -3,7 +3,6 @@
 
 #include <QWidget>
 #include "middleware/signedConnection.h"
-#include "actionsscreen.h"
 #include <functional>
 
 namespace Ui {
@@ -26,6 +25,8 @@ public:
 private slots:
 
     void on_submitButton_clicked();
+
+    void on_back_clicked();
 
 private:
 

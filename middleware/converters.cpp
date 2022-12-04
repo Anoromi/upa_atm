@@ -24,7 +24,7 @@ std::variant<uint, String> parseMoney(const String &text) {
     } else if (i + 2 != text.length() && text[i] == '.') {
         return L"Потрібно ввести копійки після крапки";
     }
-    return static_cast<uint>(std::stod(text) * 100);
+    return static_cast<uint>(std::stod(text.c_str()) * 100);
 }
 
 std::variant<Card, String> parseCard(const String &text) {

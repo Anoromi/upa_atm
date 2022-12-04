@@ -1,7 +1,6 @@
 #include "transaction_screen.h"
 
 #include <utility>
-#include "success_screen.h"
 #include "ui_transaction_screen.h"
 #include "transaction_details.h"
 #include "middleware/converters.h"
@@ -71,6 +70,11 @@ void TransactionScreen::on_submitButton_clicked() {
     }
     Card c = std::get<Card>(cardRes);
     uint money = std::get<uint>(moneyRes);
+    if (money > _connection.getCardInfo().getBalance()) {
+        showErrorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(_connection.getCardInfo().getBalance())
+                                               << L", а запитали " << moneyToString(money)).str());
+        return;
+    }
     bool afterTariff = ui->withTariff->isChecked();
     try {
         TransferRequest request = TransferRequest(c, money, afterTariff);
@@ -84,5 +88,10 @@ void TransactionScreen::on_submitButton_clicked() {
     catch (UnexpectedException &e) {
         showErrorMessage(L"Такого рахунку не існує");
     }
+}
+
+
+void TransactionScreen::on_back_clicked() {
+    _back();
 }
 

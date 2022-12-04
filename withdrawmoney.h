@@ -12,11 +12,12 @@ class WithdrawMoney : public QWidget
     Q_OBJECT
 
 public:
-    explicit WithdrawMoney(QWidget *parent = nullptr);
+    explicit WithdrawMoney(std::function<void()> end, QWidget *parent = nullptr);
     ~WithdrawMoney();
 
 private:
     Ui::WithdrawMoney *ui;
+    std::function<void()> _end;
 };
 
 #endif // WITHDRAWMONEY_H

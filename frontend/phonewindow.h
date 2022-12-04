@@ -15,6 +15,11 @@ public:
     explicit PhoneWindow(QWidget *parent = nullptr);
     ~PhoneWindow();
 
+private slots:
+    void on_confirm_clicked();
+
+    void on_cancel_clicked();
+
 private:
     Ui::PhoneWindow *ui;
 };

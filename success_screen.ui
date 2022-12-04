@@ -85,7 +85,7 @@
 
 	background: rgb(0,0,0);
 }
-QPushButton#pushButton:hover {
+QPushButton#end_button:hover {
 	color : black;
 	background:red;
 }</string>

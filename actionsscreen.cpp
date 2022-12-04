@@ -1,6 +1,8 @@
 #include "actionsscreen.h"
+#include "success_screen.h"
 
 #include <utility>
+#include "frontend/error_message.h"
 #include "transaction_details.h"
 #include "transaction_screen.h"
 #include "ui_actionsscreen.h"
@@ -46,7 +48,13 @@ void ActionsScreen::on_transfer_clicked() {
                   [this](auto request, auto details) {
                       toDetails(L"Перевести гроші", request.getDestination(), details.getTariff(), details.getMoney(),
                                 [this, request]() {
-                                    this->_connect->transferMoney(request);
+                                    try {
+                                        this->_connect->transferMoney(request);
+                                    } catch (UnexpectedException& e) {
+                                        showErrorMessage(e.message());
+                                        return;
+                                    }
+                                    _push(new success_screen([this](){this->_push(this);}));
                                 });
                   },
                   _pop
@@ -72,7 +80,25 @@ void ActionsScreen::toDetails(
 
 
 void ActionsScreen::on_withdraw_clicked() {
-    _push(new WithdrawalScreen());
+    _push(
+          new WithdrawalScreen(
+                    [this](const WithdrawalRequest& request, const WithdrawalDetails& details) {
+                         try {
+                            this->_connect->withdrawMoney(request);
+                         } catch (UnexpectedException& e) {
+                            showErrorMessage(e.message());
+                            return;
+                         }
+                        _push(
+                                    new success_screen(
+                                        [this](){this->_push(this);}
+                                    )
+                        );
+                    },
+                    [this](){this->_pop();},
+                    *this->_connect
+                    )
+         );
 }
 
 

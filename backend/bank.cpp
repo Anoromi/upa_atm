@@ -5,16 +5,19 @@
 #include "backend/database/db_transaction.h"
 #include "backend/database/db_category.h"
 #include "backend/database/db_parent_relation.h"
+#include "middleware/exceptions.h"
+#include <QSqlError>
 
-uint Bank::InternalBank::getSpendableMoney(const Credentials &c) {
-    Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(c.card().getCardNumber(), _db);
-    ullong balance = cardBalance(c.card());
+uint Bank::InternalBank::getSpendableMoney(const Card &c) {
+    ullong cardNumber = c.getCardNumber();
+    Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(cardNumber, _db);
+    ullong balance = cardBalance(cardNumber);
     if (!rel.has_value()) { // it is not a child card
         return balance;
     }
     ullong dayLimit = rel.value().getDayLimit().value();
     Vector<DBTransaction> todayTransactions =
-            DBTransaction::selectSpendingsByPeriod(c.card().getCardNumber(),
+            DBTransaction::selectSpendingsByPeriod(cardNumber,
                                                    QDate::currentDate().startOfDay(),
                                                    QDateTime::currentDateTime(),
                                                    _db);
@@ -39,9 +42,9 @@ void Bank::InternalBank::addMoney(const Card &c, uint change) {
 
 void Bank::InternalBank::removeMoney(const Card &c, uint change) {
     uint balance = cardBalance(c);
-    if (balance < change) {
-        // todo replace with explicit exception
-        throw UnexpectedException(L"Trying to remove too much money");
+    uint spendable = getSpendableMoney(c);
+    if (spendable < change) {
+        throw BadMoney(change, spendable);
     }
     DBCard card;
     card.setNumber(c.getCardNumber());
@@ -73,8 +76,10 @@ void Bank::InternalBank::addTransaction(std::optional<Card> sender,
         bankTransaction.setTime(QDateTime::currentDateTime());
         DBTransaction::create(bankTransaction, _db);
         if (!_db.commit()) {
-            _db.rollback();
-            throw UnexpectedException(L"Cound not commit to db");
+            if (!_db.rollback()) {
+                qDebug() << "Could not rollback";
+            }
+            throw UnexpectedException(_db.lastError().databaseText().toStdWString());
         }
     } catch (...) {
         _db.rollback();
@@ -100,9 +105,10 @@ bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
 }
 
 TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, const TransferRequest &request) {
+    DBCard sender = DBCard::selectByNumber(c.card().getCardNumber());
     DBCard receiver;
     try {
-        receiver = DBCard::selectByNumber(c.card().getCardNumber());
+        receiver = DBCard::selectByNumber(request.getDestination().getCardNumber());
     } catch (...) {
         throw BadRecipient(request.getDestination());
     }
@@ -111,40 +117,28 @@ TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, con
     try {
         receiverInfo = DBHolder::selectById(rHolder);
     } catch (...) {
-        throw UnexpectedException(L"Holder with id wasn't found");
+        throw BadRecipient(request.getDestination());
     }
-
-    String holderName = receiverInfo.getSurname().value().toStdWString() + L" " +
-                        receiverInfo.getName().value().toStdWString();
 
     DBCategory category;
     try {
-        category = DBCategory::selectById(receiver.getCategoryId().value());
+        category = DBCategory::selectById(sender.getCategoryId().value());
     } catch (...) {
         throw;
     }
-
-    PercentageTariff *tariff = new PercentageTariff(category.getFeeRate().value());
-    uint actualInitial;
-    if (request.isAfterTariff()) {
-        actualInitial = tariff->getInitial(request.getMoney());
-    } else {
-        actualInitial = request.getMoney();
-    }
-    uint spendable = getSpendableMoney(c);
-    if (actualInitial > spendable) {
-        throw BadMoney(actualInitial, spendable);
-    }
-    return {holderName, request.getDestination(), actualInitial, Unique<Tariff>(tariff)};
+    return {receiverInfo.getFullName().toStdWString(),
+            request.getDestination(),
+            request.getMoney(),
+            Unique<Tariff>(new PercentageTariff(category.getFeeRate().value()))};
 }
 
 void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRequest &request) {
     TransferDetails details = getTransferDetails(from, request);
-        uint moneyToAdd = details.getMoney();
-        uint fee = details.getTariff().getFee(moneyToAdd);
-        addTransaction(from.card(),
-                       request.getDestination().getCardNumber(),
-                       moneyToAdd, fee);
+    uint moneyToAdd = details.getMoney();
+    uint fee = details.getTariff().getFee(moneyToAdd);
+    addTransaction(from.card(),
+                   request.getDestination().getCardNumber(),
+                   moneyToAdd, fee);
 }
 
 DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
@@ -181,7 +175,7 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c,
     } else {
         actualInitial = request.getMoney();
     }
-    uint spendable = getSpendableMoney(c);
+    uint spendable = getSpendableMoney(c.card());
     if (actualInitial > spendable) {
         throw BadMoney(actualInitial, spendable);
     }

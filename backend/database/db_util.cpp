@@ -21,9 +21,9 @@ void populateDatabase(const QSqlDatabase &db)
     qDebug() << "Created holder with id" << hold1;
     ullong hold2 = DBHolder::create({0,"Vasyl", "Pupok", "+380507654321"}, db);
     qDebug() << "Created holder with id" << hold2;
-    ullong card1 = DBCard::create({1234567891011121,1234, QDate(2025,6,6), hold1, 100000, cat1}, db);
+    ullong card1 = DBCard::create({1234567891011121,1234, QDate(2025,6,6), hold1, 100, cat1}, db);
     qDebug() << "Created card with id" << card1 << "pin:" << 1234;
-    ullong card2 = DBCard::create({5168123412341234,3221, QDate(2023,7,5), hold2, 50000, cat2}, db);
+    ullong card2 = DBCard::create({5168123412341234,3221, QDate(2023,7,5), hold2, 50, cat2}, db);
     qDebug() << "Created card with id" << card2 << "pin:" << 3221;
 }
 

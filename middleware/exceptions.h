@@ -14,7 +14,7 @@ private:
     uint _requested;
     uint _available;
 public:
-    inline BadMoney(const uint requested, const uint &available) : _requested(requested), _available(available) {}
+    inline BadMoney(const uint requested, const uint available) : _requested(requested), _available(available) {}
 
     uint getRequested() const {
         return _requested;

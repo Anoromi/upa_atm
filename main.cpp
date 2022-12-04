@@ -33,8 +33,6 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     NavigationWindow w;
     w.show();
-    // remove true to save data
-    initDatabase("bank.db", true); // todo move it somewhere else?
     basic_db_test();
     return a.exec();
 }

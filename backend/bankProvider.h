@@ -6,6 +6,7 @@
 #define UPA_ATM_BANKPROVIDER_H
 
 #include "bank.h"
+#include "backend/database/db_util.h"
 
 class BankProvider {
 private:
@@ -13,6 +14,8 @@ private:
 public:
     static Bank& getBank() {
         if(_bank == nullptr) {
+            // remove true to save data
+            initDatabase("bank.db", true);
             _bank = new Bank();
         }
         return *_bank;

@@ -18,12 +18,15 @@ private:
         QSqlDatabase _db;
         Set<ullong> _blocked_cards;
 
-        uint getSpendableMoney(const Credentials &c);
+        uint getSpendableMoney(const Card &c);
         uint cardBalance(const Card &c);
         void addMoney(const Card &c, uint change);
         void removeMoney(const Card &c, uint change);
 
-
+        /*
+         * amount + fee will be charged from sender
+         * amount will be send to receiver
+         */
         void addTransaction(std::optional<Card> sender,
                             std::optional<Card> receiver,
                             uint amount, uint fee);
@@ -58,6 +61,7 @@ public:
     template<typename R, typename... Ad>
     R authorizedCall(const Credentials &cr, Request<R, Ad...> request, const Ad &... ar) {
         if (!_internalBank.areValidCredentials(cr)) {
+            // todo make this InvalidCredentialsException
             throw UnexpectedException(L"Credentials aren't valid");
         }
         return (_internalBank.*request)(cr, ar...);

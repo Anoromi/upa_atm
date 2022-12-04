@@ -9,6 +9,7 @@ void executeStatement(const QSqlDatabase &db, const char *stmttext);
 void initDatabase(const char* path, bool clear = false);
 void clearDatabase(const QSqlDatabase &db);
 void createDatabaseSchema(const QSqlDatabase &db);
+void populateDatabase(const QSqlDatabase &db);
 
 template <typename Entity>
 Vector<Entity> selectAllT(const char* table_name, const QSqlDatabase& db)

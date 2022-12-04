@@ -37,6 +37,8 @@ public:
     explicit inline PercentageTariff(double percentage) : Tariff(), _percentage(percentage) {}
 
     inline uint getInitial(uint tariffed) const {
+        // todo recheck formula
+        // and division by zero
         return tariffed / (uint) (_percentage * 100) * 100;
     }
 

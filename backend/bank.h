@@ -10,6 +10,7 @@
 #include "middleware/transfer.h"
 #include "middleware/exceptions.h"
 #include "middleware/cardinfo.h"
+#include "middleware/transaction.h"
 
 class Bank {
 private:
@@ -61,6 +62,8 @@ private:
 
         CardInfo getCardInfo(const Credentials &);
 
+        Vector<Transaction> getTransactions(const Credentials &);
+
         void blockCard(const Card &card);
     };
 
@@ -96,6 +99,8 @@ public:
     constexpr static Bank::Request<void, WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
     constexpr static Bank::Request<void, Card, uint> limitChildMoney = &InternalBank::limitChildMoney;
     constexpr static Bank::Request<CardInfo> getCardInfo = &InternalBank::getCardInfo;
+    constexpr static Bank::Request<CardInfo> getTransactions = &InternalBank::getTransactions;
+
 };
 
 #endif //UPA_ATM_BANK_H

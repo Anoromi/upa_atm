@@ -14,13 +14,14 @@ std::variant<uint, String> parseMoney(const String &text) {
             return L"Неправильний символ у числі";
         }
     }
-    if (i + 2 == text.length() && text[i] == '.') {
+    if (i + 3 == text.length() && text[i] == '.') {
+        i++;
         for (; i < text.length(); i++) {
             if (text[i] < '0' || text[i] > '9') {
                 return L"Неправильний символ у числі";
             }
         }
-    } else if (i + 2 != text.length() && text[i] == '.') {
+    } else if (text[i] == '.') {
         return L"Потрібно ввести копійки після крапки";
     }
     return static_cast<uint>(std::stod(text.c_str()) * 100);

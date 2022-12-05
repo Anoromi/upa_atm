@@ -2,7 +2,7 @@
 #define PUT_MONEY_H
 
 #include <QWidget>
-#include <middleware/signedConnection.h>
+#include "middleware/signedConnection.h"
 
 namespace Ui {
     class PutMoney;

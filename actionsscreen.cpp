@@ -20,7 +20,7 @@ void ActionsScreen::updateCardInfo() {
     ui->balance->setText(stringToQ(moneyToString(info.getBalance())));
 }
 
-ActionsScreen::ActionsScreen(Shared<SignedConnection> &s, std::function<void(QWidget *destination)> push,
+ActionsScreen::ActionsScreen(Shared<SignedConnection> &s, std::function<void(QWidget * destination)> push,
                              std::function<void()> pop, QWidget *parent) :
         QWidget(parent),
         ui(new Ui::ActionsScreen),
@@ -120,7 +120,11 @@ void ActionsScreen::on_refil_clicked() {
                             showErrorMessage(e.message());
                             return;
                         }
-                        _push(new success_screen([this]() { this->_push(this); }));
+                        _push(new success_screen([this]() {
+                            _pop();
+                            _pop();
+                            updateCardInfo();
+                        }));
                     },
                     [this]() { this->_pop(); },
                     *this->_connect

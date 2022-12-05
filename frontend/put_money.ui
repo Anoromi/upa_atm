@@ -117,35 +117,20 @@ QPushButton::hover {
     </widget>
    </item>
    <item row="1" column="0" colspan="2">
-    <widget class="QLineEdit" name="moneyLine">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
+    <widget class="QLineEdit" name="money">
      <property name="font">
       <font>
-       <pointsize>14</pointsize>
+       <pointsize>12</pointsize>
       </font>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::NoFocus</enum>
-     </property>
-     <property name="toolTip">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ff0000; border-style:inset; border-color:red; background:black; border-width:1px;&quot;&gt;Введіть бажану суму для поповнення. Надлишок буде повернутий банкоматом як решта&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
      <property name="styleSheet">
       <string notr="true">QLineEdit {
-	color: rgb(255,0,0);
-	border-color: rgb(255,0,0);
-	border-style:inset;
-	border-width:2px;
+color: rgb(255,0,0);
+border-color: rgb(255,0,0);
+border-style:inset;
+border-width:2px;
 }
 </string>
-     </property>
-     <property name="text">
-      <string/>
      </property>
     </widget>
    </item>

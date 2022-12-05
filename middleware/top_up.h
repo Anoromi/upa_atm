@@ -10,8 +10,8 @@
 
 class TopUpRequest {
 public:
-    TopUpRequest(char phone[15], uint money, bool isAfterTariff) : _money(money),
-                                                                   _isAfterTariff(isAfterTariff) {}
+    TopUpRequest(uint money, bool isAfterTariff) : _money(money),
+                                                   _isAfterTariff(isAfterTariff) {}
 
 private:
     uint _money;

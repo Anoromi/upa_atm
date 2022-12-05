@@ -23,7 +23,7 @@ PutMoney::~PutMoney() {
 }
 
 void PutMoney::on_put_clicked() {
-    std::variant<uint, String> readMoney(parseMoney(this->ui->moneyLine->text().toStdWString()));
+    std::variant<uint, String> readMoney(parseMoney(this->ui->money->text().toStdWString()));
     if (readMoney.index() == 1) {
         showErrorMessage(std::get<String>(readMoney));
         return;

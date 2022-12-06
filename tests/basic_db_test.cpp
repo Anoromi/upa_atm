@@ -188,6 +188,8 @@ void deposittests() {
               [] {return "Bad credentials" == testDeposit({1234567891011121,123}, 0, false);});
     checkTest("deposit3",
               [] {return "150" == testDeposit({1234567891011121,1234}, 50, false);});
+    auto result = DBTransaction::selectAllById(1234567891011121);
+    qDebug() << result.size();
     restoreTestData(db);
     checkTest("deposit4",
               [] {return "140" == testDeposit({1234567891011121,1234}, 50, true);});

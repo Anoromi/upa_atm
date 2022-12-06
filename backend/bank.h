@@ -99,7 +99,7 @@ public:
     constexpr static Bank::Request<void, WithdrawalRequest> withdrawMoney = &InternalBank::withdrawMoney;
     constexpr static Bank::Request<void, Card, uint> limitChildMoney = &InternalBank::limitChildMoney;
     constexpr static Bank::Request<CardInfo> getCardInfo = &InternalBank::getCardInfo;
-    constexpr static Bank::Request<CardInfo> getTransactions = &InternalBank::getTransactions;
+    constexpr static Bank::Request<Vector<Transaction>> getTransactions = &InternalBank::getTransactions;
 
 };
 

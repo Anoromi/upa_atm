@@ -6,12 +6,20 @@
 #define UPA_ATM_TRANSACTION_H
 
 #include <optional>
+#include <backend/database/db_transaction.h>
 #include "types.h"
 
 class Transaction {
 public:
     Transaction(const std::optional<ullong> &sender, const std::optional<ullong> &receiver, uint money, uint tariff)
-            : _sender(sender), _receiver(receiver), money(money), tariff(tariff) {}
+            : _sender(sender), _receiver(receiver), _money(money), _tariff(tariff) {}
+
+    Transaction(const DBTransaction &transaction)
+        : _sender(transaction.getSenderId()),
+          _receiver(transaction.getReceiverId()),
+          _money(transaction.getAmount().value()),
+          _tariff(transaction.getFee().value())
+    {}
 
     const std::optional<ullong> &getSender() const {
         return _sender;
@@ -22,18 +30,18 @@ public:
     }
 
     uint getMoney() const {
-        return money;
+        return _money;
     }
 
     uint getTariff() const {
-        return tariff;
+        return _tariff;
     }
 
 private:
-    std::optional<ullong> _sender;
-    std::optional<ullong> _receiver;
-    uint money;
-    uint tariff;
+    Optional<ullong> _sender;
+    Optional<ullong> _receiver;
+    uint _money;
+    uint _tariff;
 };
 
 #endif //UPA_ATM_TRANSACTION_H

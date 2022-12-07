@@ -7,19 +7,13 @@
 
 #include <optional>
 #include "types.h"
+#include "middleware/credentials.h"
 
 class Transaction {
 public:
-    Transaction(const std::optional<ullong> &sender, const std::optional<ullong> &receiver, uint money, uint tariff)
+    Transaction(const std::optional<Card> &sender, const std::optional<Card> &receiver, uint money, uint tariff)
             : _sender(sender), _receiver(receiver), money(money), tariff(tariff) {}
 
-    const std::optional<ullong> &getSender() const {
-        return _sender;
-    }
-
-    const std::optional<ullong> &getReceiver() const {
-        return _receiver;
-    }
 
     uint getMoney() const {
         return money;
@@ -29,9 +23,17 @@ public:
         return tariff;
     }
 
+    const std::optional<Card> &getSender() const {
+        return _sender;
+    }
+
+    const std::optional<Card> &getReceiver() const {
+        return _receiver;
+    }
+
 private:
-    std::optional<ullong> _sender;
-    std::optional<ullong> _receiver;
+    std::optional<Card> _sender;
+    std::optional<Card> _receiver;
     uint money;
     uint tariff;
 };

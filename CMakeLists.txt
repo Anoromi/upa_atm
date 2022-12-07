@@ -62,7 +62,8 @@ set(PROJECT_SOURCES
         tests/basic_db_test.h tests/basic_db_test.cpp
         middleware/top_up.h
         frontend/transactionhistoryscreen.h frontend/transactionhistoryscreen.cpp frontend/transactionhistoryscreen.ui
-        middleware/transaction.h)
+        middleware/transaction.h
+        frontend/transactionitem.h frontend/transactionitem.cpp frontend/transactionitem.ui)
 
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

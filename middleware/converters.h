@@ -14,9 +14,12 @@ std::variant<uint, String> parseMoney(const String &text);
 
 String moneyToString(uint money);
 
+String ullongToString(ullong);
+
 std::variant<Card, String> parseCard(const String &text);
 
 QString stringToQ(const String& s);
 
 std::variant<Pin, String> parsePin(const String& text);
+
 #endif //UPA_ATM_CONVERTERS_H

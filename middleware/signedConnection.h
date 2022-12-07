@@ -28,7 +28,7 @@ public:
 
     WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &r);
 
-
+    Vector<Transaction> getTransactions();
 
     inline const Credentials &credentials() const { return _details.getCredentials(); }
 

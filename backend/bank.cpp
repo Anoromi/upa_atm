@@ -207,6 +207,7 @@ void Bank::InternalBank::blockCard(const Card &card) {
     _blocked_cards.insert(card.getCardNumber());
 }
 
-Vector<Transaction> Bank::InternalBank::getTransactions(const Credentials &) {
-    return Vector<Transaction>();
+Vector<Transaction> Bank::InternalBank::getTransactions(const Credentials &c) {
+    Vector<DBTransaction> queryResult = DBTransaction::selectAllById(c.card().getCardNumber(), _db);
+
 }

@@ -6,36 +6,42 @@
 #define UPA_ATM_TRANSACTION_H
 
 #include <optional>
+#include <backend/database/db_transaction.h>
 #include "types.h"
-#include "middleware/credentials.h"
 
 class Transaction {
 public:
-    Transaction(const std::optional<Card> &sender, const std::optional<Card> &receiver, uint money, uint tariff)
-            : _sender(sender), _receiver(receiver), money(money), tariff(tariff) {}
+    Transaction(const std::optional<ullong> &sender, const std::optional<ullong> &receiver, uint money, uint tariff)
+            : _sender(sender), _receiver(receiver), _money(money), _tariff(tariff) {}
 
+    Transaction(const DBTransaction &transaction)
+        : _sender(transaction.getSenderId()),
+          _receiver(transaction.getReceiverId()),
+          _money(transaction.getAmount().value()),
+          _tariff(transaction.getFee().value())
+    {}
 
-    uint getMoney() const {
-        return money;
-    }
-
-    uint getTariff() const {
-        return tariff;
-    }
-
-    const std::optional<Card> &getSender() const {
+    const std::optional<ullong> &getSender() const {
         return _sender;
     }
 
-    const std::optional<Card> &getReceiver() const {
+    const std::optional<ullong> &getReceiver() const {
         return _receiver;
     }
 
+    uint getMoney() const {
+        return _money;
+    }
+
+    uint getTariff() const {
+        return _tariff;
+    }
+
 private:
-    std::optional<Card> _sender;
-    std::optional<Card> _receiver;
-    uint money;
-    uint tariff;
+    Optional<ullong> _sender;
+    Optional<ullong> _receiver;
+    uint _money;
+    uint _tariff;
 };
 
 #endif //UPA_ATM_TRANSACTION_H

@@ -57,3 +57,17 @@ Vector<DBTransaction> DBTransaction::selectSpendingsByPeriod(ullong card_id,
     }
     return result;
 }
+
+Vector<DBTransaction> DBTransaction::selectAllById(ullong id, const QSqlDatabase& db)
+{
+    SqlQuery query(db);
+    query.prepare("SELECT * FROM bank_transaction "
+                  "WHERE sender_id = :id OR receiver_id = :id");
+    query.bindValue(":id", id);
+    query.exec();
+    Vector<DBTransaction> result;
+    while (query.next()) {
+        result.push_back(query.record());
+    }
+    return result;
+}

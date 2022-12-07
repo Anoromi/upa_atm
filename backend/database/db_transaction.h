@@ -65,6 +65,7 @@ public:
                                                          QDateTime start,
                                                          QDateTime end,
                                                          const QSqlDatabase& db = QSqlDatabase::database());
+    static Vector<DBTransaction> selectAllById(ullong id, const QSqlDatabase& db = QSqlDatabase::database());
 };
 
 

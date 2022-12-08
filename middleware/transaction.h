@@ -7,25 +7,29 @@
 
 #include <optional>
 #include <backend/database/db_transaction.h>
-#include "credentials.h"
 #include "types.h"
 
 class Transaction {
 public:
-    Transaction(const std::optional<Card> &sender, const std::optional<Card> &receiver, uint money, uint tariff)
-            : _sender(sender), _receiver(receiver), _money(money), _tariff(tariff) {}
+    Transaction(const std::optional<ullong> &sender,
+                const std::optional<ullong> &receiver,
+                uint money, uint tariff, const String& description)
+            : _sender(sender), _receiver(receiver), _money(money), _tariff(tariff), _description(description) {}
 
     Transaction(const DBTransaction &transaction)
-            : _sender(transaction.getSenderId()),
-              _receiver(transaction.getReceiverId()),
-              _money(transaction.getAmount().value()),
-              _tariff(transaction.getFee().value()) {}
+        : _sender(transaction.getSenderId()),
+          _receiver(transaction.getReceiverId()),
+          _money(transaction.getAmount().value()),
+          _tariff(transaction.getFee().value()),
+          _description(transaction.getDescription().value().toStdWString()),
+          _time(transaction.getTime().value())
+    {}
 
-    const std::optional<Card> &getSender() const {
+    const std::optional<ullong> &getSender() const {
         return _sender;
     }
 
-    const std::optional<Card> &getReceiver() const {
+    const std::optional<ullong> &getReceiver() const {
         return _receiver;
     }
 
@@ -37,11 +41,21 @@ public:
         return _tariff;
     }
 
+    const String& getDescription() const {
+        return _description;
+    }
+
+    const QDateTime& getTime() const {
+        return _time;
+    }
+
 private:
-    std::optional<Card> _sender;
-    std::optional<Card> _receiver;
+    Optional<ullong> _sender;
+    Optional<ullong> _receiver;
     uint _money;
     uint _tariff;
+    String _description;
+    QDateTime _time;
 };
 
 #endif //UPA_ATM_TRANSACTION_H

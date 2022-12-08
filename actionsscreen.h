@@ -28,6 +28,8 @@ private slots:
 
     void on_refilMobile_clicked();
 
+    void on_pushButton_clicked();
+
 private:
     Ui::ActionsScreen *ui;
     Shared<SignedConnection> _connect;

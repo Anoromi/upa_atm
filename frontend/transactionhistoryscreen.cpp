@@ -7,14 +7,23 @@
 #include "transactionitem.h"
 #include "middleware/converters.h"
 
-TransactionHistoryScreen::TransactionHistoryScreen(SignedConnection &connection, QWidget *parent) :
+TransactionHistoryScreen::TransactionHistoryScreen(SignedConnection &connection, std::function<void()> back,
+                                                   QWidget *parent) :
         QWidget(parent),
         ui(new Ui::TransactionHistoryScreen),
+        _back(std::move(back)),
         _connection(connection) {
     ui->setupUi(this);
     Vector<Transaction> transactions = _connection.getTransactions();
-    QStandardItemModel *model = new QStandardItemModel(5, transactions.size());
+    QStandardItemModel *model = new QStandardItemModel(0, 5);
     ui->tableView->setModel(model);
+    model->setHorizontalHeaderItem(0, new QStandardItem(QString::fromWCharArray(L"Тип")));
+    model->setHorizontalHeaderItem(1, new QStandardItem(QString::fromWCharArray(L"Надсилач")));
+    model->setHorizontalHeaderItem(2, new QStandardItem(QString::fromWCharArray(L"Отримувач")));
+    model->setHorizontalHeaderItem(3, new QStandardItem(QString::fromWCharArray(L"Сума")));
+    model->setHorizontalHeaderItem(4, new QStandardItem(QString::fromWCharArray(L"Тариф")));
+    model->setHorizontalHeaderItem(5, new QStandardItem(QString::fromWCharArray(L"Опис")));
+
 
     for (auto &t: transactions) {
         QList<QStandardItem *> row;
@@ -37,8 +46,13 @@ TransactionHistoryScreen::TransactionHistoryScreen(SignedConnection &connection,
 
         row.append(new QStandardItem(stringToQ(moneyToString(t.getMoney()))));
         row.append(new QStandardItem(stringToQ(moneyToString(t.getTariff()))));
+        row.append(new QStandardItem(stringToQ(t.getDescription())));
         model->appendRow(row);
     }
+
+    ui->tableView->resizeColumnsToContents();
+    ui->tableView->resizeRowsToContents();
+    ui->tableView->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
 }
 
@@ -47,6 +61,6 @@ TransactionHistoryScreen::~TransactionHistoryScreen() {
 }
 
 void TransactionHistoryScreen::on_pushButton_clicked() {
-
+    _back();
 }
 

@@ -10,19 +10,21 @@ namespace Ui {
 
 class TransactionHistoryScreen : public QWidget {
 
-    Q_OBJECT
+Q_OBJECT
 
 public:
-    TransactionHistoryScreen(SignedConnection &connection, QWidget *parent = nullptr);
+    TransactionHistoryScreen(SignedConnection &connection, std::function<void()> back, QWidget *parent = nullptr);
 
     ~TransactionHistoryScreen();
 
 private slots:
+
     void on_pushButton_clicked();
 
 private:
     Ui::TransactionHistoryScreen *ui;
     SignedConnection &_connection;
+    std::function<void()> _back;
 };
 
 #endif // TRANSACTIONHISTORYSCREEN_H

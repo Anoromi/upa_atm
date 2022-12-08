@@ -20,13 +20,13 @@ public:
 
     void transferMoney(const TransferRequest &);
 
+    WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest& r);
+
     void withdrawMoney(const WithdrawalRequest &);
 
     DepositDetails getDepositDetails(const DepositRequest &r);
 
     void depositMoney(const DepositRequest &r);
-
-    WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &r);
 
 
 

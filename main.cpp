@@ -16,8 +16,7 @@
 #include "backend/database/db_util.h"
 #include "tests/basic_db_test.h"
 
-void selectAllHolders()
-{
+void selectAllHolders() {
     Vector<DBHolder> holders = DBHolder::selectAll();
     for (DBHolder& h : holders)
     {
@@ -28,8 +27,7 @@ void selectAllHolders()
     }
 };
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
     NavigationWindow w;
     w.show();

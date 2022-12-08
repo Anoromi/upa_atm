@@ -16,6 +16,6 @@ public:
 private:
     uint _money;
     bool _isAfterTariff;
-}
+};
 
 #endif //UPA_ATM_TOP_UP_H

@@ -4,6 +4,7 @@
 
 #ifndef UPA_ATM_SIGNEDCONNECTION_H
 #define UPA_ATM_SIGNEDCONNECTION_H
+
 #include "transfer.h"
 #include "deposit.h"
 #include "backend/bankProvider.h"
@@ -20,13 +21,13 @@ public:
 
     void transferMoney(const TransferRequest &);
 
+    WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &r);
+
     void withdrawMoney(const WithdrawalRequest &);
 
     DepositDetails getDepositDetails(const DepositRequest &r);
 
     void depositMoney(const DepositRequest &r);
-
-    WithdrawalDetails getWithdrawalDetails(const WithdrawalRequest &r);
 
     Vector<Transaction> getTransactions();
 
@@ -43,8 +44,9 @@ private:
     ChildCard _childCard;
     Bank bank = BankProvider::getBank();
 public:
-   inline const Credentials &credentials() const { return _details.getCredentials(); }
+    inline const Credentials &credentials() const { return _details.getCredentials(); }
 
-   void limitChildMoney(uint money);
+    void limitChildMoney(uint money);
 };
+
 #endif //UPA_ATM_SIGNEDCONNECTION_H

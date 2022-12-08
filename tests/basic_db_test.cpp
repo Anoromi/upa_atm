@@ -7,6 +7,7 @@
 #include "middleware/signedConnection.h"
 #include "middleware/unsignedConnection.h"
 #include "backend/database/db_card.h"
+#include "backend/bankProvider.h"
 #include <string>
 
 using namespace std;
@@ -218,9 +219,31 @@ void withdrawtests() {
               [] {return "Bad money" == testWithdraw({5168123412341234,3221}, 50, true);});
 }
 
-void basic_db_test() {
+void top_up_test() {
+    QSqlDatabase db = QSqlDatabase::database();
+    db.open();
+    restoreTestData(db);
+    Credentials c = {1234567891011121,1234};
+    qDebug() << "Balance before top up: " <<
+                BankProvider::getBank().authorizedCall(c, Bank::getCardInfo).getBalance();
+    TopUpRequest req = {10, false, L"+380501234567"};
+    BankProvider::getBank().authorizedCall(c, Bank::performTopUp, req);
+    Vector<DBTransaction> transactions = DBTransaction::selectAllById(c.card().getCardNumber(), db);
+    for (auto &trans : transactions) {
+        qDebug() << trans.getSenderId().value()
+                 << trans.getReceiverId().value()
+                 << trans.getAmount().value()
+                 << trans.getFee().value()
+                 << trans.getTime().value()
+                 << trans.getDescription().value();
+    }
+    qDebug() << "Balance after top up: " <<
+                BankProvider::getBank().authorizedCall(c, Bank::getCardInfo).getBalance();
+}
 
+void basic_db_test() {
     transactiontests();
     deposittests();
     withdrawtests();
+    top_up_test();
 }

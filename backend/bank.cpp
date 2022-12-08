@@ -56,9 +56,10 @@ void Bank::InternalBank::removeMoney(const Card &c, uint change) {
  * amount will be charged from sender
  * amount - fee will be send to receiver
  */
-void Bank::InternalBank::addTransaction(std::optional<Card> sender,
-                                        std::optional<Card> receiver,
-                                        uint amount, uint fee) {
+void Bank::InternalBank::addTransaction(Optional<Card> sender,
+                                        Optional<Card> receiver,
+                                        uint amount, uint fee,
+                                        Optional<String> desc) {
     _db.transaction();
     try {
         if (sender.has_value()) {
@@ -73,6 +74,9 @@ void Bank::InternalBank::addTransaction(std::optional<Card> sender,
         }
         if (receiver.has_value()) {
             bankTransaction.setReceiverId(receiver.value().getCardNumber());
+        }
+        if (desc.has_value()) {
+            bankTransaction.setDescription(QString::fromStdWString(desc.value()));
         }
         bankTransaction.setAmount(amount);
         bankTransaction.setFee(fee);
@@ -211,3 +215,7 @@ void Bank::InternalBank::blockCard(const Card &card) {
 //    Vector<DBTransaction> queryResult = DBTransaction::selectAllById(c.card().getCardNumber(), _db);
 //
 //}
+
+void Bank::InternalBank::performTopUp(const Credentials &c, const TopUpRequest &request) {
+    addTransaction(c.card(), Optional<Card>(), request.money(), 0, L"Mobile top-up: " + request.mobileNumber());
+}

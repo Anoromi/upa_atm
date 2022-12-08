@@ -211,10 +211,15 @@ void Bank::InternalBank::blockCard(const Card &card) {
     _blocked_cards.insert(card.getCardNumber());
 }
 
-//Vector<Transaction> Bank::InternalBank::getTransactions(const Credentials &c) {
-//    Vector<DBTransaction> queryResult = DBTransaction::selectAllById(c.card().getCardNumber(), _db);
-//
-//}
+Vector<Transaction> Bank::InternalBank::getTransactions(const Credentials &c) {
+    Vector<DBTransaction> queryResult = DBTransaction::selectAllById(c.card().getCardNumber(), _db);
+    Vector<Transaction> result;
+    result.reserve(queryResult.size());
+    for (auto& t : queryResult) {
+        result.push_back(t);
+    }
+    return result;
+}
 
 void Bank::InternalBank::performTopUp(const Credentials &c, const TopUpRequest &request) {
     addTransaction(c.card(), Optional<Card>(), request.money(), 0, L"Mobile top-up: " + request.mobileNumber());

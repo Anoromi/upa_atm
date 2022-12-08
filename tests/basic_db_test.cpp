@@ -228,14 +228,15 @@ void top_up_test() {
                 BankProvider::getBank().authorizedCall(c, Bank::getCardInfo).getBalance();
     TopUpRequest req = {10, false, L"+380501234567"};
     BankProvider::getBank().authorizedCall(c, Bank::performTopUp, req);
-    Vector<DBTransaction> transactions = DBTransaction::selectAllById(c.card().getCardNumber(), db);
+    Vector<Transaction> transactions =
+            BankProvider::getBank().authorizedCall(c, Bank::getTransactions);
     for (auto &trans : transactions) {
-        qDebug() << trans.getSenderId().value()
-                 << trans.getReceiverId().value()
-                 << trans.getAmount().value()
-                 << trans.getFee().value()
-                 << trans.getTime().value()
-                 << trans.getDescription().value();
+        qDebug() << trans.getSender().value()
+                 << trans.getReceiver().value()
+                 << trans.getMoney()
+                 << trans.getTariff()
+                 << trans.getTime()
+                 << trans.getDescription();
     }
     qDebug() << "Balance after top up: " <<
                 BankProvider::getBank().authorizedCall(c, Bank::getCardInfo).getBalance();

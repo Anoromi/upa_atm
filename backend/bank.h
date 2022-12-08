@@ -11,7 +11,7 @@
 #include "middleware/exceptions.h"
 #include "middleware/cardinfo.h"
 #include "middleware/transaction.h"
-
+#include "middleware/top_up.h"
 class Bank {
 private:
     class InternalBank {
@@ -31,9 +31,9 @@ private:
          * amount will be charged from sender
          * amount - fee will be send to receiver
          */
-        void addTransaction(std::optional<Card> sender,
-                            std::optional<Card> receiver,
-                            uint amount, uint fee);
+        void addTransaction(Optional<Card> sender,
+                            Optional<Card> receiver,
+                            uint amount, uint fee, Optional<String> desc = Optional<String>());
 
         inline bool isBlocked(const Credentials &c) {
             return _blocked_cards.find(c.card().getCardNumber()) != _blocked_cards.end();
@@ -65,6 +65,8 @@ private:
         Vector<Transaction> getTransactions(const Credentials &);
 
         void blockCard(const Card &card);
+
+        void performTopUp(const Credentials &c, const TopUpRequest &req);
     };
 
     InternalBank _internalBank;
@@ -100,7 +102,7 @@ public:
     constexpr static Bank::Request<void, Card, uint> limitChildMoney = &InternalBank::limitChildMoney;
     constexpr static Bank::Request<CardInfo> getCardInfo = &InternalBank::getCardInfo;
     constexpr static Bank::Request<Vector<Transaction>> getTransactions = &InternalBank::getTransactions;
-
+    constexpr static Bank::Request<void, TopUpRequest> performTopUp = &InternalBank::performTopUp;
 };
 
 #endif //UPA_ATM_BANK_H

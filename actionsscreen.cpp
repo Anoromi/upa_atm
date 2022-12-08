@@ -105,10 +105,11 @@ void ActionsScreen::on_withdraw_clicked() {
 		)
 	);
 			},
-			[this]() { this->_pop(); },
+            [this]() { this->_pop(); updateCardInfo(); },
 				*this->_connect
 				)
 	);
+    updateCardInfo();
 }
 
 
@@ -126,13 +127,13 @@ void ActionsScreen::on_refil_clicked() {
 	_push(new success_screen([this]() {
 		_pop();
 	_pop();
-	updateCardInfo();
 		}));
 			},
-			[this]() { this->_pop(); },
+            [this]() { this->_pop(); updateCardInfo(); },
 				*this->_connect
 				)
 	);
+
 }
 
 
@@ -149,7 +150,7 @@ void ActionsScreen::on_refilMobile_clicked() {
 	}
 	_push(
 		new success_screen(
-			[this]() { this->_push(this); }
+            [this]() { this->_push(this); updateCardInfo(); }
 		)
 	);
 			},

@@ -21,14 +21,19 @@ void populateDatabase(const QSqlDatabase &db) {
     ullong hold2 = DBHolder::create({0, "Vasyl", "Pupok", "+380507654321"}, db);
     qDebug() << "Created holder with id" << hold2;
     ullong hold3 = DBHolder::create({0, "Andrii", "Zahorulko", "+380507654321"}, db);
-    qDebug() << "Created holder with id" << hold2;
+    qDebug() << "Created holder with id" << hold3;
+    ullong hold4 = DBHolder::create({0, "Abraam", "Kitko", "+380507654321"}, db);
+    qDebug() << "Created holder with id" << hold4;
     ullong card1 = DBCard::create({1234567891011121, 1234, QDate(2025, 6, 6), hold1, 100, cat1}, db);
     qDebug() << "Created card with id" << card1 << "pin:" << 1234;
     ullong card2 = DBCard::create({5168123412341234, 3221, QDate(2023, 7, 5), hold2, 50, cat2}, db);
     qDebug() << "Created card with id" << card2 << "pin:" << 3221;
     ullong card3 = DBCard::create({1234123412341234, 4567, QDate(2024, 5, 5), hold3, 1000, cat2}, db);
     qDebug() << "Created card with id" << card3 << "pin:" << 4567;
+    ullong card4 = DBCard::create({1234123412341234, 4567, QDate(2024, 5, 5), hold4, 1000, cat2}, db);
+    qDebug() << "Created card with id" << card3 << "pin:" << 4567;
     DBParentRelation::create({card3, card2, 1000}, db);
+    DBParentRelation::create({card3, card4, 500}, db);
 }
 
 void initDatabase(const char *path, bool clear) {

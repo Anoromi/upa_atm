@@ -10,18 +10,17 @@
 
 class TopUpRequest {
 public:
-    TopUpRequest(uint money, bool isAfterTariff, const String& mobileNumber) :
-        _money(money),
-        _isAfterTariff(isAfterTariff),
-      _mobileNumber(mobileNumber)
-    {}
+    TopUpRequest(uint money, String mobileNumber) :
+            _money(money),
+            _mobileNumber(std::move(mobileNumber)) {}
 
-    inline uint money() const {return _money; }
-    inline bool isAfterTariff() const { return _isAfterTariff; }
-    inline const String& mobileNumber() const { return _mobileNumber; }
+    inline uint money() const { return _money; }
+
+
+    inline const String &mobileNumber() const { return _mobileNumber; }
+
 private:
     uint _money;
-    bool _isAfterTariff;
     String _mobileNumber;
 };
 

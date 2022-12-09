@@ -31,6 +31,8 @@ public:
 
     Vector<Transaction> getTransactions();
 
+    void topUpMoney(const TopUpRequest& r);
+
     inline const Credentials &credentials() const { return _details.getCredentials(); }
 
     inline const CardInfo getCardInfo() {

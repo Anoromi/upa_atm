@@ -39,8 +39,8 @@ string testTransaction(const Credentials &from,
                  << connection.get()->getCardInfo().getName();
         connection->getCardInfo();
         auto res = to_string(DBCard::selectByNumber(from.card().getCardNumber()).getBalance().value())
-               + " "
-               + to_string(DBCard::selectByNumber(to.getCardNumber()).getBalance().value());
+                   + " "
+                   + to_string(DBCard::selectByNumber(to.getCardNumber()).getBalance().value());
         qDebug() << res.c_str();
         return res;
     }
@@ -136,7 +136,7 @@ void restoreTestData(const QSqlDatabase &db) {
     populateDatabase(db);
 }
 
-void checkTest(const char* name, bool (*condition)()) {
+void checkTest(const char *name, bool (*condition)()) {
     qDebug() << name << "=====================================";
     if (condition()) {
         qDebug() << "PASSED";
@@ -146,8 +146,7 @@ void checkTest(const char* name, bool (*condition)()) {
     qDebug() << "============================================";
 }
 
-void transactiontests()
-{
+void transactiontests() {
     // tried to make this work on test.db
     // but BankProvider thus Bank uses bank.db anyway
     // so we need to turn tests off for know if we want to work
@@ -156,27 +155,27 @@ void transactiontests()
     db.open();
     restoreTestData(db);
     checkTest("trans1",
-              [] {return "Bad credentials" == testTransaction({123,123}, {123}, 0, false);});
+              [] { return "Bad credentials" == testTransaction({123, 123}, {123}, 0, false); });
     checkTest("trans2",
-              [] {return "Bad credentials" == testTransaction({1234567891011121,123}, {123}, 0, false);});
+              [] { return "Bad credentials" == testTransaction({1234567891011121, 123}, {123}, 0, false); });
     checkTest("trans3",
-              [] {return "Bad recipient" == testTransaction({1234567891011121,1234}, {123}, 0, false);});
+              [] { return "Bad recipient" == testTransaction({1234567891011121, 1234}, {123}, 0, false); });
     checkTest("trans4",
-              [] {return "Bad money" == testTransaction({1234567891011121,1234}, {5168123412341234}, 1000, false);});
+              [] { return "Bad money" == testTransaction({1234567891011121, 1234}, {5168123412341234}, 1000, false); });
     checkTest("trans5",
-              [] {return "0 150" == testTransaction({1234567891011121,1234}, {5168123412341234}, 100, false);});
+              [] { return "0 150" == testTransaction({1234567891011121, 1234}, {5168123412341234}, 100, false); });
     restoreTestData(db);
     checkTest("trans6",
-              [] {return "0 150" == testTransaction({1234567891011121,1234}, {5168123412341234}, 100, true);});
+              [] { return "0 150" == testTransaction({1234567891011121, 1234}, {5168123412341234}, 100, true); });
     restoreTestData(db);
     checkTest("trans7",
-              [] {return "0 150" == testTransaction({5168123412341234,3221}, {1234567891011121}, 50, false);});
+              [] { return "0 150" == testTransaction({5168123412341234, 3221}, {1234567891011121}, 50, false); });
     restoreTestData(db);
     checkTest("trans8",
-              [] {return "2 148" == testTransaction({5168123412341234,3221}, {1234567891011121}, 48, false);});
+              [] { return "2 148" == testTransaction({5168123412341234, 3221}, {1234567891011121}, 48, false); });
     restoreTestData(db);
     checkTest("trans9",
-              [] {return "0 148" == testTransaction({5168123412341234,3221}, {1234567891011121}, 48, true);});
+              [] { return "0 148" == testTransaction({5168123412341234, 3221}, {1234567891011121}, 48, true); });
 }
 
 void deposittests() {
@@ -184,19 +183,19 @@ void deposittests() {
     db.open();
     restoreTestData(db);
     checkTest("deposit1",
-              [] {return "Bad credentials" == testDeposit({123,123}, 0, false);});
+              [] { return "Bad credentials" == testDeposit({123, 123}, 0, false); });
     checkTest("deposit2",
-              [] {return "Bad credentials" == testDeposit({1234567891011121,123}, 0, false);});
+              [] { return "Bad credentials" == testDeposit({1234567891011121, 123}, 0, false); });
     checkTest("deposit3",
-              [] {return "150" == testDeposit({1234567891011121,1234}, 50, false);});
+              [] { return "150" == testDeposit({1234567891011121, 1234}, 50, false); });
     auto result = DBTransaction::selectAllById(1234567891011121);
     qDebug() << result.size();
     restoreTestData(db);
     checkTest("deposit4",
-              [] {return "140" == testDeposit({1234567891011121,1234}, 50, true);});
+              [] { return "140" == testDeposit({1234567891011121, 1234}, 50, true); });
     restoreTestData(db);
     checkTest("deposit5",
-              [] {return "100" == testDeposit({1234567891011121,1234}, 5, true);});
+              [] { return "100" == testDeposit({1234567891011121, 1234}, 5, true); });
 }
 
 void withdrawtests() {
@@ -204,33 +203,33 @@ void withdrawtests() {
     db.open();
     restoreTestData(db);
     checkTest("withdraw1",
-              [] {return "Bad credentials" == testWithdraw({123,123}, 0, false);});
+              [] { return "Bad credentials" == testWithdraw({123, 123}, 0, false); });
     checkTest("withdraw2",
-              [] {return "Bad credentials" == testWithdraw({1234567891011121,123}, 0, false);});
+              [] { return "Bad credentials" == testWithdraw({1234567891011121, 123}, 0, false); });
     checkTest("withdraw3",
-              [] {return "0" == testWithdraw({1234567891011121,1234}, 100, false);});
+              [] { return "0" == testWithdraw({1234567891011121, 1234}, 100, false); });
     restoreTestData(db);
     checkTest("withdraw4",
-              [] {return "0" == testWithdraw({1234567891011121,1234}, 100, true);});
+              [] { return "0" == testWithdraw({1234567891011121, 1234}, 100, true); });
     restoreTestData(db);
     checkTest("withdraw5",
-              [] {return "0" == testWithdraw({5168123412341234,3221}, 50, false);});
+              [] { return "0" == testWithdraw({5168123412341234, 3221}, 50, false); });
     checkTest("withdraw6",
-              [] {return "Bad money" == testWithdraw({5168123412341234,3221}, 50, true);});
+              [] { return "Bad money" == testWithdraw({5168123412341234, 3221}, 50, true); });
 }
 
 void top_up_test() {
     QSqlDatabase db = QSqlDatabase::database();
     db.open();
     restoreTestData(db);
-    Credentials c = {1234567891011121,1234};
+    Credentials c = {1234567891011121, 1234};
     qDebug() << "Balance before top up: " <<
-                BankProvider::getBank().authorizedCall(c, Bank::getCardInfo).getBalance();
-    TopUpRequest req = {10, false, L"+380501234567"};
+             BankProvider::getBank().authorizedCall(c, Bank::getCardInfo).getBalance();
+    TopUpRequest req = {10, L"+380501234567"};
     BankProvider::getBank().authorizedCall(c, Bank::performTopUp, req);
     Vector<Transaction> transactions =
             BankProvider::getBank().authorizedCall(c, Bank::getTransactions);
-    for (auto &trans : transactions) {
+    for (auto &trans: transactions) {
         qDebug() << trans.getSender().value().getCardNumber()
                  << trans.getReceiver().value().getCardNumber()
                  << trans.getMoney()
@@ -239,7 +238,7 @@ void top_up_test() {
                  << trans.getDescription();
     }
     qDebug() << "Balance after top up: " <<
-                BankProvider::getBank().authorizedCall(c, Bank::getCardInfo).getBalance();
+             BankProvider::getBank().authorizedCall(c, Bank::getCardInfo).getBalance();
 }
 
 void basic_db_test() {

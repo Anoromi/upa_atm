@@ -146,9 +146,9 @@ void ActionsScreen::on_refil_clicked() {
 void ActionsScreen::on_refilMobile_clicked() {
     _push(
             new PhoneWindow(
-                    [this](const WithdrawalRequest &request, const WithdrawalDetails &details) {
+                    [this](const TopUpRequest &request) {
                         try {
-                            this->_connect->withdrawMoney(request);
+                            this->_connect->topUpMoney(request);
                         }
                         catch (UnexpectedException &e) {
                             showErrorMessage(e.message());

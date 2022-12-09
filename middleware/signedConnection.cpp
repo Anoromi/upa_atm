@@ -35,6 +35,10 @@ Vector<Transaction> SignedConnection::getTransactions() {
     return std::move(bank.authorizedCall(credentials(), Bank::getTransactions));
 }
 
+void SignedConnection::topUpMoney(const TopUpRequest &r) {
+    bank.authorizedCall(credentials(), Bank::performTopUp, r);
+}
+
 void ParentConnection::limitChildMoney(uint money) {
     bank.authorizedCall(credentials(), Bank::limitChildMoney, _childCard.getCard(), money);
 }

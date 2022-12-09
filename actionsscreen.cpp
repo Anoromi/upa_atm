@@ -116,24 +116,24 @@ void ActionsScreen::on_withdraw_clicked() {
 void ActionsScreen::on_refil_clicked() {
 	_push(
 		new PutMoney(
-			[this](const DepositRequest& request, const DepositDetails& details) {
-				try {
-		this->_connect->depositMoney(request);
-	}
-	catch (UnexpectedException& e) {
-		showErrorMessage(e.message());
-		return;
-	}
-	_push(new success_screen([this]() {
-		_pop();
-	_pop();
+        [this](const DepositRequest& request, const DepositDetails& details) {
+        try {
+            this->_connect->depositMoney(request);
+        }
+        catch (UnexpectedException& e) {
+            showErrorMessage(e.message());
+            return;
+        }
+        _push(new success_screen([this]() {
+            _pop();
+            _pop();
+            updateCardInfo();
 		}));
-			},
-            [this]() { this->_pop(); updateCardInfo(); },
+        },
+            [this]() { this->_pop(); },
 				*this->_connect
-				)
+    )
 	);
-
 }
 
 

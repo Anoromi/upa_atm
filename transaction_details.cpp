@@ -23,7 +23,7 @@ TransactionDetails::TransactionDetails(
         ui->gridLayout->removeWidget(ui->receiver_label);
         ui->gridLayout->removeWidget(ui->receiver_card);
     } else {
-        ui->receiver_card->setText(stringToQ((std::wostringstream() << _receiver.value().getCardNumber()).str()));
+        ui->receiver_card->setText(stringToQ(ullongToString(_receiver->getCardNumber())));
     }
     ui->money->setText(stringToQ(moneyToString(money)));
     ui->message->setText(stringToQ(message));

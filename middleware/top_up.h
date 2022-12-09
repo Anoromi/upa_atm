@@ -10,12 +10,18 @@
 
 class TopUpRequest {
 public:
-    TopUpRequest(uint money, bool isAfterTariff) : _money(money),
-                                                   _isAfterTariff(isAfterTariff) {}
+    TopUpRequest(uint money, String mobileNumber) :
+            _money(money),
+            _mobileNumber(std::move(mobileNumber)) {}
+
+    inline uint money() const { return _money; }
+
+
+    inline const String &mobileNumber() const { return _mobileNumber; }
 
 private:
     uint _money;
-    bool _isAfterTariff;
+    String _mobileNumber;
 };
 
 #endif //UPA_ATM_TOP_UP_H

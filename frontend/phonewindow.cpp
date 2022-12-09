@@ -5,22 +5,20 @@
 #include "error_message.h"
 
 PhoneWindow::PhoneWindow(
-    std::function<void(const WithdrawalRequest&, const WithdrawalDetails&)> proceed, 
-    std::function<void()> back, 
-    const SignedConnection& connetion, 
-    QWidget* parent
+        std::function<void(const TopUpRequest &)> proceed,
+        std::function<void()> back,
+        const SignedConnection &connetion,
+        QWidget *parent
 ) :
-    _proceed(proceed),
-    _back(back),
-    _connection(connetion),
-    QWidget(parent),
-    ui(new Ui::PhoneWindow)
-{
+        _proceed(proceed),
+        _back(back),
+        _connection(connetion),
+        QWidget(parent),
+        ui(new Ui::PhoneWindow) {
     ui->setupUi(this);
 }
 
-PhoneWindow::~PhoneWindow()
-{
+PhoneWindow::~PhoneWindow() {
     delete ui;
 }
 
@@ -36,19 +34,17 @@ void PhoneWindow::on_confirm_clicked() {
         return;
     }
     try {
-        WithdrawalRequest request(_connection.credentials(), withdrawAmount, false);
-        WithdrawalDetails details(_connection.getWithdrawalDetails(request));
-        _proceed(request, details);
+        TopUpRequest request(withdrawAmount, this->ui->phoneEdit->text().toStdWString());
+        _proceed(request);
     }
-    catch (UnexpectedException& e) {
+    catch (UnexpectedException &e) {
         showErrorMessage(e.message());
         return;
     }
 }
 
 
-void PhoneWindow::on_cancel_clicked()
-{
+void PhoneWindow::on_cancel_clicked() {
     _back();
 }
 

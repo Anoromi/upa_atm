@@ -22,7 +22,7 @@ void SignedConnection::depositMoney(const DepositRequest &r) {
 }
 
 WithdrawalDetails SignedConnection::getWithdrawalDetails(const WithdrawalRequest &r) {
-    return bank.authorizedCall(credentials(), Bank::getWithdrawalDetails, r);
+    return std::move(bank.authorizedCall(credentials(), Bank::getWithdrawalDetails, r));
 }
 
 void SignedConnection::withdrawMoney(const WithdrawalRequest &r) {
@@ -30,6 +30,14 @@ void SignedConnection::withdrawMoney(const WithdrawalRequest &r) {
 }
 
 SignedConnection::SignedConnection(const ConnectionDetails &details) : _details(details) {}
+
+Vector<Transaction> SignedConnection::getTransactions() {
+    return std::move(bank.authorizedCall(credentials(), Bank::getTransactions));
+}
+
+void SignedConnection::topUpMoney(const TopUpRequest &r) {
+    bank.authorizedCall(credentials(), Bank::performTopUp, r);
+}
 
 void ParentConnection::limitChildMoney(uint money) {
     bank.authorizedCall(credentials(), Bank::limitChildMoney, _childCard.getCard(), money);

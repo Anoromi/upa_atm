@@ -82,3 +82,7 @@ std::variant<Pin, String> parsePin(const String &text) {
     result = std::stoi(text);
     return Pin(result);
 }
+
+String ullongToString(ullong u) {
+    return (std::wostringstream() << u).str();
+}

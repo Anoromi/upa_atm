@@ -19,6 +19,100 @@
 }</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_2">
+   <item row="0" column="0">
+    <widget class="QWidget" name="cardInfo" native="true">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QWidget#cardInfo {
+	border-style: outset;
+	border-radius: 10px;
+	border-width: 2px;
+	
+	border-color: red;
+	background-color:black;
+}</string>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="2" column="0">
+       <widget class="QLabel" name="cardNumberText">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#cardNumberText {
+	color: red;
+	background: black;
+}</string>
+        </property>
+        <property name="text">
+         <string>Номер карти</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QLabel" name="balanceText">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#balanceText {
+	color:red;
+	background: black;
+}</string>
+        </property>
+        <property name="text">
+         <string>Баланс</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QLabel" name="cardNumber">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#cardNumber {
+	color:red;
+	background: black;
+}</string>
+        </property>
+        <property name="text">
+         <string>0000000000000000</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="2">
+       <widget class="QLabel" name="balance">
+        <property name="font">
+         <font>
+          <pointsize>16</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel#balance {
+	color:red;
+	background: black;
+}</string>
+        </property>
+        <property name="text">
+         <string>0</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
    <item row="1" column="0">
     <widget class="QWidget" name="cardMenu" native="true">
      <property name="styleSheet">
@@ -101,43 +195,6 @@ QPushButton::hover {
         </property>
        </widget>
       </item>
-      <item row="0" column="0">
-       <widget class="QPushButton" name="refil">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-	background: rgb(0,0,0);
-
-	border-color: rgb(255,0,0);
-	border-style: inset;
-	border-width: 2px;
-
-	color: rgb(255,0,0);
-}
-
-QPushButton::hover {
-	background: rgb(255,0,0);
-
-	border-color: rgb(0,0,0);
-
-	color: rgb(0,0,0);
-}</string>
-        </property>
-        <property name="text">
-         <string>Поповнити рахунок</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="withdraw">
         <property name="sizePolicy">
@@ -175,97 +232,77 @@ QPushButton::hover {
         </property>
        </widget>
       </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0">
-    <widget class="QWidget" name="cardInfo" native="true">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QWidget#cardInfo {
-	border-style: outset;
-	border-radius: 10px;
+      <item row="0" column="0">
+       <widget class="QPushButton" name="refil">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
 	border-width: 2px;
-	
-	border-color: red;
-	background-color:black;
-}</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="3" column="0">
-       <widget class="QLabel" name="balanceText">
-        <property name="font">
-         <font>
-          <pointsize>16</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel#balanceText {
-	color:red;
-	background: black;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
 }</string>
         </property>
         <property name="text">
-         <string>Баланс</string>
+         <string>Поповнити рахунок</string>
         </property>
        </widget>
       </item>
-      <item row="3" column="2">
-       <widget class="QLabel" name="balance">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="pushButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
         <property name="font">
          <font>
-          <pointsize>16</pointsize>
+          <pointsize>14</pointsize>
          </font>
         </property>
         <property name="styleSheet">
-         <string notr="true">QLabel#balance {
-	color:red;
-	background: black;
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
+	border-width: 2px;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
 }</string>
         </property>
         <property name="text">
-         <string>0</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QLabel" name="cardNumber">
-        <property name="font">
-         <font>
-          <pointsize>16</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel#cardNumber {
-	color:red;
-	background: black;
-}</string>
-        </property>
-        <property name="text">
-         <string>0000000000000000</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="cardNumberText">
-        <property name="font">
-         <font>
-          <pointsize>16</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel#cardNumberText {
-	color: red;
-	background: black;
-}</string>
-        </property>
-        <property name="text">
-         <string>Номер карти</string>
+         <string>Історія транзакцій</string>
         </property>
        </widget>
       </item>

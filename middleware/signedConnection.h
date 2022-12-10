@@ -10,6 +10,9 @@
 #include "backend/bankProvider.h"
 #include "connectionDetails.h"
 
+
+class ParentConnection;
+
 class SignedConnection {
     ConnectionDetails _details;
     Bank &bank = BankProvider::getBank();
@@ -31,13 +34,17 @@ public:
 
     Vector<Transaction> getTransactions();
 
-    void topUpMoney(const TopUpRequest& r);
+    void topUpMoney(const TopUpRequest &r);
 
     inline const Credentials &credentials() const { return _details.getCredentials(); }
 
     inline const CardInfo getCardInfo() {
         return bank.authorizedCall(credentials(), Bank::getCardInfo);
     }
+
+    Vector<ChildCard> getChildren();
+
+    ParentConnection createParentConnection(const ChildCard &child);
 };
 
 class ParentConnection {
@@ -46,6 +53,9 @@ private:
     ChildCard _childCard;
     Bank bank = BankProvider::getBank();
 public:
+
+    ParentConnection(const ConnectionDetails &details, const ChildCard &childCard);
+
     inline const Credentials &credentials() const { return _details.getCredentials(); }
 
     void limitChildMoney(uint money);

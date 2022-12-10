@@ -39,7 +39,19 @@ void SignedConnection::topUpMoney(const TopUpRequest &r) {
     bank.authorizedCall(credentials(), Bank::performTopUp, r);
 }
 
+Vector<ChildCard> SignedConnection::getChildren() {
+    return bank.authorizedCall(credentials(), Bank::getChildren);
+}
+
+ParentConnection SignedConnection::createParentConnection(const ChildCard &child) {
+    return {_details, child};
+}
+
 void ParentConnection::limitChildMoney(uint money) {
     bank.authorizedCall(credentials(), Bank::limitChildMoney, _childCard.getCard(), money);
 }
+
+ParentConnection::ParentConnection(const ConnectionDetails &details, const ChildCard &childCard) : _details(details),
+                                                                                                   _childCard(
+                                                                                                           childCard) {}
 

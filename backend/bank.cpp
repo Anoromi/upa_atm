@@ -224,3 +224,7 @@ Vector<Transaction> Bank::InternalBank::getTransactions(const Credentials &c) {
 void Bank::InternalBank::performTopUp(const Credentials &c, const TopUpRequest &request) {
     addTransaction(c.card(), Optional<Card>(), request.money(), 0, L"Mobile top-up: " + request.mobileNumber());
 }
+
+Vector<ChildCard> Bank::InternalBank::getChildren(const Credentials &) {
+    return Vector<ChildCard>();
+}

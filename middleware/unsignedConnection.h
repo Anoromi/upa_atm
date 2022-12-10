@@ -21,7 +21,7 @@ public:
         if (incorrectVerifications++ >= 3) {
             bank.blockCard(c.card());
         }
-        return Shared<SignedConnection>(new SignedConnection({c, true}));
+        return Shared<SignedConnection>(new SignedConnection(ConnectionDetails(c)));
     }
 };
 

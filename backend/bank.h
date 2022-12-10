@@ -12,6 +12,7 @@
 #include "middleware/cardinfo.h"
 #include "middleware/transaction.h"
 #include "middleware/top_up.h"
+
 class Bank {
 private:
     class InternalBank {
@@ -58,6 +59,8 @@ private:
 
         void withdrawMoney(const Credentials &, const WithdrawalRequest &);
 
+        Vector<ChildCard> getChildren(const Credentials&);
+
         void limitChildMoney(const Credentials &, const Card &card, const uint &money);
 
         CardInfo getCardInfo(const Credentials &);
@@ -67,6 +70,7 @@ private:
         void blockCard(const Card &card);
 
         void performTopUp(const Credentials &c, const TopUpRequest &req);
+
     };
 
     InternalBank _internalBank;
@@ -103,6 +107,7 @@ public:
     constexpr static Bank::Request<CardInfo> getCardInfo = &InternalBank::getCardInfo;
     constexpr static Bank::Request<Vector<Transaction>> getTransactions = &InternalBank::getTransactions;
     constexpr static Bank::Request<void, TopUpRequest> performTopUp = &InternalBank::performTopUp;
+    constexpr static Bank::Request<Vector<ChildCard>> getChildren = &InternalBank::getChildren;
 };
 
 #endif //UPA_ATM_BANK_H

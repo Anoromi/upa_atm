@@ -11,18 +11,12 @@ class ConnectionDetails {
 
 private:
     Credentials _credentials;
-    bool _isParentCard;
 
 public:
-    ConnectionDetails(const Credentials &credentials, bool isParentCard) : _credentials(credentials),
-                                                                           _isParentCard(isParentCard) {}
+    ConnectionDetails(const Credentials &credentials) : _credentials(credentials) {}
 
     inline const Credentials &getCredentials() const {
         return _credentials;
-    }
-
-    inline bool isParentCard() const {
-        return _isParentCard;
     }
 };
 

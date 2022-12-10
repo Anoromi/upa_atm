@@ -16,6 +16,9 @@ uint Bank::InternalBank::getSpendableMoney(const Card &c) {
         return balance;
     }
     ullong dayLimit = rel.value().getDayLimit().value();
+    if (dayLimit <= 0) {
+        return balance;
+    }
     Vector<DBTransaction> todayTransactions =
             DBTransaction::selectSpendingsByPeriod(cardNumber,
                                                    QDate::currentDate().startOfDay(),
@@ -225,6 +228,17 @@ void Bank::InternalBank::performTopUp(const Credentials &c, const TopUpRequest &
     addTransaction(c.card(), Optional<Card>(), request.money(), 0, L"Mobile top-up: " + request.mobileNumber());
 }
 
-Vector<ChildCard> Bank::InternalBank::getChildren(const Credentials &) {
-    return Vector<ChildCard>();
+Vector<ChildCard> Bank::InternalBank::getChildren(const Credentials &c) {
+    Vector<DBParentRelation> parentRelations =
+            DBParentRelation::selectByParentId(c.card().getCardNumber(), _db);
+
+    Vector<ChildCard> childrenCardInfo;
+    childrenCardInfo.reserve(parentRelations.size());
+    for (auto& pr : parentRelations) {
+        ullong childCardNumber = pr.getChildCardId().value();
+        DBCard cardInfo = DBCard::selectByNumber(childCardNumber);
+        DBHolder childHolder = DBHolder::selectById(cardInfo.getHolderId().value(), _db);
+        childrenCardInfo.push_back({childHolder.getFullName().toStdWString(), childCardNumber});
+    }
+    return childrenCardInfo;
 }

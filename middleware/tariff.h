@@ -12,12 +12,12 @@
 class Tariff {
 private:
 
-    virtual String getTariff_v(uint) const = 0;
+    virtual String getDescription_v(uint) const = 0;
 
     virtual uint getFee_v(uint) const = 0;
 
 public:
-    inline String getTariff(uint money) const { return getTariff_v(money); };
+    inline String getDescription(uint money) const { return getDescription_v(money); };
 
     inline uint getFee(uint money) const { return getFee_v(money); }
 
@@ -40,7 +40,7 @@ public:
     }
 
 private:
-    inline String getTariff_v(uint money) const override {
+    inline String getDescription_v(uint money) const override {
         std::wstringstream st;
         st << L"Відсотковий тариф: ";
         st << _percentage * 100 << "%";
@@ -59,7 +59,7 @@ public:
     explicit inline WholeTariff(uint loss) : _loss(loss) {}
 
 private:
-    inline String getTariff_v(uint money) const override {
+    inline String getDescription_v(uint money) const override {
         std::wstringstream st;
         st << _loss;
         return st.str();

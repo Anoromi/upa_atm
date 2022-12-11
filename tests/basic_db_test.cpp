@@ -30,7 +30,7 @@ string testTransaction(const Credentials &from,
         auto request = TransferRequest(to.getCardNumber(), amount, isTarrifed);
         auto details = connection->getTransferDetails(request);
         qDebug() << "Details: "
-                 << details.getTariff()->getTariff(amount)
+                 << details.getTariff()->getDescription(amount)
                  << details.getRecipientCard().getCardNumber() << details.getMoney()
                  << details.getRecipientName() << details.getTariff()->getFee(amount);
         connection->transferMoney(request);
@@ -67,10 +67,10 @@ string testDeposit(const Credentials &to,
         qDebug() << "Before deposit: "
                  << connection->getCardInfo().getBalance()
                  << connection.get()->getCardInfo().getName();
-        auto request = DepositRequest(connection->credentials(), amount, false);
+        auto request = DepositRequest(amount);
         auto details = connection->getDepositDetails(request);
         qDebug() << "Details:"
-                 << details.getTariff().getTariff(amount)
+                 << details.getTariff().getDescription(amount)
                  << details.getMoney()
                  << details.getTariff().getFee(amount);
         connection->depositMoney(request);
@@ -105,10 +105,10 @@ string testWithdraw(const Credentials &from,
         qDebug() << "Before deposit: "
                  << connection->getCardInfo().getBalance()
                  << connection.get()->getCardInfo().getName();
-        auto request = WithdrawalRequest(connection->credentials(), amount, false);
+        auto request = WithdrawalRequest(amount, false);
         auto details = connection->getWithdrawalDetails(request);
         qDebug() << "Details:"
-                 << details.getTariff()->getTariff(amount)
+                 << details.getTariff()->getDescription(amount)
                  << details.getMoney()
                  << details.getTariff()->getFee(amount);
         connection->withdrawMoney(request);

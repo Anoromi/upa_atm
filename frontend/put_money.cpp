@@ -30,7 +30,7 @@ void PutMoney::on_put_clicked() {
     }
     uint money = std::get<uint>(readMoney);
     try {
-        DepositRequest request(_connection.credentials(), money, false);
+        DepositRequest request( money);
         DepositDetails details(_connection.getDepositDetails(request));
         _proceed(request, details);
     }

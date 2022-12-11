@@ -32,7 +32,7 @@ set(PROJECT_SOURCES
 
         middleware/credentials.h middleware/credentials.cpp
         middleware/transfer.cpp middleware/transfer.h
-        middleware/types.h middleware/tariff.cpp
+        middleware/types.h
         middleware/tariff.h middleware/signedConnection.cpp middleware/signedConnection.h middleware/deposit.h
         middleware/exceptions.h
         backend/bank.h backend/bank.cpp

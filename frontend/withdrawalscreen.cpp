@@ -33,7 +33,7 @@ void WithdrawalScreen::on_confirm_clicked() {
 //        return;
 //    }
     try {
-        WithdrawalRequest request(_connection.credentials(), withdrawAmount, false);
+        WithdrawalRequest request( withdrawAmount, false);
         WithdrawalDetails details(_connection.getWithdrawalDetails(request));
         _proceed(request, details);
     } catch (const BadMoney &m) {

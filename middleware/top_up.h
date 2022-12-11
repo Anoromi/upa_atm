@@ -12,16 +12,16 @@ class TopUpRequest {
 public:
     TopUpRequest(uint money, String mobileNumber) :
             _money(money),
-            _mobileNumber(std::move(mobileNumber)) {}
+            _phoneNumber(std::move(mobileNumber)) {}
 
     inline uint money() const { return _money; }
 
 
-    inline const String &mobileNumber() const { return _mobileNumber; }
+    inline const String &mobileNumber() const { return _phoneNumber; }
 
 private:
     uint _money;
-    String _mobileNumber;
+    String _phoneNumber;
 };
 
 #endif //UPA_ATM_TOP_UP_H

@@ -79,3 +79,4 @@ config
 /cmake-build-debug/
 /.idea/
 /CMakeSettings.json
+CMakeLists.txt.user

@@ -40,7 +40,14 @@ public:
         _amount(record.value("amount").value<ullong>()),
         _fee(record.value("fee").value<ullong>()),
         _time(record.value("time").value<QDateTime>()),
-        _description(record.value("description").value<QString>()) {}
+        _description(record.value("description").value<QString>()) {
+        if (_sender_id.has_value() && _sender_id.value() == 0) {
+            _sender_id = Optional<ullong>();
+        }
+        if (_receiver_id.has_value() && _receiver_id.value() == 0) {
+            _receiver_id = Optional<ullong>();
+        }
+    }
 
     inline void setId(ullong id) {_id = id;}
     inline void setSenderId(ullong sender_id) {_sender_id = sender_id;}

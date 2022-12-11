@@ -15,9 +15,9 @@
 
 void ActionsScreen::updateCardInfo() {
     CardInfo info = _connect->getCardInfo();
-    QString buff;
-    buff.setNum(_connect->credentials().card().getCardNumber());
-    ui->cardNumber->setText(buff);
+    qDebug() << "Name" << info.getName();
+    ui->cardNumber->setText(stringToQ(info.getName()));
+//    ui->label->setText(stringToQ(L"Hello my cuties "));
     ui->balance->setText(stringToQ(moneyToString(info.getBalance())));
 }
 

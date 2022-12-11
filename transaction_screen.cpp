@@ -6,13 +6,6 @@
 #include "middleware/converters.h"
 #include "frontend/error_message.h"
 
-
-//transaction_screen::transaction_screen(QWidget *parent) :
-//        QWidget(parent),
-//        ui(new Ui::transaction_screen) {
-//    ui->setupUi(this);
-//}
-
 TransactionScreen::TransactionScreen(
         QWidget *parent,
         const SignedConnection &connection,
@@ -32,30 +25,6 @@ TransactionScreen::~TransactionScreen() {
     delete ui;
 }
 
-
-//void TransactionScreen::toDetails(const TransferRequest &request, const TransferDetails &details) {
-//    this->toDetails(
-//            new TransactionDetails
-//                    (
-//                            details.getRecipientName(),
-//                            details.getRecipientCard(),
-//                            details.getTariff(),
-//                            details.getMoney(),
-//                            [this, &request](bool b) {
-//                                if (b) {
-//                                    _mainMenuPush(this);
-//                                } else {
-//                                    try {
-//                                        _connection.transferMoney(request);
-//                                    } catch (UnexpectedException &e) {
-//                                        showErrorMessage(L"Something went wrong");
-//                                    }
-//                                    _mainMenuPush(new success_screen([this]() { _mainMenuPush(this); }));
-//                                }
-//                            }
-//                    )
-//    );
-//}
 
 void TransactionScreen::on_submitButton_clicked() {
     auto cardRes = parseCard(ui->card->text().toStdWString());

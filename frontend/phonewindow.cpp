@@ -29,13 +29,12 @@ void PhoneWindow::on_confirm_clicked() {
         return;
     }
     uint withdrawAmount = std::get<uint>(value);
-    if (_connection.getCardInfo().getBalance() < withdrawAmount) {
-        showErrorMessage(L"You can't get that amount of money from your card");
-        return;
-    }
     try {
         TopUpRequest request(withdrawAmount, this->ui->phoneEdit->text().toStdWString());
         _proceed(request);
+    } catch (const BadMoney &m) {
+        showErrorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
+                                               << L", а запитали " << moneyToString(m.getRequested())).str());
     }
     catch (UnexpectedException &e) {
         showErrorMessage(e.message());

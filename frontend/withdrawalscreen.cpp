@@ -4,17 +4,16 @@
 #include "ui_withdrawalscreen.h"
 
 WithdrawalScreen::WithdrawalScreen(
-        std::function<void(const WithdrawalRequest&, const WithdrawalDetails&)> proceed,
+        std::function<void(const WithdrawalRequest &, const WithdrawalDetails &)> proceed,
         std::function<void()> back,
-        const SignedConnection& connection,
+        const SignedConnection &connection,
         QWidget *parent
-        ) :
-    QWidget(parent),
-    _proceed(proceed),
-    _back(back),
-    _connection(connection),
-    ui(new Ui::WithdrawalScreen)
-{
+) :
+        QWidget(parent),
+        _proceed(proceed),
+        _back(back),
+        _connection(connection),
+        ui(new Ui::WithdrawalScreen) {
     ui->setupUi(this);
 }
 
@@ -29,15 +28,19 @@ void WithdrawalScreen::on_confirm_clicked() {
         return;
     }
     uint withdrawAmount = std::get<uint>(value);
-    if (_connection.getCardInfo().getBalance() < withdrawAmount) {
-        showErrorMessage(L"You can't get that amount of money from your card");
-        return;
-    }
+//    if (_connection.getCardInfo().getBalance() < withdrawAmount) {
+//        showErrorMessage(L"You can't get that amount of money from your card");
+//        return;
+//    }
     try {
         WithdrawalRequest request(_connection.credentials(), withdrawAmount, false);
         WithdrawalDetails details(_connection.getWithdrawalDetails(request));
         _proceed(request, details);
-    } catch (UnexpectedException& e) {
+    } catch (const BadMoney &m) {
+        showErrorMessage((std::wstringstream() << L"Ви не можете витратити більше " << moneyToString(m.getAvailable())
+                                               << L", а запитали " << moneyToString(m.getRequested())).str());
+    }
+    catch (UnexpectedException &e) {
         showErrorMessage(e.message());
         return;
     }

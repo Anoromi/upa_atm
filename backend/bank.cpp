@@ -25,7 +25,7 @@ uint Bank::InternalBank::getSpendableMoney(const Card &c) {
                                                    QDateTime::currentDateTime(),
                                                    _db);
     ullong todaySpendings = 0;
-    for (auto &t : todayTransactions) {
+    for (auto &t: todayTransactions) {
         todaySpendings += t.getAmount().value();
     }
     return dayLimit < todaySpendings ? 0 : dayLimit - todaySpendings;
@@ -156,8 +156,7 @@ void Bank::InternalBank::transferMoney(const Credentials &from, const TransferRe
                    request.isAfterTariff() ? fee : 0);
 }
 
-DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request)
-{
+DepositDetails Bank::InternalBank::getDepositDetails(const Credentials &c, const DepositRequest &request) {
     uint previousBalance = cardBalance(c.card());
     auto tariff = Unique<Tariff>(new WholeTariff(10));
     uint fee = tariff->getFee(request.getMoney());
@@ -189,16 +188,15 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c,
 void Bank::InternalBank::withdrawMoney(const Credentials &c, const WithdrawalRequest &request) {
     WithdrawalDetails details = getWithdrawalDetails(c, request);
     addTransaction(c.card(), Optional<Card>(),
-                       details.getMoney(),
-                       details.getTariff()->getFee(request.getMoney()));
+                   details.getMoney(),
+                   details.getTariff()->getFee(request.getMoney()));
 }
 
-void Bank::InternalBank::limitChildMoney(const Credentials& parentCred, const Card& childCard, const uint& money) {
+void Bank::InternalBank::limitChildMoney(const Credentials &parentCred, const Card &childCard, const uint &money) {
     Optional<DBParentRelation> rel = DBParentRelation::selectByChildId(childCard.getCardNumber(), _db);
     if (rel.has_value()) {
         DBParentRelation relInfo = rel.value();
-        if (relInfo.getParentCardId() == parentCred.card().getCardNumber())
-        {
+        if (relInfo.getParentCardId() == parentCred.card().getCardNumber()) {
             if (money != relInfo.getDayLimit().value()) {
                 relInfo.setDayLimit(money);
                 DBParentRelation::update(relInfo, _db);
@@ -228,7 +226,8 @@ Vector<Transaction> Bank::InternalBank::getTransactions(const Credentials &c) {
     Vector<DBTransaction> queryResult = DBTransaction::selectAllById(c.card().getCardNumber(), _db);
     Vector<Transaction> result;
     result.reserve(queryResult.size());
-    for (auto& t : queryResult) {
+    for (auto &t: queryResult) {
+        qDebug() << t.getReceiverId().has_value() << t.getSenderId().has_value();
         result.push_back(t);
     }
     return result;
@@ -244,7 +243,7 @@ Vector<ChildCard> Bank::InternalBank::getChildren(const Credentials &c) {
 
     Vector<ChildCard> childrenCardInfo;
     childrenCardInfo.reserve(parentRelations.size());
-    for (auto& pr : parentRelations) {
+    for (auto &pr: parentRelations) {
         ullong childCardNumber = pr.getChildCardId().value();
         DBCard cardInfo = DBCard::selectByNumber(childCardNumber);
         DBHolder childHolder = DBHolder::selectById(cardInfo.getHolderId().value(), _db);

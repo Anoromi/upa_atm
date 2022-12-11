@@ -79,7 +79,7 @@ QPushButton::hover {
 }</string>
      </property>
      <property name="text">
-      <string>Back</string>
+      <string>Повернутися</string>
      </property>
     </widget>
    </item>

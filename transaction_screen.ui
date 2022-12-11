@@ -21,7 +21,7 @@
     <widget class="QCheckBox" name="withTariff">
      <property name="font">
       <font>
-       <pointsize>16</pointsize>
+       <pointsize>18</pointsize>
       </font>
      </property>
      <property name="styleSheet">
@@ -142,7 +142,7 @@ background-color: rgb(0,0,0);</string>
        </property>
        <property name="font">
         <font>
-         <pointsize>26</pointsize>
+         <pointsize>22</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -182,7 +182,7 @@ QPushButton#submitButton::hover {
        </property>
        <property name="font">
         <font>
-         <pointsize>26</pointsize>
+         <pointsize>22</pointsize>
         </font>
        </property>
        <property name="styleSheet">

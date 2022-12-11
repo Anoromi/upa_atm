@@ -57,7 +57,7 @@ color:rgb(255,0,0);
        </property>
        <property name="font">
         <font>
-         <pointsize>14</pointsize>
+         <pointsize>22</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -92,7 +92,7 @@ QPushButton::hover {
        </property>
        <property name="font">
         <font>
-         <pointsize>14</pointsize>
+         <pointsize>22</pointsize>
         </font>
        </property>
        <property name="styleSheet">
@@ -121,6 +121,11 @@ QPushButton::hover {
    </item>
    <item row="1" column="0">
     <widget class="QLineEdit" name="money">
+     <property name="font">
+      <font>
+       <pointsize>18</pointsize>
+      </font>
+     </property>
      <property name="styleSheet">
       <string notr="true">color: rgb(255,0,0);
 background-color: rgb(0,0,0);

@@ -73,7 +73,7 @@ void ActionsScreen::on_transfer_clicked() {
 void ActionsScreen::toDetails(
         String message,
         std::optional<Card> receiver,
-        Shared<Tariff> tariff,
+        const Shared<Tariff> &tariff,
         uint money,
         std::function<void()> performAction
 ) {
@@ -101,18 +101,20 @@ void ActionsScreen::on_withdraw_clicked() {
                         }
                         this->_push(
                                 new success_screen(
-                                        [this]() { this->_push(this); }
+                                        [this]() {
+                                            this->_pop();
+                                            this->_pop();
+                                            updateCardInfo();
+                                        }
                                 )
                         );
                     },
                     [this]() {
                         this->_pop();
-                        updateCardInfo();
                     },
                     *this->_connect
             )
     );
-    updateCardInfo();
 }
 
 
@@ -130,11 +132,11 @@ void ActionsScreen::on_refil_clicked() {
                         _push(new success_screen([this]() {
                             this->_pop();
                             this->_pop();
+                            this->updateCardInfo();
                         }));
                     },
                     [this]() {
                         this->_pop();
-                        this->updateCardInfo();
                     },
                     *this->_connect
             )
@@ -157,7 +159,8 @@ void ActionsScreen::on_refilMobile_clicked() {
                         _push(
                                 new success_screen(
                                         [this]() {
-                                            this->_push(this);
+                                            this->_pop();
+                                            this->_pop();
                                             this->updateCardInfo();
                                         }
                                 )
@@ -174,5 +177,10 @@ void ActionsScreen::on_pushButton_clicked() {
     _push(
             new TransactionHistoryScreen(*_connect.get(), [this]() { this->_pop(); })
     );
+}
+
+
+void ActionsScreen::on_pushButton_2_clicked() {
+    _pop();
 }
 

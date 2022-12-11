@@ -19,7 +19,7 @@ Login::~Login() {
 
 void Login::on_confirmLogin_clicked() {
     auto cardRes = parseCard(ui->cardNumberField->text().toStdWString());
-    qDebug() << cardRes.index() << ',' ;
+    qDebug() << cardRes.index() << ',';
     if (cardRes.index() == 1) {
         showErrorMessage(std::get<String>(cardRes));
         return;
@@ -33,12 +33,20 @@ void Login::on_confirmLogin_clicked() {
     Card card = std::get<Card>(cardRes);
     Pin pin = std::get<Pin>(pinRes);
     try {
-        _enter(_uConnection.createConnection({card, pin}));
+        if (!_uConnection.validateCredentials({card, pin})) {
+            showErrorMessage(L"Введені неправильні дані");
+            return;
+        }
+        auto connection = _uConnection.createConnection({card, pin});
+        ui->cardNumberField->clear();
+        ui->passwordField->clear();
+        _uConnection.clear();
+        _enter(connection);
     }
     catch (BlockedCard) {
         showErrorMessage(L"Ваша карта заблокована");
     }
-    catch (UnexpectedException& e) {
+    catch (UnexpectedException &e) {
         showErrorMessage(e.message());
     }
 }

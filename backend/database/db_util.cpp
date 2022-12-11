@@ -31,7 +31,7 @@ void populateDatabase(const QSqlDatabase &db) {
     ullong card3 = DBCard::create({1234123412341234, 4567, QDate(2024, 5, 5), hold3, 1000, cat2}, db);
     qDebug() << "Created card with id" << card3 << "pin:" << 4567;
     ullong card4 = DBCard::create({5678567856785678, 4567, QDate(2024, 5, 5), hold4, 1000, cat2}, db);
-    qDebug() << "Created card with id" << card3 << "pin:" << 4567;
+    qDebug() << "Created card with id" << card4 << "pin:" << 4567;
     DBParentRelation::create({card3, card2, 1000}, db);
     DBParentRelation::create({card3, card4, 500}, db);
 }

@@ -227,7 +227,6 @@ Vector<Transaction> Bank::InternalBank::getTransactions(const Credentials &c) {
     Vector<Transaction> result;
     result.reserve(queryResult.size());
     for (auto &t: queryResult) {
-        qDebug() << t.getReceiverId().has_value() << t.getSenderId().has_value();
         result.push_back(t);
     }
     return result;

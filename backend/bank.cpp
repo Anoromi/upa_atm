@@ -86,8 +86,10 @@ void Bank::InternalBank::addTransaction(Optional<Card> sender,
         bankTransaction.setTime(QDateTime::currentDateTime());
         DBTransaction::create(bankTransaction, _db);
         if (!_db.commit()) {
+            qDebug() << "DB Commit failed!";
             if (!_db.rollback()) {
-                qDebug() << "Could not rollback";
+                qDebug() << "FATAL: Could not rollback";
+                exit(1);
             }
             throw UnexpectedException(_db.lastError().databaseText().toStdWString());
         }
@@ -116,24 +118,28 @@ bool Bank::InternalBank::areValidCredentials(const Credentials &c) {
 
 TransferDetails Bank::InternalBank::getTransferDetails(const Credentials &c, const TransferRequest &request) {
     if (c.card().getCardNumber() == request.getDestination().getCardNumber()) {
+        // todo maybe throw bad recipient???
         throw UnexpectedException(L"Trying to make transaction to your own card!");
     }
-
-    DBCard sender = DBCard::selectByNumber(c.card().getCardNumber());
-    DBCard receiver;
-    try {
-        receiver = DBCard::selectByNumber(request.getDestination().getCardNumber());
-    } catch (...) {
-        throw BadRecipient(request.getDestination());
-    }
-    const ullong rHolder = receiver.getHolderId().value();
-    DBHolder receiverInfo = DBHolder::selectById(rHolder);;
-    DBCategory category = DBCategory::selectById(sender.getCategoryId().value());
-    auto tariff = Unique<Tariff>(new PercentageTariff(category.getFeeRate().value()));
+    DBCard senderCard = DBCard::selectByNumber(c.card().getCardNumber());
+    DBCategory category = DBCategory::selectById(senderCard.getCategoryId().value());
     uint actual = request.getMoney();
+    auto tariff = Unique<Tariff>(new PercentageTariff(category.getFeeRate().value()));
     if (request.isAfterTariff()) {
         actual += tariff->getFee(request.getMoney());
     }
+    uint spendable = getSpendableMoney(c.card());
+    if (spendable < actual) {
+        throw BadMoney(actual, spendable);
+    }
+    DBCard receiverCard;
+    try {
+        receiverCard = DBCard::selectByNumber(request.getDestination().getCardNumber());
+    } catch (...) {
+        throw BadRecipient(request.getDestination());
+    }
+    const ullong rHolder = receiverCard.getHolderId().value();
+    DBHolder receiverInfo = DBHolder::selectById(rHolder);
     return {receiverInfo.getFullName().toStdWString(),
             request.getDestination(),
             actual,
@@ -172,6 +178,10 @@ WithdrawalDetails Bank::InternalBank::getWithdrawalDetails(const Credentials &c,
     uint moneyToBeWithdrawed = request.getMoney();
     if (request.isAfterTariff()) {
         moneyToBeWithdrawed += tariff->getFee(moneyToBeWithdrawed);
+    }
+    uint spendable = getSpendableMoney(c.card());
+    if (spendable < moneyToBeWithdrawed) {
+        throw BadMoney(moneyToBeWithdrawed, spendable);
     }
     return {moneyToBeWithdrawed, std::move(tariff)};
 }

@@ -147,34 +147,30 @@ void checkTest(const char *name, bool (*condition)()) {
 }
 
 void transactiontests() {
-    // tried to make this work on test.db
-    // but BankProvider thus Bank uses bank.db anyway
-    // so we need to turn tests off for know if we want to work
-    // with real data
     QSqlDatabase db = QSqlDatabase::database();
     db.open();
     restoreTestData(db);
-    checkTest("trans1",
+    checkTest("Bad sender card number",
               [] { return "Bad credentials" == testTransaction({123, 123}, {123}, 0, false); });
-    checkTest("trans2",
+    checkTest("Bad sender pin",
               [] { return "Bad credentials" == testTransaction({1234567891011121, 123}, {123}, 0, false); });
-    checkTest("trans3",
+    checkTest("Bad receiver card",
               [] { return "Bad recipient" == testTransaction({1234567891011121, 1234}, {123}, 0, false); });
-    checkTest("trans4",
+    checkTest("Insufficient funds on sender card without fee",
               [] { return "Bad money" == testTransaction({1234567891011121, 1234}, {5168123412341234}, 1000, false); });
-    checkTest("trans5",
+    checkTest("Correctly send money without fee on premium card",
               [] { return "0 150" == testTransaction({1234567891011121, 1234}, {5168123412341234}, 100, false); });
     restoreTestData(db);
-    checkTest("trans6",
+    checkTest("Correctly apply fee on premium card",
               [] { return "0 150" == testTransaction({1234567891011121, 1234}, {5168123412341234}, 100, true); });
     restoreTestData(db);
-    checkTest("trans7",
+    checkTest("Correctly send all money from universal card without fee",
               [] { return "0 150" == testTransaction({5168123412341234, 3221}, {1234567891011121}, 50, false); });
     restoreTestData(db);
-    checkTest("trans8",
+    checkTest("Correctly send money from universal card without fee",
               [] { return "2 148" == testTransaction({5168123412341234, 3221}, {1234567891011121}, 48, false); });
     restoreTestData(db);
-    checkTest("trans9",
+    checkTest("Correctly send money from universal card with fee",
               [] { return "0 148" == testTransaction({5168123412341234, 3221}, {1234567891011121}, 48, true); });
 }
 
@@ -182,19 +178,19 @@ void deposittests() {
     QSqlDatabase db = QSqlDatabase::database();
     db.open();
     restoreTestData(db);
-    checkTest("deposit1",
+    checkTest("Do not deposit on incorrect card",
               [] { return "Bad credentials" == testDeposit({123, 123}, 0, false); });
-    checkTest("deposit2",
+    checkTest("Do not deposit on incorrect pin",
               [] { return "Bad credentials" == testDeposit({1234567891011121, 123}, 0, false); });
-    checkTest("deposit3",
+    checkTest("Correctly add money to account without fee",
               [] { return "150" == testDeposit({1234567891011121, 1234}, 50, false); });
     auto result = DBTransaction::selectAllById(1234567891011121);
     qDebug() << result.size();
     restoreTestData(db);
-    checkTest("deposit4",
+    checkTest("Correctly add money with fee",
               [] { return "140" == testDeposit({1234567891011121, 1234}, 50, true); });
     restoreTestData(db);
-    checkTest("deposit5",
+    checkTest("Add no money when amount is less than fee",
               [] { return "100" == testDeposit({1234567891011121, 1234}, 5, true); });
 }
 
@@ -202,20 +198,15 @@ void withdrawtests() {
     QSqlDatabase db = QSqlDatabase::database();
     db.open();
     restoreTestData(db);
-    checkTest("withdraw1",
+    checkTest("Do not withdraw from incorrect card",
               [] { return "Bad credentials" == testWithdraw({123, 123}, 0, false); });
-    checkTest("withdraw2",
+    checkTest("Do not withdraw on incorrect pin",
               [] { return "Bad credentials" == testWithdraw({1234567891011121, 123}, 0, false); });
-    checkTest("withdraw3",
+    checkTest("Correctly withdraw all money",
               [] { return "0" == testWithdraw({1234567891011121, 1234}, 100, false); });
     restoreTestData(db);
-    checkTest("withdraw4",
-              [] { return "0" == testWithdraw({1234567891011121, 1234}, 100, true); });
-    restoreTestData(db);
-    checkTest("withdraw5",
+    checkTest("Correctly withdraw all money from universal card",
               [] { return "0" == testWithdraw({5168123412341234, 3221}, 50, false); });
-    checkTest("withdraw6",
-              [] { return "Bad money" == testWithdraw({5168123412341234, 3221}, 50, true); });
 }
 
 void top_up_test() {

@@ -121,8 +121,8 @@
 }</string>
      </property>
      <layout class="QGridLayout" name="gridLayout_3">
-      <item row="3" column="0">
-       <widget class="QPushButton" name="transfer">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="pushButton">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -154,81 +154,7 @@ QPushButton::hover {
 }</string>
         </property>
         <property name="text">
-         <string>Переказати кошти</string>
-        </property>
-       </widget>
-      </item>
-      <item row="3" column="1">
-       <widget class="QPushButton" name="refilMobile">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-	background: rgb(0,0,0);
-
-	border-color: rgb(255,0,0);
-	border-style: inset;
-	border-width: 2px;
-
-	color: rgb(255,0,0);
-}
-
-QPushButton::hover {
-	background: rgb(255,0,0);
-
-	border-color: rgb(0,0,0);
-
-	color: rgb(0,0,0);
-}</string>
-        </property>
-        <property name="text">
-         <string>Поповнити мобільний</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="1">
-       <widget class="QPushButton" name="withdraw">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QPushButton {
-	background: rgb(0,0,0);
-
-	border-color: rgb(255,0,0);
-	border-style: inset;
-	border-width: 2px;
-
-	color: rgb(255,0,0);
-}
-
-QPushButton::hover {
-	background: rgb(255,0,0);
-
-	border-color: rgb(0,0,0);
-
-	color: rgb(0,0,0);
-}</string>
-        </property>
-        <property name="text">
-         <string>Зняти кошти</string>
+         <string>Історія транзакцій</string>
         </property>
        </widget>
       </item>
@@ -269,8 +195,8 @@ QPushButton::hover {
         </property>
        </widget>
       </item>
-      <item row="4" column="0">
-       <widget class="QPushButton" name="pushButton">
+      <item row="3" column="1">
+       <widget class="QPushButton" name="refilMobile">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -302,7 +228,118 @@ QPushButton::hover {
 }</string>
         </property>
         <property name="text">
-         <string>Історія транзакцій</string>
+         <string>Поповнити мобільний</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0">
+       <widget class="QPushButton" name="transfer">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
+	border-width: 2px;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
+}</string>
+        </property>
+        <property name="text">
+         <string>Переказати кошти</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QPushButton" name="withdraw">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
+	border-width: 2px;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
+}</string>
+        </property>
+        <property name="text">
+         <string>Зняти кошти</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0" colspan="2">
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>18</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton {
+	background: rgb(0,0,0);
+
+	border-color: rgb(255,0,0);
+	border-style: inset;
+	border-width: 2px;
+
+	color: rgb(255,0,0);
+}
+
+QPushButton::hover {
+	background: rgb(255,0,0);
+
+	border-color: rgb(0,0,0);
+
+	color: rgb(0,0,0);
+}</string>
+        </property>
+        <property name="text">
+         <string>Завершити</string>
         </property>
        </widget>
       </item>

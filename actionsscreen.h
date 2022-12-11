@@ -30,6 +30,8 @@ private slots:
 
     void on_pushButton_clicked();
 
+    void on_pushButton_2_clicked();
+
 private:
     Ui::ActionsScreen *ui;
     Shared<SignedConnection> _connect;
@@ -45,7 +47,7 @@ private:
     void toDetails(
             String message,
             std::optional<Card> receiver,
-            Shared<Tariff> tariff,
+            const Shared<Tariff> &tariff,
             uint money,
             std::function<void()> performAction
     );

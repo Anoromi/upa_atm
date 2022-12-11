@@ -54,7 +54,6 @@ set(PROJECT_SOURCES
         success_screen.h success_screen.cpp success_screen.ui
         navigationwindow.h navigationwindow.cpp navigationwindow.ui
         actionsscreen.h actionsscreen.cpp actionsscreen.ui
-        frontend/depositscreen.h frontend/depositscreen.cpp frontend/depositscreen.ui
         frontend/withdrawalscreen.h frontend/withdrawalscreen.cpp frontend/withdrawalscreen.ui
         frontend/put_money.h frontend/put_money.cpp frontend/put_money.ui
         frontend/phonewindow.h frontend/phonewindow.cpp frontend/phonewindow.ui
@@ -63,7 +62,7 @@ set(PROJECT_SOURCES
         middleware/top_up.h
         frontend/transactionhistoryscreen.h frontend/transactionhistoryscreen.cpp frontend/transactionhistoryscreen.ui
         middleware/transaction.h
-        frontend/transactionitem.h frontend/transactionitem.cpp frontend/transactionitem.ui)
+        )
 
 
 if (${QT_VERSION_MAJOR} GREATER_EQUAL 6)

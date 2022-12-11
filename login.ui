@@ -214,6 +214,9 @@ QPushButton#confirmLogin:hover {
 }
 </string>
          </property>
+         <property name="placeholderText">
+          <string>Пароль</string>
+         </property>
         </widget>
        </item>
        <item row="0" column="0">
@@ -243,6 +246,9 @@ QPushButton#confirmLogin:hover {
 	border-color: rgb(255, 0, 0);
 	border-width: 2px;
 }</string>
+         </property>
+         <property name="placeholderText">
+          <string>Номер картки</string>
          </property>
         </widget>
        </item>

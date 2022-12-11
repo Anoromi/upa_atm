@@ -4,7 +4,6 @@
 #include "ui_transactionhistoryscreen.h"
 #include "middleware/transaction.h"
 #include "middleware/signedConnection.h"
-#include "transactionitem.h"
 #include "middleware/converters.h"
 
 TransactionHistoryScreen::TransactionHistoryScreen(SignedConnection &connection, std::function<void()> back,

@@ -230,9 +230,21 @@ void top_up_test() {
     Vector<Transaction> transactions =
             BankProvider::getBank().authorizedCall(c, Bank::getTransactions);
     for (auto &trans: transactions) {
-        qDebug() << trans.getSender().value().getCardNumber()
-                 << trans.getReceiver().value().getCardNumber()
-                 << trans.getMoney()
+        Optional<Card> sender = trans.getSender();
+        Optional<Card> receiver = trans.getReceiver();
+
+        if (sender.has_value()) {
+            qDebug() << sender.value().getCardNumber();
+        } else {
+            qDebug() << "NULL";
+        }
+
+        if (receiver.has_value()) {
+            qDebug() << receiver.value().getCardNumber();
+        } else {
+            qDebug() << "NULL";
+        }
+        qDebug() << trans.getMoney()
                  << trans.getTariff()
                  << trans.getTime()
                  << trans.getDescription();
